@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 
 const ToucanPageFetch = require('../../libs/toucan-page-fetch/index');
-const pageFetch = new ToucanPageFetch()
+const pageFetch = new ToucanPageFetch();
 
 describe('page fetch 测试', () => {
 
