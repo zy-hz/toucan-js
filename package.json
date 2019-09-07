@@ -1,0 +1,28 @@
+{
+  "name": "toucan-js",
+  "version": "1.0.0",
+  "description": "toucan js libs",
+  "main": "libs/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zy-hz/toucan-js.git"
+  },
+  "keywords": [
+    "toucan"
+  ],
+  "author": "Easy Zhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zy-hz/toucan-js/issues"
+  },
+  "homepage": "https://github.com/zy-hz/toucan-js#readme",
+  "devDependencies": {
+    "eslint": "^6.3.0"
+  }
+}
