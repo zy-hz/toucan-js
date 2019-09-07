@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/zy-hz/toucan-js#readme",
   "devDependencies": {
-    "eslint": "^6.3.0"
+    "eslint": "^6.3.0",
+    "mocha": "^6.2.0",
+    "chai": "^4.2.0"
   }
 }
