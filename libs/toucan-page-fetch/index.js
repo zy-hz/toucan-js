@@ -1,3 +1,5 @@
+const SuperAgentPageFetch = require('./_superagent-fetch');
+
 // 页面抓手
 class ToucanPageFetch {
 
@@ -11,8 +13,7 @@ class ToucanPageFetch {
 
         // 如果抓手不存在,根据参数创建抓手
         this._fetcher = this._fetcher || createPageFetchObject(Object.assign(option, { url }));
-        //return await this._fetcher.do(url, { option })
-        return 'abc'
+        return await this._fetcher.do(url, option)
     }
 
 }
@@ -20,12 +21,13 @@ class ToucanPageFetch {
 // 创建页面抓手对象
 function createPageFetchObject({
     // 页面链接
-    url = '',  
+    url = '',
     // 抓手类型: auto - 自动判断, request - request请求
     fetchType = 'auto'
 } = {}) {
-    
-    console.log(url, fetchType)
+
+    console.log('create page fetch:', url, fetchType)
+    return new SuperAgentPageFetch()
 }
 
 module.exports = ToucanPageFetch;
