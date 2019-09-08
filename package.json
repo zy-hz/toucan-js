@@ -28,6 +28,7 @@
     "encoding": "0.1.12",
     "jschardet": "^2.1.0",
     "lodash": "4.17.15",
+    "puppeteer": "^1.19.0",
     "superagent": "5.1.0"
   },
   "devDependencies": {

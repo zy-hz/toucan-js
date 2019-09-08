@@ -1,4 +1,5 @@
 const SuperAgentPageFetch = require('./_superagent-fetch');
+const PuppeteerPageFetch = require('./_puppeteer-fetch');
 
 // 页面抓手
 class ToucanPageFetch {
@@ -22,12 +23,12 @@ class ToucanPageFetch {
 function createPageFetchObject({
     // 页面链接
     url = '',
-    // 抓手类型: auto - 自动判断, request - request请求
+    // 抓手类型: auto - 自动判断, request - request请求,webpage - 页面访问
     fetchType = 'auto'
 } = {}) {
 
     console.log('create page fetch:', url, fetchType)
-    return new SuperAgentPageFetch()
+    return fetchType === 'webpage' ? new PuppeteerPageFetch() : new SuperAgentPageFetch();
 }
 
 module.exports = ToucanPageFetch;
