@@ -1,19 +1,30 @@
+const _ = require('lodash');
 const request = require('superagent');
 const encoding = require('encoding');
+const charDecter = require('jschardet');
 const util = require('./_common-utility');
+const userAgents = require('./_user-agent');
 
 class SuperAgentPageFetch {
 
     async do(url, option = {}) {
 
         try {
-
+            // 用户的代理
+            let userAgent = userAgents[parseInt(Math.random() * userAgents.length)];
             // 根据选项构建url
             let visitUrl = util.buildUrl(url, option);
             // 使用二进制读取页面
-            const response = await request.get(visitUrl).responseType('binary');
+            const response = await request
+                .get(visitUrl)
+                .responseType('binary')
+                .set({ 'User-Agent': userAgent });
+
+            // 获取页面的字符集
+            const pageCharset = getCharsetFromResponse(response);
+
             // 使用页面的指定编码转码为utf-8
-            const pageContent = encoding.convert(response.body, 'utf-8', response.charset, true).toString();
+            const pageContent = encoding.convert(response.body, 'utf-8', pageCharset, true).toString();
 
             return {
                 // 抓取过程是否异常
@@ -48,6 +59,15 @@ class SuperAgentPageFetch {
             }
         }
     }
+}
+
+
+function getCharsetFromResponse(response) {
+    // 如果页面有了字符集就使用页面的字符集
+    if (!_.isUndefined(response.charset)) return response.charset;
+
+    const { encoding = 'utf-8' } = charDecter.detect(response.body);
+    return encoding;
 }
 
 module.exports = SuperAgentPageFetch;
