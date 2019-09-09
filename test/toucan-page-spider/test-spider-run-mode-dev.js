@@ -3,9 +3,9 @@ const expect = require('chai').expect;
 const ToucanPageSpider = require('../../libs/toucan-page-spider');
 
 
-describe('page spider 测试', () => {
+describe('page spider run mode 测试', () => {
 
-    it('start and stop 测试 temp', async () => {
+    it('start and stop 测试', async () => {
         const spider = new ToucanPageSpider();
 
         spider.start();
@@ -17,12 +17,4 @@ describe('page spider 测试', () => {
 
     });
 
-    it('run 循环体测试', async () => {
-        const spiderA = new ToucanPageSpider({ spiderName: '1号蜘蛛', idleSleep: 3000 });
-        spiderA.start();
-
-        const spiderB = new ToucanPageSpider({ spiderName: '2号蜘蛛' });
-        spiderB.start();
-
-    });
 });

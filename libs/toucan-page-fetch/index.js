@@ -23,8 +23,7 @@ class ToucanPageFetch {
 function createPageFetchObject({
     // 页面链接
     url = '',
-    // 抓手类型: auto - 自动判断, request - request请求,webpage - 页面访问
-    // TODO:: 实现auto类型的抓手
+    // 抓手类型: request - request请求,webpage - 页面访问
     fetchType = 'request'
 } = {}) {
 

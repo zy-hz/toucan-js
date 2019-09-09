@@ -73,6 +73,11 @@ class ToucanPageSpider {
             waitMillionSecond = waitMillionSecond + 100;
         }
     }
+
+    // 执行一个抓取任务
+    async do(){
+
+    }
 }
 
 module.exports = ToucanPageSpider;
