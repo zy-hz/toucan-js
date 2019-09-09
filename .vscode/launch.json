@@ -7,13 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\index.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "test 全部测试用例",
+            "name": "All 测试所有用例",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [

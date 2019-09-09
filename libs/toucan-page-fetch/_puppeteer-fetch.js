@@ -1,5 +1,8 @@
 const _ = require('lodash');
 const puppeteer = require('puppeteer');
+const util = require('./_common-utility');
+const userAgents = require('./_user-agent');
+const { onException } = require('./_fetch-exception');
 
 class PuppeteerPageFetch {
 
@@ -7,9 +10,13 @@ class PuppeteerPageFetch {
 
         // 有该标记，表示页面载入完成
         const { pageLoadDoneFlag = '' } = option;
+        const fetchType = 'webpage';
 
         try {
-
+            // 用户的代理
+            let userAgent = userAgents[parseInt(Math.random() * userAgents.length)];
+            // 根据选项构建url
+            let visitUrl = util.buildUrl(url, option);
 
             const browser = await puppeteer.launch(
                 {
@@ -27,17 +34,21 @@ class PuppeteerPageFetch {
                     ]
                 });
 
-
+            // 创建浏览器的新页面
             const page = await browser.newPage();
-
-            await page.goto(url);
+            // 设置用户类型
+            await page.setUserAgent(userAgent)
+            // 前往页面地址
+            await page.goto(visitUrl);
 
             // 如果有特殊的页面载入标记时，启动等待页面标记过程
             if (!_.isEmpty(pageLoadDoneFlag)) {
-                await page.waitForSelector('.WB_frame');
+                await page.waitForSelector(pageLoadDoneFlag);
             }
 
+            // 获得页面内容
             const pageContent = await page.content();
+            // 关闭浏览器
             await browser.close();
 
             return {
@@ -46,7 +57,7 @@ class PuppeteerPageFetch {
                 // 页面内容
                 pageContent,
                 // 抓手类型
-                fetchType: 'webpage',
+                fetchType,
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
@@ -56,21 +67,7 @@ class PuppeteerPageFetch {
             };
         }
         catch (error) {
-            const { code, errno, message, stack } = error
-            return {
-                // 抓取过程是否异常
-                hasException: true,
-                // 抓手类型
-                fetchType: 'webpage',
-                // 错误码
-                code,
-                // 错误码
-                errno,
-                // 错误信息
-                message,
-                // 调用堆栈
-                stack
-            }
+            return onException(error, fetchType)
         }
     }
 }

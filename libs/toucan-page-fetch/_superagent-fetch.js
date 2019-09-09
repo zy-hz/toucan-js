@@ -4,10 +4,13 @@ const encoding = require('encoding');
 const charDecter = require('jschardet');
 const util = require('./_common-utility');
 const userAgents = require('./_user-agent');
+const { onException } = require('./_fetch-exception');
 
 class SuperAgentPageFetch {
 
     async do(url, option = {}) {
+
+        const fetchType = 'request';
 
         try {
             // 用户的代理
@@ -32,7 +35,7 @@ class SuperAgentPageFetch {
                 // 页面内容
                 pageContent,
                 // 抓手类型
-                fetchType: 'request',
+                fetchType,
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
@@ -42,21 +45,7 @@ class SuperAgentPageFetch {
             };
         }
         catch (error) {
-            const { code, errno, message, stack } = error
-            return {
-                // 抓取过程是否异常
-                hasException: true,
-                // 抓手类型
-                fetchType: 'request',
-                // 错误码
-                code,
-                // 错误码
-                errno,
-                // 错误信息
-                message,
-                // 调用堆栈
-                stack
-            }
+            return onException(error, fetchType);
         }
     }
 }
