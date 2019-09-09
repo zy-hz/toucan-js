@@ -4,7 +4,7 @@ const spiderFactory = require('../../libs/toucan-page-spider');
 
 describe('page spider run mode 测试', () => {
 
-    it('start and stop 测试 temp', async () => {
+    it('start and stop 测试', async () => {
         const spider = spiderFactory.createSpider();
 
         spider.start();
