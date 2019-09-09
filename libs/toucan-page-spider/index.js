@@ -24,6 +24,7 @@ class ToucanPageSpider {
         // 空闲的时候，暂停的时间
         idleSleep,
     } = {}) {
+
         //
         // 设置属性的默认值
         //
@@ -36,21 +37,41 @@ class ToucanPageSpider {
         // 强制停止标记
         this.forceStop = false;
 
-        // 运行体
-        while (this.forceStop) {
+        try {
+            // 设置正在运行的标记
+            this.isRunning = true;
+            // 运行体
+            while (!this.forceStop) {
 
-            console.log('test one :', this.spiderName);
-            await sleep(this.idleSleep);
-            console.log('test two :', this.spiderName);
+                await sleep(this.idleSleep);
+            }
         }
+        finally {
+            this.isRunning = false
+        }
+
     }
 
     // 停止蜘蛛的工作
-    // delay: 延时停止
-    async stop(delay = 1000) {
+    async stop({
+        // 延时停止的毫秒
+        delay = 10,
+        // 等待蜘蛛停止成功。0 表示不等待, -1 表示一直等待，其他整数表示等待的毫秒
+        expectWaitMillionSecond = -1
+    } = {}) {
         await sleep(delay);
         // 设置停止标记
         this.forceStop = true;
+
+        // 如果 -1 表示一直等待，设置为一天
+        expectWaitMillionSecond = expectWaitMillionSecond === -1 ? 1000 * 60 * 60 * 24 : expectWaitMillionSecond;
+        // 等待的毫秒
+        let waitMillionSecond = 0
+        while (this.isRunning && waitMillionSecond < expectWaitMillionSecond) {
+
+            await sleep(100);
+            waitMillionSecond = waitMillionSecond + 100;
+        }
     }
 }
 
