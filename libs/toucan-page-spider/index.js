@@ -10,7 +10,6 @@
 //
 //
 
-const _ = require('lodash');
 const { sleep } = require('../toucan-utility');
 
 class ToucanPageSpider {
@@ -75,9 +74,18 @@ class ToucanPageSpider {
     }
 
     // 执行一个抓取任务
-    async do(){
-
+    async do(task) {
+        console.log('i am demo woker.', task);
     }
 }
 
-module.exports = ToucanPageSpider;
+// 大嘴鸟的蜘蛛工厂
+class ToucanSpiderFactory {
+
+    // 创造蜘蛛
+    createSpider(option = {}) {
+        return new ToucanPageSpider(option);
+    }
+}
+
+module.exports = new ToucanSpiderFactory();
