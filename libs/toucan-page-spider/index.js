@@ -9,39 +9,49 @@
 // 触发抓取任务完成，抓取任务异常事件
 //
 //
+
+const _ = require('lodash');
+const { sleep } = require('../toucan-utility');
+
 class ToucanPageSpider {
 
     // 构造页面蜘蛛
     constructor({
+        // 触发获取任务的回掉
         onGetTask,
-        // 蜘蛛的名称
+        // 蜘蛛的名称         
         spiderName,
         // 空闲的时候，暂停的时间
-        idleSleep = 1000,
+        idleSleep,
     } = {}) {
-
-        // 获得任务
-        this.onGetTask = onGetTask;
-
-        this.spiderName = spiderName;
-        this.idleSleep = idleSleep;
+        //
+        // 设置属性的默认值
+        //
+        this.spiderName = spiderName || 'unknown';
+        this.idleSleep = idleSleep || 1000;
     }
 
     // 蜘蛛开始运行
-    async run() {
-        let cnt = 0;
-        while (cnt < 10) {
+    async start() {
+        // 强制停止标记
+        this.forceStop = false;
+
+        // 运行体
+        while (this.forceStop) {
+
             console.log('test one :', this.spiderName);
             await sleep(this.idleSleep);
-            console.log('test two :', this.spiderName, cnt);
-
-            cnt = cnt + 1;
+            console.log('test two :', this.spiderName);
         }
     }
-}
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    // 停止蜘蛛的工作
+    // delay: 延时停止
+    async stop(delay = 1000) {
+        await sleep(delay);
+        // 设置停止标记
+        this.forceStop = true;
+    }
 }
 
 module.exports = ToucanPageSpider;

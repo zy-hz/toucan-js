@@ -7,6 +7,26 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Temp 测试指定用例",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "test",
+                "--no-timeouts",
+                "--recursive",
+                "--grep",
+                // 指定需要运行的词
+                "temp"
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "All 测试所有用例",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
