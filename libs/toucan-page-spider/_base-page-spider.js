@@ -20,6 +20,8 @@ class ToucanPageSpider {
         onGetTask,
         // 蜘蛛的名称         
         spiderName,
+        // 蜘蛛的类型
+        spiderType,
         // 空闲的时候，暂停的时间
         idleSleep,
     } = {}) {
@@ -28,6 +30,7 @@ class ToucanPageSpider {
         // 设置属性的默认值
         //
         this.spiderName = spiderName || 'unknown';
+        this.spiderType = spiderType;
         this.idleSleep = idleSleep || 1000;
     }
 

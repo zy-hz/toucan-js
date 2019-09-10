@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const sipderFactory = require('../../libs/toucan-page-spider');
+const { isClass } = require('../../libs/toucan-utility');
 
 describe('page spider 基础功能测试', () => {
 
@@ -12,10 +13,22 @@ describe('page spider 基础功能测试', () => {
         expect(spider.idleSleep).to.be.eq(spiderOption.idleSleep);
     });
 
-    it('create spider for spider type 测试 ', () => {
+    it('create spider for spider type 测试', () => {
+
         let spider = sipderFactory.createSpider({ spiderType: 'http' });
-        expect(spider.spiderType).to.be.eq('http');
+        spiderComponeExpect(spider,'http','ToucanHttpPageSpider');
+
+        spider = sipderFactory.createSpider({ spiderType: 'browser' });
+        spiderComponeExpect(spider,'browser','ToucanBrowserPageSpider');
 
 
     });
 });
+
+function spiderComponeExpect(spider, spiderType, className) {
+
+    expect(spider.spiderType, `应该是 ${spiderType} 蜘蛛`).to.be.eq(spiderType);
+    expect(isClass(spider.constructor, className), `蜘蛛类是 ${className}`).to.be.true;
+    expect(isClass(spider.constructor, 'ToucanPageSpider'), '基础类是 ToucanPageSpider').to.be.true;
+
+}

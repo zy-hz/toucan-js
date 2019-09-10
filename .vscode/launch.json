@@ -14,6 +14,7 @@
                 "test",
                 "--no-timeouts",
                 "--recursive",
+                "--bail", // 发现错误后停止
                 "--grep",
                 // 指定需要运行的词
                 "temp"
@@ -33,7 +34,8 @@
             "args": [
                 "test",
                 "--no-timeouts",
-                "--recursive"
+                "--recursive",
+                "--bail" // 发现错误后停止
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,

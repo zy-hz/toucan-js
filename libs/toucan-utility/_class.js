@@ -16,8 +16,14 @@ function isClassExt(
     // 如果不是类，放弃以下检查
     if (!isClass(obj)) return false;
 
+    // 以下代码，都是针对类的检查
+    //
+
+    // 如果不需要检查类名，直接返回
+    if (_.isEmpty(expectClassName)) return true;
+
     // 类名检查
-    return isClassName(obj,expectClassName, ignoreCase);
+    return isClassName(obj, expectClassName, ignoreCase);
 }
 
 // 比较大小写
@@ -36,6 +42,4 @@ function isClassName(obj, expectClassName, ignoreCase = false) {
     return false
 }
 
-
-
-module.exports = isClassExt;
+module.exports = { isClass:isClassExt  };
