@@ -22,30 +22,32 @@ class ToucanSpiderFactory {
 
         let spiderClass = {};
 
-        if (!_.isEmpty(spiderType)) spiderClass = createSpiderBySpiderType(spiderType)
+        if (!_.isEmpty(spiderType)) spiderClass = createSpiderClassBySpiderType(spiderType);
 
-        if (_.isEmpty(spiderClass) && !_.isEmpty(taskTarget)) spiderClass = createSpiderByTarget(taskTarget);
+        console.log(spiderClass.constructor )
 
-        if (_.isEmpty(spiderClass) && !_.isEmpty(taskUrl)) spiderClass = createSpiderByUrl(taskUrl);
+        if (_.isObject(spiderClass) && !_.isEmpty(taskTarget)) spiderClass = createSpiderClassByTarget(taskTarget);
 
-        if(_.isEmpty(spiderClass)) spiderClass = ToucanPageSpider;
-        
+        if (_.isObject(spiderClass) && !_.isEmpty(taskUrl)) spiderClass = createSpiderClassByUrl(taskUrl);
+
+        if(_.isObject(spiderClass)) spiderClass = ToucanPageSpider;
+
         const opt = Object.assign(spiderOption, { spiderType });
         return new spiderClass(opt);
     }
 }
 
 // 根据蜘蛛的类型创建蜘蛛
-function createSpiderBySpiderType(spiderType) {
+function createSpiderClassBySpiderType(spiderType) {
     return require('./_base-page-spider');
 }
 
 // 根据目标创建蜘蛛
-function createSpiderByTarget(targetName) {
+function createSpiderClassByTarget(targetName) {
     return require('./_base-page-spider');
 }
 
-function createSpiderByUrl(url) {
+function createSpiderClassByUrl(url) {
     return require('./_base-page-spider');
 }
 
