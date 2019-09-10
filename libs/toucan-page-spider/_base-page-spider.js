@@ -10,20 +10,23 @@
 //
 //
 
+const _ = require('lodash');
 const { sleep } = require('../toucan-utility');
 
 class ToucanPageSpider {
 
     // 构造页面蜘蛛
     constructor({
-        // 触发获取任务的回掉
-        onGetTask,
         // 蜘蛛的名称         
         spiderName,
         // 蜘蛛的类型
         spiderType,
         // 空闲的时候，暂停的时间
         idleSleep,
+        // 触发获取任务的回掉
+        onGetTask,
+        // 任务发生异常
+        onTaskException,
     } = {}) {
 
         //
@@ -32,6 +35,9 @@ class ToucanPageSpider {
         this.spiderName = spiderName || 'unknown';
         this.spiderType = spiderType;
         this.idleSleep = idleSleep || 1000;
+
+        // 默认使用日志纪录器
+        this.onTaskException = onTaskException || console.log;
     }
 
     // 蜘蛛开始运行
@@ -74,6 +80,32 @@ class ToucanPageSpider {
             await sleep(100);
             waitMillionSecond = waitMillionSecond + 100;
         }
+    }
+
+    // 执行一个抓取任务
+    async do(task = {}) {
+        const {
+            taskUrl,
+            // 可以指定任务运行时的错误处理器，用于调试
+            onTaskException = this.onTaskException
+        } = task;
+        try {
+
+            if (_.isEmpty(taskUrl)) throw new ParamsError('taskUrl');
+        }
+        catch (error) {
+            // 设置异常关联的任务
+            onTaskException(Object.assign(error, { task }))
+        }
+
+    }
+}
+
+class ParamsError extends Error {
+    constructor(paramName) {
+        super();
+        this.paramName = paramName
+        this.message = `${paramName} 不能为空`;
     }
 }
 
