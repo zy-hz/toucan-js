@@ -2,15 +2,20 @@ const _ = require('lodash');
 const puppeteer = require('puppeteer');
 const util = require('./_common-utility');
 const userAgents = require('./_user-agent');
+const ToucanPageFetch = require('./_base-fetch');
 const { onException } = require('./_fetch-exception');
 
-class PuppeteerPageFetch {
+class PuppeteerPageFetch extends ToucanPageFetch {
+
+    constructor() {
+        super();
+        this.fetchType = 'webpage';
+    }
 
     async do(url, option = {}) {
 
         // 有该标记，表示页面载入完成
         const { pageLoadDoneFlag = '' } = option;
-        const fetchType = 'webpage';
 
         try {
             // 用户的代理
@@ -57,7 +62,7 @@ class PuppeteerPageFetch {
                 // 页面内容
                 pageContent,
                 // 抓手类型
-                fetchType,
+                fetchType: this.fetchType,
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
@@ -67,7 +72,7 @@ class PuppeteerPageFetch {
             };
         }
         catch (error) {
-            return onException(error, fetchType)
+            return onException(error, this.fetchType)
         }
     }
 }

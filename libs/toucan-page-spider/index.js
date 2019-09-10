@@ -1,4 +1,4 @@
-const ToucanPageSpider = require('./_base-page-spider');
+const ToucanHttpPageSpider = require('./_http-page-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
@@ -33,8 +33,8 @@ class ToucanSpiderFactory {
         // 根据任务的url创建蜘蛛
         if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(taskUrl)) spiderClass = createSpiderClassByUrl(taskUrl);
 
-        // 如果都不是，创建默认蜘蛛
-        if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanPageSpider;
+        // 如果都不是，创建默认蜘蛛 (http蜘蛛)
+        if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpPageSpider;
 
         const opt = Object.assign(spiderOption, { spiderType });
         return new spiderClass(opt);

@@ -75,11 +75,6 @@ class ToucanPageSpider {
             waitMillionSecond = waitMillionSecond + 100;
         }
     }
-
-    // 执行一个抓取任务
-    async do(task) {
-        console.log('i am demo woker.', task);
-    }
 }
 
 module.exports = ToucanPageSpider;

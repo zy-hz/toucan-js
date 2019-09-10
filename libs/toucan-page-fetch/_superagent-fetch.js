@@ -4,13 +4,17 @@ const encoding = require('encoding');
 const charDecter = require('jschardet');
 const util = require('./_common-utility');
 const userAgents = require('./_user-agent');
+const ToucanPageFetch = require('./_base-fetch');
 const { onException } = require('./_fetch-exception');
 
-class SuperAgentPageFetch {
+class SuperAgentPageFetch extends ToucanPageFetch {
+
+    constructor(){
+        super();
+        this.fetchType = 'request';
+    }
 
     async do(url, option = {}) {
-
-        const fetchType = 'request';
 
         try {
             // 用户的代理
@@ -35,7 +39,7 @@ class SuperAgentPageFetch {
                 // 页面内容
                 pageContent,
                 // 抓手类型
-                fetchType,
+                fetchType : this.fetchType,
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
@@ -45,7 +49,7 @@ class SuperAgentPageFetch {
             };
         }
         catch (error) {
-            return onException(error, fetchType);
+            return onException(error, this.fetchType);
         }
     }
 }
