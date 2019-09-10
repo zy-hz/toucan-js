@@ -30,7 +30,8 @@
     "jschardet": "^2.1.0",
     "lodash": "4.17.15",
     "puppeteer": "^1.19.0",
-    "superagent": "5.1.0"
+    "superagent": "5.1.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^6.3.0",

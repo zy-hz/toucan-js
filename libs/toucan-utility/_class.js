@@ -42,4 +42,12 @@ function isClassName(obj, expectClassName, ignoreCase = false) {
     return false
 }
 
-module.exports = { isClass:isClassExt  };
+// 获得对象的类名
+function getObjectClassName(obj) {
+    if (_.isNil(obj)) return '';
+
+    if (_.isNil(obj.__proto__) || _.isNil(obj.__proto__.constructor)) return '';
+    return obj.__proto__.constructor.name;
+}
+
+module.exports = { isClass: isClassExt, getObjectClassName };

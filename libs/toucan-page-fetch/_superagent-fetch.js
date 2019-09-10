@@ -43,7 +43,7 @@ class SuperAgentPageFetch extends ToucanPageFetch {
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
-                pageCharset: response.charset,
+                pageCharset,
                 // 状态码
                 statusCode: response.statusCode
             };
