@@ -11,7 +11,7 @@ describe('http 蜘蛛测试', () => {
         
     });
 
-    it('do 异常测试 temp',async()=>{
+    it('do 异常测试',async()=>{
         const spider = sipderFactory.createSpider({ spiderType: 'http' });
 
         spider.do({

@@ -10,6 +10,7 @@ describe('工具库的入口测试',()=>{
         expect(typeof utils.isClass,'isClass 载入').to.be.eq('function');
         expect(typeof utils.isEqualString,'isEqualString 载入').to.be.eq('function');
         expect(typeof utils.sleep,'sleep 载入').to.be.eq('function');
+        expect(typeof utils.batchLoadModule,'batchLoadModule 载入').to.be.eq('function');
 
         expect(utils.isEqualString('abc','Abc',true),'isEqualString 比较测试').to.be.true;
 
