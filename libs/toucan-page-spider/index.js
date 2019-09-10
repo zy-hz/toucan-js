@@ -1,6 +1,5 @@
 const ToucanPageSpider = require('./_base-page-spider');
 const _ = require('lodash');
-const fs = require('fs');
 const { isClass } = require('../toucan-utility');
 
 // 大嘴鸟的蜘蛛工厂
