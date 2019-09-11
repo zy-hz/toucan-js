@@ -6,7 +6,7 @@ const sipderFactory = require('../../libs/toucan-page-spider');
 
 describe('http 蜘蛛抓取测试', () => {
 
-    it('http://delve.bodani.cn/ 测试 temp', async () => {
+    it('http://delve.bodani.cn/ 测试', async () => {
         const spider = sipderFactory.createSpider({ spiderType: 'http' });
         const taskId = uuid();
 
@@ -47,7 +47,7 @@ describe('http 蜘蛛参数测试', () => {
 
 });
 
-describe('http 蜘蛛异常测试', () => {
+describe('http 蜘蛛异常测试 temp', () => {
 
     it('do 异常测试', async () => {
         const spider = sipderFactory.createSpider({ spiderType: 'http' });
