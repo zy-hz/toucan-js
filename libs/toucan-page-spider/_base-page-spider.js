@@ -125,7 +125,6 @@ function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallb
     if (typeof eventCallback === 'function') {
         // 事件回调
         eventCallback(task)
-
     }
     else {
         let msg = `${getObjectClassName(taskSpider)} ${taskSpider.spiderName}[${taskSpider.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`

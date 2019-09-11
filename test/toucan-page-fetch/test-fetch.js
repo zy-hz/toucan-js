@@ -67,7 +67,7 @@ describe('request page fetch 测试',()=>{
 
 describe('speical 测试',()=>{
 
-    it('delve.bodani.cn测试',async()=>{
+    it('[long] delve.bodani.cn测试',async()=>{
         const pageFetch = pageFetchFactory.createFetch({ fetchType: 'request' });
         const res = await pageFetch.do('delve.bodani.cn');
         expect(res, '页面抓取结果不能为空').to.be.not.empty;
