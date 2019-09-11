@@ -4,7 +4,7 @@ const _ = require('lodash');
 const uuid = require('uuid/v1');
 const sipderFactory = require('../../libs/toucan-page-spider');
 
-describe('http 蜘蛛抓取测试', () => {
+describe('http 蜘蛛抓取测试 temp', () => {
 
     it('http://delve.bodani.cn/ 测试', async () => {
         const spider = sipderFactory.createSpider({ spiderType: 'http' });
@@ -14,15 +14,10 @@ describe('http 蜘蛛抓取测试', () => {
             taskUrl: 'http://delve.bodani.cn/',
             taskId,
 
-            // 发生的异常
-            onTaskException: (error) => {
-                console.log(error);
-                expect.fail('不能出现异常');
-            },
-
             // 任务完成
-            onTaskDone: (res) => {
-                const { task, taskSpider, statusCode, pageCharset } = res;
+            onTaskDone: (task) => {
+                const { taskSpider, taskResult } = task;
+                const { statusCode, pageCharset } = taskResult;
 
                 expect(task.taskId, 'taskId 需要保持一致').to.be.eq(taskId);
                 expect(taskSpider.spiderType, '蜘蛛类型为 http').to.be.eq('http');
@@ -47,7 +42,7 @@ describe('http 蜘蛛参数测试', () => {
 
 });
 
-describe('http 蜘蛛异常测试 temp', () => {
+describe('http 蜘蛛异常测试', () => {
 
     it('do 异常测试', async () => {
         const spider = sipderFactory.createSpider({ spiderType: 'http' });
@@ -55,11 +50,10 @@ describe('http 蜘蛛异常测试 temp', () => {
         const taskId = uuid();
         spider.do({
             taskId,
-            onTaskException: (error) => {
-
-                expect(error.argName).to.be.eq('taskUrl');
-                expect(_.isNil(error.task), 'task 对象不能为空').to.be.false;
-                expect(error.task.taskId, 'taskId 需要保持一致').to.be.eq(taskId);
+            onTaskDone: (task) => {
+                expect(task.hasException, '发现异常').to.be.true;
+                expect(task.taskResult.argName).to.be.eq('taskUrl');
+                expect(task.taskId, 'taskId 需要保持一致').to.be.eq(taskId);
             }
         });
 

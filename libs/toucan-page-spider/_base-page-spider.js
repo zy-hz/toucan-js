@@ -11,6 +11,7 @@
 //
 
 const _ = require('lodash');
+
 const { sleep, getObjectClassName } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 
@@ -26,10 +27,8 @@ class ToucanPageSpider {
         idleSleep,
         // 触发获取任务的回掉
         onGetTask,
-        // 任务完成
+        // 任务完成，
         onTaskDone,
-        // 任务发生异常
-        onTaskException,
     } = {}) {
         this._self = this;
 
@@ -40,9 +39,8 @@ class ToucanPageSpider {
         this.spiderType = spiderType;
         this.idleSleep = idleSleep || 1000;
 
-        // 默认使用日志纪录器
-        this.onTaskDone = onTaskDone || defaultOnTaskDone;
-        this.onTaskException = onTaskException || defaultOnTaskException;
+        // 任务完成的处理程序
+        this.onTaskDone = onTaskDone;
     }
 
     // 蜘蛛开始运行
@@ -93,10 +91,10 @@ class ToucanPageSpider {
             taskUrl,
             // 可以指定任务运行时的完成处理
             onTaskDone = this.onTaskDone,
-            // 可以指定任务运行时的错误处理器，用于调试
-            onTaskException = this.onTaskException
         } = task;
 
+        // 任务开始时间
+        task = Object.assign(task, { taskBeginTime: _.now() })
         try {
             // 参数验证
             if (_.isEmpty(taskUrl)) throw new NullArgumentError('taskUrl');
@@ -104,33 +102,37 @@ class ToucanPageSpider {
             // 获得页面的采集结果
             const response = await this.pageFetch.do(taskUrl)
 
-            // 任务完成
-            let result = Object.assign(response, { task, taskSpider: this._self })
-            onTaskDone(result);
+            // 触发任务完成的事件
+            triggleTaskDoneEvent(false, this._self, task, response, onTaskDone)
         }
         catch (error) {
-            // 设置异常关联的任务
-            onTaskException(Object.assign(error, { task, taskSpider: this._self }))
+            // 触发任务完成的事件
+            triggleTaskDoneEvent(true, this._self, task, error, onTaskDone)
         }
 
     }
 
 }
 
-// 默认的任务处理
-function defaultOnTaskDone(args) {
-    defaultTaskLog('任务完成',args);
-}
+// 触发任务完成得事件
+function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallback) {
 
-// 默认的异常处理
-function defaultOnTaskException(args){
-    defaultTaskLog('任务异常',args);
-}
+    const taskEndTime = _.now();
+    const taskSpendTime = taskEndTime - task.taskBeginTime;
 
-function defaultTaskLog(message,args){
-    const { taskSpider } = args;
-    const msg = `${getObjectClassName(taskSpider)} ${taskSpider.spiderName}[${taskSpider.spiderType}]: ${message}。`
-    console.log(msg, args);
+    task = Object.assign(task, { hasException, taskEndTime, taskSpendTime, taskSpider, taskResult: result })
+
+    if (typeof eventCallback === 'function') {
+        // 事件回调
+        eventCallback(task)
+
+    }
+    else {
+        let msg = `${getObjectClassName(taskSpider)} ${taskSpider.spiderName}[${taskSpider.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
+        msg = `***** 没有发现可用的 eventCallback ***** \r\n ${msg}`;
+        console.log(msg, result);
+    }
+
 }
 
 module.exports = ToucanPageSpider;
