@@ -12,7 +12,7 @@ class StatusGroup {
         this.__statusArray__ = statusArray;
 
         // 设置为默认的状态
-        this.updateStatus(statusArray[0],theTime);
+        this.updateStatus(statusArray[0], theTime);
     }
 
     // 初始化状态值为false
@@ -24,23 +24,75 @@ class StatusGroup {
         })
     }
 
-    // 设置属性值
+    // 初始化状态持续时间相关的属性
+    initStatusDurationAttr() {
+        _.forEach(this.__statusArray__, (code) => {
+            this.setLastStatueChangeTime(code, 0);
+            this.setStatusDurationTime(code, 0);
+        })
+    }
+
+    // 更新状态
+    updateStatus(code, theTime = _.now()) {
+        // 计算状态持续的时间，该方法会修改对象的相关属性值
+        this.calStatusDuration(this.status, code, theTime);
+
+        // 初始化状态值（清除）
+        this.initStatusValue();
+
+        // 切换到新的状态值
+        this.setStatusValue(code, true);
+        this.status = code;
+        this.__statusChangeTime__ = theTime;
+    }
+
+    // 计算当前状态的持续时间
+    calStatusDuration(oldStatus, newStatus, theTime = _.now()) {
+        // 如果没有状态值，表示时刚启动，则初始化相关属性
+        if (_.isNil(oldStatus)) {
+            this.initStatusDurationAttr()
+        }
+
+        const lastStatusTime = this[lastStatusChangeTimeAttrName(oldStatus)] || theTime;
+        const statusDurationTime = this[statusDurationTimeAttrName(oldStatus)] || 0;
+
+        // 合计持续时间
+        this.setStatusDurationTime(oldStatus, theTime - lastStatusTime + statusDurationTime);
+
+        if (oldStatus != newStatus) {
+            // 设置新状态检查时间
+            this.setLastStatueChangeTime(newStatus, theTime)
+        }
+    }
+
+
+    // 设置属性值 - 状态
     setStatusValue(code, val) {
         const attrName = `is${_.capitalize(code)}`;
         this[attrName] = val;
     }
 
-    // 更新状态
-    updateStatus(code, theTime = _.now()) {
-        // 初始化状态值
-        this.initStatusValue();
-
-        // 设置状态值
-        this.setStatusValue(code, true);
-        this.status = code;
+    // 设置上次属性变更的时间
+    setLastStatueChangeTime(code, val) {
+        const lastStatusChangeTime = lastStatusChangeTimeAttrName(code)
+        this[lastStatusChangeTime] = val;
     }
 
+    // 设置属性持续时间
+    setStatusDurationTime(code, val) {
+        const statusDurationTime = statusDurationTimeAttrName(code);
+        this[statusDurationTime] = val;
+    }
 }
+
+function lastStatusChangeTimeAttrName(code) {
+    return `last${_.capitalize(code)}ChangeTime`;
+}
+
+function statusDurationTimeAttrName(code) {
+    return `${_.lowerCase(code)}DurationTime`;
+}
+
 
 // 状态码
 const StatusCode = {
