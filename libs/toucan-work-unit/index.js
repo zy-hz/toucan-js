@@ -8,10 +8,14 @@
 
 const uuid = require('uuid/v1');
 const _ = require('lodash');
+const { StatusGroup, StatusCode } = require('../toucan-utility');
 
 class ToucanWorkUnit {
 
     constructor(unitInfo = {}) {
+
+        // 保证时间一致性
+        const theTime = _.now();
 
         // 单元资料，构造时确定，以后不会发生变化
         this.unitInfo = Object.assign({
@@ -29,10 +33,13 @@ class ToucanWorkUnit {
             unitAddress: ''
         }, unitInfo);
 
+        // 构建状态机,指定三种状态，第一种为默认状态
+        this.__unitStatus__ = new StatusGroup([StatusCode.idle, StatusCode.actived, StatusCode.suspend], theTime);
+
         // 工作信息
         this.__work__ = {
             //   - 开始工作时间
-            unitStartTime: _.now(),
+            unitStartTime: theTime,
             //   - 当前工作状态，激活中，空闲中，错误中
             unitStatus: 'idle',
             //   - 上个运行任务的开始时间
@@ -66,6 +73,7 @@ class ToucanWorkUnit {
     }
 
     get workInfo() {
+        // 计算累计工作时间
         const unitDuratioinTime = _.now() - this.__work__.unitStartTime;
         return Object.assign(this.__work__, { unitDuratioinTime });
     }

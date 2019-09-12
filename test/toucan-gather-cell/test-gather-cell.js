@@ -4,7 +4,7 @@ const _ = require('lodash');
 const { sleep } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-cell');
 
-describe('ToucanGatherCell 构造测试 temp', () => {
+describe('ToucanGatherCell 构造测试', () => {
 
     it('', async () => {
         // 固定时间
