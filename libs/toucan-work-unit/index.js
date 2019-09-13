@@ -12,10 +12,7 @@ const { StatusGroup, StatusCode } = require('../toucan-utility');
 
 class ToucanWorkUnit {
 
-    constructor(unitInfo = {}) {
-
-        // 保证时间一致性
-        const theTime = _.now();
+    constructor({ unitInfo = {}, theTime = _.now() }) {
 
         // 单元资料，构造时确定，以后不会发生变化
         this.unitInfo = Object.assign({
@@ -33,15 +30,12 @@ class ToucanWorkUnit {
             unitAddress: ''
         }, unitInfo);
 
-        // 构建状态机,指定三种状态，第一种为默认状态
-        this.__unitStatus__ = new StatusGroup([StatusCode.idle, StatusCode.actived, StatusCode.suspend], theTime);
-
         // 工作信息
         this.__work__ = {
+            //   - 工作单元的状态
+            unitStatus: new StatusGroup([StatusCode.idle, StatusCode.actived, StatusCode.suspend], theTime),
             //   - 开始工作时间
             unitStartTime: theTime,
-            //   - 当前工作状态，激活中，空闲中，错误中
-            unitStatus: 'idle',
             //   - 上个运行任务的开始时间
             lastTaskBeginTime: 0,
             //   - 上个运行任务的结束时间
@@ -56,12 +50,6 @@ class ToucanWorkUnit {
             lastTaskDescription: '',
             //   - 累计工作时间
             unitDuratioinTime: 0,
-            //   - 累计运行任务的时间
-            totalUnitActiveTime: 0,
-            //   - 累计空闲时间
-            totalUnitIdleTime: 0,
-            //   - 累计错误时间
-            totalUnitErrorTime: 0,
             //   - 累计任务总数            
             totalExecuteTaskCount: 0,
             //   - 累计成功任务数量
@@ -73,8 +61,13 @@ class ToucanWorkUnit {
     }
 
     get workInfo() {
+        const theNow = _.now();
+
         // 计算累计工作时间
-        const unitDuratioinTime = _.now() - this.__work__.unitStartTime;
+        const unitDuratioinTime = theNow - this.__work__.unitStartTime;
+        // 计算单元的工作状态
+        this.__work__.unitStatus.updateStatus(this.__work__.unitStatus.statusCode, theNow);
+
         return Object.assign(this.__work__, { unitDuratioinTime });
     }
 

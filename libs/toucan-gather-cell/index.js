@@ -8,21 +8,23 @@
 // 
 
 const ToucanWorkUnit = require('../toucan-work-unit');
-
+const _ = require('lodash');
 class ToucanGatherCell extends ToucanWorkUnit {
 
     constructor({
         // 单元资料
-        unitInfo = {}
+        unitInfo = {},
+        // 指定构造的时间
+        theTime = _.now(),
     } = {}
     ) {
         // 设置默认的采集单元资料
         unitInfo = Object.assign(unitInfo, {
             unitName: unitInfo.unitName || 'GatherCell'
         });
-        
+
         // ToucanWorkUnit构造器
-        super(unitInfo);
+        super({ unitInfo, theTime });
     }
 }
 

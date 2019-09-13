@@ -4,13 +4,13 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 
 
-describe('StatusGroup 测试 temp', () => {
+describe('StatusGroup 测试', () => {
 
     it('', async () => {
         const theTime = _.now();
         const statusGroup = new StatusGroup([StatusCode.idle, StatusCode.actived, StatusCode.suspend], theTime);
 
-        expect(statusGroup.status, '默认为 idle').to.be.eq(StatusCode.idle);
+        expect(statusGroup.statusCode, '默认为 idle').to.be.eq(StatusCode.idle);
         expect(statusGroup.isIdle, 'isIdle 为true').to.be.true;
         expect(statusGroup.isActived, 'isActived 为false').to.be.false;
         expect(statusGroup.isSuspend, 'isSuspend 为false').to.be.false;
@@ -19,7 +19,7 @@ describe('StatusGroup 测试 temp', () => {
         const secondTime = _.now();
         statusGroup.updateStatus(StatusCode.actived, secondTime);
 
-        expect(statusGroup.status, '默认为 actived').to.be.eq(StatusCode.actived);
+        expect(statusGroup.statusCode, '默认为 actived').to.be.eq(StatusCode.actived);
         expect(statusGroup.isIdle, 'isIdle false').to.be.false;
         expect(statusGroup.isActived, 'isActived 为true').to.be.true;
         expect(statusGroup.isSuspend, 'isSuspend 为false').to.be.false;

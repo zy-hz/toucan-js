@@ -33,16 +33,16 @@ class StatusGroup {
     }
 
     // 更新状态
-    updateStatus(code, theTime = _.now()) {
+    updateStatus(code = this.statusCode, theTime = _.now()) {
         // 计算状态持续的时间，该方法会修改对象的相关属性值
-        this.calStatusDuration(this.status, code, theTime);
+        this.calStatusDuration(this.statusCode, code, theTime);
 
         // 初始化状态值（清除）
         this.initStatusValue();
 
         // 切换到新的状态值
         this.setStatusValue(code, true);
-        this.status = code;
+        this.statusCode = code;
         this.__statusChangeTime__ = theTime;
     }
 

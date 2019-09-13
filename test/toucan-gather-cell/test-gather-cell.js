@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const _ = require('lodash');
-const { sleep } = require('../../libs/toucan-utility');
+const { sleep,StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-cell');
 
-describe('ToucanGatherCell 构造测试', () => {
+describe('ToucanGatherCell 构造测试 temp', () => {
 
-    it('', async () => {
+    it('workInfo 测试', async () => {
         // 固定时间
         const theTime = _.now()
         const gatherCell = new ToucanGatherCell({ unitInfo: { unitNo: 'N1988' } });
@@ -19,16 +19,27 @@ describe('ToucanGatherCell 构造测试', () => {
         expect(_.isEmpty(unitInfo.unitId), '单元标识为 自动uuid').to.be.false;
 
         expect(_.isNil(workInfo), '工作信息不能为空').to.be.false;
-        expect(workInfo.unitStartTime, '单元启动时间 小于').to.be.greaterThan(theTime);
-        expect(workInfo.unitStartTime, '单元启动时间 大于0').to.be.lessThan(_.now());
+        expect(workInfo.unitStartTime, '单元启动时间 = theTime').to.be.eq(theTime);
+
+    });
+
+    it('unitStatus 测试', async () => {
+        const gatherCell = new ToucanGatherCell();
+
+        // 初始化
+        let unitStatus = gatherCell.workInfo.unitStatus;
+        expect(unitStatus.statusCode,'初始状态为 idle').to.be.eq(StatusCode.idle);
+        expect(unitStatus.isIdle,'idle 为true').to.be.true;
+        expect(unitStatus.isActived,'actived 为false').to.be.false;
+        expect(unitStatus.isSuspend,'suspend 为false').to.be.false;
 
         // 测试启动时间
+        // workInfo对象，需要重新取值
         await sleep(100);
-        let d1 = gatherCell.workInfo.unitDuratioinTime
-        expect(d1, '经历的时间 大于 0').to.be.greaterThan(0);
+        expect(gatherCell.workInfo.unitDuratioinTime,'工作单元启动时间 大于90').to.be.greaterThan(90);
+        expect(gatherCell.workInfo.unitStatus.idleDurationTime,'空闲时间 大于90').to.be.greaterThan(90);
+        expect(gatherCell.workInfo.unitStatus.activedDurationTime,'激活时间 = 0').to.be.eq(0);
+        expect(gatherCell.workInfo.unitStatus.suspendDurationTime,'挂起时间 = 0').to.be.eq(0);
 
-        await sleep(100);
-        let d2 = gatherCell.workInfo.unitDuratioinTime
-        expect(d2, 'd2 经历的时间 大于 d1').to.be.greaterThan(d1);
     });
 })
