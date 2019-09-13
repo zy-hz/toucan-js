@@ -11,6 +11,14 @@ describe('ToucanMQVisitorFactory 测试 temp', () => {
         const baseMQVisitor = mqVisitorFactory.create(option);
 
         expect(_.isNil(baseMQVisitor), 'base visitor 构造不能为空').to.be.false;
-        expect(baseMQVisitor.option, 'base visitor  option比较').to.be.deep.eq(option);
-    })
+        expect(baseMQVisitor.option, 'base visitor option ').to.be.deep.eq(option);
+    });
+
+    it('crate rabbitmq visitor',()=>{
+        const option = { op1: 1, op2: 'abc' };
+        const rabbitMQVisitor = mqVisitorFactory.create('rabbit',option);
+
+        expect(_.isNil(rabbitMQVisitor), 'rabbit visitor 构造不能为空').to.be.false;
+        expect(rabbitMQVisitor.option, 'rabbit visitor option ').to.be.deep.eq(option);
+    });
 });
