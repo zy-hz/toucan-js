@@ -9,6 +9,7 @@
 
 const ToucanWorkUnit = require('../toucan-work-unit');
 const _ = require('lodash');
+
 class ToucanGatherCell extends ToucanWorkUnit {
 
     constructor({
@@ -26,6 +27,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
         // ToucanWorkUnit构造器
         super({ unitInfo, theTime });
     }
+
+    
 }
 
 module.exports = ToucanGatherCell;
