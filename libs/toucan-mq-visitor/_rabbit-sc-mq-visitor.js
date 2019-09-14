@@ -8,8 +8,25 @@
 const BaseMQVisitor = require('./_base-mq-visitor');
 const amqp = require('amqplib');
 
-class ShortConnRabbitMQVisitor extends BaseMQVisitor{
+class ShortConnRabbitMQVisitor extends BaseMQVisitor {
 
+    constructor(option = {}) {
+        super(option);
+    }
+
+    // 发布消息
+    async publish(content, head = {}) {
+        const conn = await amqp.connect();
+        const ch = await conn.createChannel();
+
+        const queueName = head;
+        let ok = await ch.assertQueue(queueName);
+        await ch.sendToQueue(queueName, new Buffer(content));
+
+        await ch.close();
+        //await conn.close();
+
+    }
 }
 
 module.exports = ShortConnRabbitMQVisitor;
