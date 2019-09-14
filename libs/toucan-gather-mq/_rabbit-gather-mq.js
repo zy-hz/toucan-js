@@ -1,8 +1,6 @@
 // 
-// RabbitMQ Short Connection 版本接口
+// RabbitMQ 的采集消息队列
 //
-// 生产消息前创建connection ,生成消息后connection关闭
-// 消费消息前创建connection，消费消息后connection关闭
 //
 
 const ToucanGatherMQ = require('./_toucan-gather-mq');
@@ -10,8 +8,11 @@ const amqp = require('amqplib');
 
 class RabbitGatherMQ extends ToucanGatherMQ {
 
-    constructor(option = {}) {
-        super(option);
+    // 连接到消息服务器
+    async connect(option = {}) {
+        // 合并选项
+        let opt = Object.assign(this.option,option);
+        this.conn = await amqp.connect();
     }
 
     // 发布消息
