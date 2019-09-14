@@ -5,10 +5,10 @@
 // 消费消息前创建connection，消费消息后connection关闭
 //
 
-const BaseMQVisitor = require('./_base-mq-visitor');
+const ToucanGatherMQ = require('./_toucan-gather-mq');
 const amqp = require('amqplib');
 
-class ShortConnRabbitMQVisitor extends BaseMQVisitor {
+class RabbitGatherMQ extends ToucanGatherMQ {
 
     constructor(option = {}) {
         super(option);
@@ -29,4 +29,4 @@ class ShortConnRabbitMQVisitor extends BaseMQVisitor {
     }
 }
 
-module.exports = ShortConnRabbitMQVisitor;
+module.exports = RabbitGatherMQ;

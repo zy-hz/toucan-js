@@ -7,7 +7,7 @@ const _ = require('lodash');
 class ToucanGatherMQFactory {
 
     // 创建消息队列
-    create(mqType = '', option = {}) {
+    create(mqType = 'toucan', option = {}) {
 
         // 没有指定消息队列类型，默认使用toucan类型
         if (typeof mqType != 'string' && _.isEmpty(option)) {
