@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const mqVisitorFactory = require('../../libs/toucan-mq-visitor');
 
-describe('ToucanMQVisitorFactory 测试 temp', () => {
+describe('ToucanMQVisitorFactory 测试', () => {
 
     it('create base visitor', () => {
         const option = { op1: 1, op2: 'abc' };
