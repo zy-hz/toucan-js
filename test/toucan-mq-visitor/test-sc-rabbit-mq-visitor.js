@@ -7,7 +7,7 @@ const mqVisitorFactory = require('../../libs/toucan-mq-visitor');
 describe('短连接 RabbitMQ 测试', () => {
 
     it('构造测试 temp', (done) => {
-        const mqVisitor = mqVisitorFactory.create('sc-rabbit');
+        const mqVisitor = mqVisitorFactory.create('rabbit-sc');
         expect(_.isNil(mqVisitor), '构造RabbitMQ对象不能为空').to.be.false;
 
         done();

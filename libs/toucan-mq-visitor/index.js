@@ -14,7 +14,8 @@ class ToucanMQVisitorFactory {
             mqType = 'base';
         }
         
-        const mqClassFile = `./_${_.lowerCase(mqType)}-mq-visitor.js`;
+        // 注意处理 sc-rabbit 这样的类型
+        const mqClassFile = `./_${_.kebabCase(_.lowerCase(mqType))}-mq-visitor.js`;
         const mqClassObj = require(mqClassFile);
 
         return new mqClassObj(option);
