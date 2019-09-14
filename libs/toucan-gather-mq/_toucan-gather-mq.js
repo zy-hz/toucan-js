@@ -1,6 +1,6 @@
 // 消息队列访问器的基类
 
-class BaseMQVisitor {
+class ToucanGatherMQ {
 
     constructor(option = {}) {
         // 设置对象
@@ -8,4 +8,4 @@ class BaseMQVisitor {
     }
 }
 
-module.exports = BaseMQVisitor;
+module.exports = ToucanGatherMQ;
