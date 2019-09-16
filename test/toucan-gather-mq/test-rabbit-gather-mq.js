@@ -22,8 +22,8 @@ describe('RabbitGatherMQ 测试 temp', () => {
         expect(await mqExpect.isConnected(gatherMQ.conn)).to.be.true;
 
         // 断开连接
-        //await gatherMQ.disconnect();
-        //expect(await mqExpect.isConnected(gatherMQ.conn)).to.be.false;
+        await gatherMQ.disconnect();
+        expect(await mqExpect.isConnected(gatherMQ.conn)).to.be.false;
 
     });
 });
