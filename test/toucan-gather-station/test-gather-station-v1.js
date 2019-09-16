@@ -23,8 +23,8 @@ function runExpect4GatherSkill(gatherSkill) {
 }
 
 function runExpect4GatherCells(gatherCells) {
-    expect(_.isNil(gatherCells), '采集单元组不能为空').to.be.false;
     expect(Array.isArray(gatherCells), '采集单元是个数组').to.be.true;
+    expect(gatherCells, '采集单元不能是空数组').is.not.empty;
 
     _.forEach(gatherCells,runExpect4skillCell)
 }

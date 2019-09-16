@@ -1,3 +1,6 @@
 {
-    "test":1
+    "gatherSkill1":{
+        "maxGatherCellCount":1,
+        "gatherCells":[]
+    }
 }
