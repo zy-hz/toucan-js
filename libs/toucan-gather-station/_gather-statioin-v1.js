@@ -4,7 +4,7 @@
 // 功能：
 // 1. 管理采集单元。采集单元体现采集站的能力
 //
-const ToucanWorkUnit = require('../toucan-work-unit');
+const { ToucanWorkUnit } = require('../toucan-work-unit');
 const _ = require('lodash');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {

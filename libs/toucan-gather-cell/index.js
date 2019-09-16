@@ -7,7 +7,7 @@
 // 3. 一次一个，完成（失败）后再获取下一个任务
 // 
 
-const ToucanWorkUnit = require('../toucan-work-unit');
+const { ToucanWorkUnit } = require('../toucan-work-unit');
 const _ = require('lodash');
 
 class ToucanGatherCell extends ToucanWorkUnit {
@@ -28,7 +28,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
         super({ unitInfo, theTime });
     }
 
-    
+
 }
 
 module.exports = ToucanGatherCell;
