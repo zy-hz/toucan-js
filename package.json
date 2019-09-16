@@ -32,6 +32,7 @@
     "lodash": "4.17.15",
     "moment": "^2.24.0",
     "puppeteer": "^1.19.0",
+    "rewire": "^4.0.1",
     "superagent": "5.1.0",
     "uuid": "^3.3.3"
   },

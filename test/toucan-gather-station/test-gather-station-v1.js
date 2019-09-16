@@ -3,6 +3,9 @@ const ToucanGatherStation = require('../../libs/toucan-gather-station');
 const expect = require('chai').expect;
 const _ = require('lodash');
 
+const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin-v1');
+const buildGatherCellPool = lib.__get__('buildGatherCellPool');
+
 describe('GatherStationV1 测试 ', () => {
     const cfgFileName = `${__dirname}/gsconfig.json`;
 
@@ -13,12 +16,28 @@ describe('GatherStationV1 测试 ', () => {
         runExpect4GatherSkill(gs.stationConfig.gatherSkill);
     });
 
-    it('初始化 temp',()=>{
-        // 采集单元数量 = 2
+    it('初始化', () => {
         const gs = new ToucanGatherStation(cfgFileName);
         gs.init();
-        
-        expect(gs.gatherCellPool.unitCount,'采集单元数量 = 2').to.be.eq(2);
+    });
+});
+
+describe('GatherStationV1 内部方法测试 temp', () => {
+
+    it('buildGatherCellPool 参数异常', () => {
+        try {
+            buildGatherCellPool();
+        }
+        catch (e) {
+            expect(e.argName).to.be.eq('maxGatherCellCount');
+        }
+
+        try {
+            buildGatherCellPool({ maxGatherCellCount: 5 });
+        }
+        catch (e) {
+            expect(e.argName).to.be.eq('gatherCells');
+        }
     });
 });
 
@@ -34,13 +53,13 @@ function runExpect4GatherCells(gatherCells) {
     expect(Array.isArray(gatherCells), '采集单元是个数组').to.be.true;
     expect(gatherCells, '采集单元不能是空数组').is.not.empty;
 
-    _.forEach(gatherCells,runExpect4skillCell)
+    _.forEach(gatherCells, runExpect4skillCell)
 }
 
 // 技能单元测试
-function runExpect4skillCell(skillCell){
-    expect(skillCell.skillName,'能力名称不能空').is.not.empty;
-    expect(Array.isArray(skillCell.skillKeys),'能力关键词是个数组').to.be.true;
-    expect(skillCell.skillKeys,'能力关键词不能为空').is.not.empty;
-    expect(_.isNil(skillCell.skillCapability),'能力的容量不能为空').to.be.false;
+function runExpect4skillCell(skillCell) {
+    expect(skillCell.skillName, '能力名称不能空').is.not.empty;
+    expect(Array.isArray(skillCell.skillKeys), '能力关键词是个数组').to.be.true;
+    expect(skillCell.skillKeys, '能力关键词不能为空').is.not.empty;
+    expect(_.isNil(skillCell.skillCapability), '能力的容量不能为空').to.be.false;
 }

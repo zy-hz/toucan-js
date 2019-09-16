@@ -6,6 +6,7 @@
 //
 const { ToucanWorkUnit } = require('../toucan-work-unit');
 const _ = require('lodash');
+const { NullArgumentError } = require('../toucan-error');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {
 
@@ -36,7 +37,12 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 }
 
 // 构建采集单元池
-function buildGatherCellPool(gatherSkill) {
+function buildGatherCellPool(gatherSkill = {}) {
+    const { maxGatherCellCount, gatherCells } = gatherSkill;
+
+    if (_.isNil(maxGatherCellCount)) throw new NullArgumentError('maxGatherCellCount');
+    if (_.isNil(gatherCells)) throw new NullArgumentError('gatherCells');
+
     return { unitCount: 2 }
 }
 
