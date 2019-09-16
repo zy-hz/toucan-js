@@ -6,6 +6,8 @@ const _ = require('lodash');
 
 // 默认的配置对象
 const DEFALUT_CONFIG = {
+    // 采集站初始化完成后是否自动启动
+    autoStart: true,
     // 采集能力的描述
     gatherSkill: {
         // 本采集站拥有的采集单元的数量

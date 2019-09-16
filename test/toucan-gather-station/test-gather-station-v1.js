@@ -3,7 +3,7 @@ const ToucanGatherStation = require('../../libs/toucan-gather-station');
 const expect = require('chai').expect;
 const _ = require('lodash');
 
-describe('GatherStationV1 测试 temp', () => {
+describe('GatherStationV1 测试 ', () => {
     const cfgFileName = `${__dirname}/gsconfig.json`;
 
     it('读取配置文件', () => {
@@ -11,6 +11,14 @@ describe('GatherStationV1 测试 temp', () => {
         expect(_.isNil(gs)).to.be.false;
 
         runExpect4GatherSkill(gs.stationConfig.gatherSkill);
+    });
+
+    it('初始化 temp',()=>{
+        // 采集单元数量 = 2
+        const gs = new ToucanGatherStation(cfgFileName);
+        gs.init();
+        
+        expect(gs.gatherCellPool.unitCount,'采集单元数量 = 2').to.be.eq(2);
     });
 });
 

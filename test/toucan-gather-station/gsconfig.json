@@ -1,6 +1,17 @@
 {
     "gatherSkill1":{
-        "maxGatherCellCount":1,
-        "gatherCells":[]
+        "maxGatherCellCount":2,
+        "gatherCells":[
+            {
+                "skillName":"http采集",
+                "skillDescript":"",
+                "skillKeys":["cm.http"]
+            },
+            {
+                "skillName":"浏览器模拟采集",
+                "skillDescript":"",
+                "skillKeys":["cm.browser"]
+            }
+        ]
     }
 }
