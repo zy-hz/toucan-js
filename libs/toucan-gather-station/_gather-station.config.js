@@ -6,7 +6,23 @@ const _ = require('lodash');
 
 // 默认的配置对象
 const DEFALUT_CONFIG = {
-
+    // 采集能力的描述
+    gatherSkill: {
+        // 本采集站拥有的采集单元的数量
+        maxGatherCellCount: 9,
+        // 采集单元的集合
+        gatherCells: [
+            {
+                skillName: '通用采集',
+                skillDescription: '支持http协议和模拟浏览器采集任务',
+                // 关键词用户描写每个采集单元的能力，支持通配符号，例如：
+                // cm.* = cm.http + cm.browser
+                // sp.ali.* = sp.ali.1688 + sp.ali.trust
+                // sp.* = sp.ali.* + sp.jd.* + sp.zhihu.*
+                skillKeys: ['cm.http', 'cm.browser'],
+            }
+        ],
+    }
 }
 
 function getConfig(fileName = '') {
