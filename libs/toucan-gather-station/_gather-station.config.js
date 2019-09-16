@@ -20,6 +20,12 @@ const DEFALUT_CONFIG = {
                 // sp.ali.* = sp.ali.1688 + sp.ali.trust
                 // sp.* = sp.ali.* + sp.jd.* + sp.zhihu.*
                 skillKeys: ['cm.http', 'cm.browser'],
+                // 能力的数量，支持 整数，小数，和负数
+                // >0的整数  - 该采集单元的数量，不超过最大数量，
+                // =0       - 表示该引擎不能创建
+                // <0的整数 - 数量自动调整
+                // 小数     - 表示采集最大数量的百分比，取整
+                skillCapability: 3,
             }
         ],
     }

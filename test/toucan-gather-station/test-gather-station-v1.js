@@ -32,7 +32,7 @@ function runExpect4GatherCells(gatherCells) {
 // 技能单元测试
 function runExpect4skillCell(skillCell){
     expect(skillCell.skillName,'能力名称不能空').is.not.empty;
-    expect(Array.isArray(skillCell.skillKeys),'技能关键词是个数组').to.be.true;
-    expect(skillCell.skillKeys,'技能关键词不能为空').is.not.empty;
-
+    expect(Array.isArray(skillCell.skillKeys),'能力关键词是个数组').to.be.true;
+    expect(skillCell.skillKeys,'能力关键词不能为空').is.not.empty;
+    expect(_.isNil(skillCell.skillCapability),'能力的容量不能为空').to.be.false;
 }
