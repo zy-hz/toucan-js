@@ -7,6 +7,7 @@
 const { ToucanWorkUnit } = require('../toucan-work-unit');
 const _ = require('lodash');
 const { NullArgumentError } = require('../toucan-error');
+const { createGatherSkillTemplates } = require('./_gather-skill');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {
 
@@ -43,7 +44,11 @@ function buildGatherCellPool(gatherSkill = {}) {
     if (_.isNil(maxGatherCellCount)) throw new NullArgumentError('maxGatherCellCount');
     if (_.isNil(gatherCells)) throw new NullArgumentError('gatherCells');
 
+    // 创建采集能力
+    const gatherSkillTemplate = createGatherSkillTemplates(maxGatherCellCount, gatherCells);
+
     return { unitCount: 2 }
 }
+
 
 module.exports = ToucanGatherStationV1;

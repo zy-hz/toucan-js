@@ -22,7 +22,7 @@ describe('GatherStationV1 测试 ', () => {
     });
 });
 
-describe('GatherStationV1 内部方法测试 temp', () => {
+describe('GatherStationV1 内部方法测试', () => {
 
     it('buildGatherCellPool 参数异常', () => {
         try {
