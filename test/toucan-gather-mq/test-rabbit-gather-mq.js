@@ -4,7 +4,7 @@ const _ = require('lodash');
 const mqFactory = require('../../libs/toucan-gather-mq');
 const RabbitMQExpect = require('../../libs/toucan-utility/_expect-rabbit-mq');
 
-describe('RabbitGatherMQ 测试 temp', () => {
+describe('RabbitGatherMQ 测试', () => {
 
     it('构造测试', () => {
         const gatherMQ = mqFactory.create('rabbit');

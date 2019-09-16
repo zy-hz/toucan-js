@@ -12,7 +12,7 @@ const { StatusGroup, StatusCode } = require('../toucan-utility');
 
 class ToucanWorkUnit {
 
-    constructor({ unitInfo = {}, theTime = _.now() }) {
+    constructor({ unitInfo = {}, theTime = _.now() } = {}) {
 
         // 单元资料，构造时确定，以后不会发生变化
         this.unitInfo = Object.assign({
