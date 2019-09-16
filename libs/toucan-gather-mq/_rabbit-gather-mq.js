@@ -1,5 +1,5 @@
 // 
-// RabbitMQ 的采集消息队列
+// RabbitMQ 的采集任务队列
 //
 //
 
@@ -48,8 +48,8 @@ class RabbitGatherMQ extends ToucanGatherMQ {
         delete this.conn;
     }
 
-    // 发布消息
-    async publish(content, head = {}) {
+    // 发布任务
+    async publishTask(content, head = {}) {
         const conn = await amqp.connect();
         const ch = await conn.createChannel();
 
