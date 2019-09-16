@@ -27,12 +27,13 @@ describe('GatherSkill 测试 temp', () => {
         ];
 
         let skillTemplates = createGatherSkillTemplate(6,gatherCells);
-        expect(skillTemplates,'模板数量 = 6').to.have.lengthOf(6)
+        expect(skillTemplates[0].skillCapability,'模板数量 = 3/6').to.be.eq(3)
 
         skillTemplates = createGatherSkillTemplate(9,gatherCells);
-        expect(skillTemplates,'模板数量 不超过 6').to.have.lengthOf(6)
+        expect(skillTemplates[2].skillCapability,'模板数量 = 1/9').to.to.be.eq(1);
 
         skillTemplates = createGatherSkillTemplate(4,gatherCells);
-        expect(skillTemplates,'模板数量 = 4').to.have.lengthOf(4)
+        expect(skillTemplates[2].skillCapability,'模板数量 = 0/4').to.to.be.eq(0);
+        expect(skillTemplates[1].skillCapability,'模板数量 = 1/4').to.to.be.eq(1);
     });
 });
