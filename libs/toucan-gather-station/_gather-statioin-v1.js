@@ -45,7 +45,7 @@ function buildGatherCellPool(gatherSkill = {}) {
     if (_.isNil(gatherCells)) throw new NullArgumentError('gatherCells');
 
     // 创建采集能力
-    const gatherSkillTemplate = createGatherSkillTemplates(maxGatherCellCount, gatherCells);
+    const skillTemplate = createGatherSkillTemplates(maxGatherCellCount, gatherCells);
 
     return { unitCount: 2 }
 }
