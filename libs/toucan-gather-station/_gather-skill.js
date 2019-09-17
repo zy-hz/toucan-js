@@ -6,6 +6,9 @@ const _ = require('lodash');
 // 创建能力模板
 function createGatherSkillTemplate(maxCount, gatherSkills) {
 
+    // 后续操作会更改这个对象的值
+    gatherSkills = _.cloneDeep(gatherSkills)
+
     // 计算能力数值
     const skillTemplate = calSkillCapabilty4All(maxCount, gatherSkills);
 
@@ -31,7 +34,7 @@ function calSkillCapabilty4All(maxCount, gatherSkills) {
         // 计算能力值
         const skillCapability = skillConfig.skillCapability >= 0
             ? calSkillCapabilty4One(maxCount, totalCapability, skillConfig.skillCapability)
-            : calSkillCapabiltyAvg(waitAvgCount, waitAvgCapability, idx === gatherSkills.length - 1 ? maxCount - totalCapability : 0);
+            : calSkillCapabiltyAvg(waitAvgCount, waitAvgCapability, idx === gatherSkills.length - 1 ? maxCount - totalCapability : -1);
 
         // 合计能力总值
         totalCapability = skillCapability + totalCapability;
@@ -55,7 +58,7 @@ function calSkillCapabilty4One(maxCount, totalCapability, skillCapability) {
 // 计算平均数
 // 如果有指定的数值，就不用计算平均值
 function calSkillCapabiltyAvg(waitAvgCount, waitAvgCapability, expectCount) {
-    return expectCount === 0 ? Math.floor(waitAvgCapability / waitAvgCount) : expectCount;
+    return expectCount < 0 ? Math.max(1, Math.floor(waitAvgCapability / waitAvgCount)) : expectCount;
 }
 
 module.exports = { createGatherSkillTemplate }
