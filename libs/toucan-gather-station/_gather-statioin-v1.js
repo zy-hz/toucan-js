@@ -10,6 +10,8 @@ const publicIp = require('public-ip');
 const { ToucanWorkUnit, ToucanWorkUnitPool } = require('../toucan-work-unit');
 const { NullArgumentError } = require('../toucan-error');
 const { createGatherSkillTemplate } = require('./_gather-skill');
+const { StatusCode } = require('../toucan-utility');
+
 const ToucanGatherCell = require('../toucan-gather-cell');
 const mqFactory = require('../toucan-gather-mq');
 
@@ -37,12 +39,16 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
         });
 
         // 自动启动
-        if (this.stationConfig.autoStart) this.start();
+        if (this.stationConfig.autoStart) await this.start();
     }
 
     // 站点启动
-    start() {
-        console.log('站点启动...');
+    async start() {
+
+        // 为每个采集单元开启消息监听模式
+
+        // 变更为激活状态
+        this.workInfo.unitStatus.updateStatus(StatusCode.actived);
     }
 }
 

@@ -17,9 +17,20 @@ describe('GatherStationV1 测试', () => {
         runExpect4GatherSkill(gs.stationConfig.gatherSkill);
     });
 
-    it('初始化', async () => {
+    it('初始化-不启动', async () => {
+        const gs = new ToucanGatherStation(cfgFileName);
+        gs.stationConfig.autoStart = false;
+        await gs.init();
+
+        expect(gs.workInfo.unitStatus.isIdle).to.be.true;
+        expect(gs.unitInfo.unitAddress).is.not.empty;
+    });
+
+    it('初始化-启动 temp', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
+        
+        expect(gs.workInfo.unitStatus.isActived).to.be.true;
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 });
