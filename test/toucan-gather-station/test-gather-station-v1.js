@@ -65,14 +65,21 @@ describe('GatherStationV1 内部方法测试  ', () => {
                 skillCapability: 2,
             },
             {
-                skillName: 'http采集',
+                skillName: 'browsers采集',
                 skillKeys: ['cm.browser'],
                 skillCapability: -1,
             }]
         }
 
         const gcPool = buildGatherCellPool(skills);
-        expect(gcPool,'队列长度异常').to.have.lengthOf(skills.maxGatherCellCount);
+        expect(gcPool, '队列长度异常').to.have.lengthOf(skills.maxGatherCellCount);
+
+        const gc1 = gcPool.findIndex(0);
+        const gc5 = gcPool.findIndex(4);
+
+        expect(gc1.unitInfo.unitName).to.be.eq('http采集');
+        expect(gc5.unitInfo.unitName).to.be.eq('browsers采集');
+        expect(gc1.mqVisitor).to.not.eq(gc5.mqVisitor);
 
     });
 });

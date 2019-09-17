@@ -15,15 +15,16 @@ class ToucanWorkUnitPool {
         this.__unitArray__ = _.concat(this.__unitArray__, ary);
     }
 
-    // 删除
-    remove(...workUnits) {
-
+    findIndex(index) {
+        if (index >= this.__unitArray__.length) return null;
+        return this.__unitArray__[index];
     }
 
     // 获取队列的长度
     get length() {
         return this.__unitArray__.length;
     }
+
 }
 
 module.exports = ToucanWorkUnitPool;
