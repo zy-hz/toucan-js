@@ -5,6 +5,7 @@
 // 1. 管理采集单元。采集单元体现采集站的能力
 //
 const _ = require('lodash');
+const publicIp = require('public-ip');
 
 const { ToucanWorkUnit, ToucanWorkUnitPool } = require('../toucan-work-unit');
 const { NullArgumentError } = require('../toucan-error');
@@ -25,10 +26,15 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
     }
 
     // 站点初始化
-    init() {
+    async init() {
+        // 设置站点的Ip地址
+        this.unitInfo.unitAddress = await publicIp.v4();
 
         // 构造采集单元池
-        this.gatherCellPool = buildGatherCellPool(this.stationConfig.gatherSkill);
+        this.gatherCellPool = buildGatherCellPool(this.stationConfig.gatherSkill, {
+            stationId: this.stationConfig.stationId,
+            stationIp: this.unitInfo.unitAddress,
+        });
 
         // 自动启动
         if (this.stationConfig.autoStart) this.start();
@@ -41,7 +47,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 }
 
 // 构建采集单元池
-function buildGatherCellPool(gatherSkill = {}) {
+function buildGatherCellPool(gatherSkill = {}, { stationId = 'TGS', stationIp = '' } = {}) {
     const { maxGatherCellCount, gatherCells } = gatherSkill;
 
     if (_.isNil(maxGatherCellCount)) throw new NullArgumentError('maxGatherCellCount');
@@ -52,15 +58,15 @@ function buildGatherCellPool(gatherSkill = {}) {
 
     // 构建工作单元池
     const unitPool = new ToucanWorkUnitPool();
-    _.forEach(skillTemplate, (skill) => {
-        const gc = buildGatherCells(skill);
+    _.forEach(skillTemplate, (skill, index) => {
+        const gc = buildGatherCells(skill, index, stationId, stationIp);
         unitPool.add(gc);
     })
     return unitPool
 }
 
 // 从模板构建采集单元集合
-function buildGatherCells(skill) {
+function buildGatherCells(skill, index, stationId, unitAddress = '') {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
 
     // 创建采集消息队列
@@ -68,13 +74,14 @@ function buildGatherCells(skill) {
 
     let gcs = [];
     for (let i = 0; i < skill.skillCapability; i++) {
+        const unitNo = `${stationId}-${_.padStart(index + 1, 2, '0')}-${_.padStart(i + 1, 2, '0')}`
         const unitInfo = {
             // 单元名称
             unitName: skill.skillName,
             // 单元编号
-            unitNo: skill.skillCapability === 1 ? '' : _.padStart(i + 1, 2, '0'),
+            unitNo,
             // 单元地址
-            unitAddress: ''
+            unitAddress
         }
 
         gcs.push(new ToucanGatherCell({ unitInfo, mqVisitor }))
