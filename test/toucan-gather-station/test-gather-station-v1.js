@@ -56,7 +56,7 @@ describe('GatherStationV1 内部方法测试  ', () => {
 
     });
 
-    it('buildGatherCellPool 结果测试 temp', () => {
+    it('buildGatherCellPool 结果测试', () => {
         const skills = {
             maxGatherCellCount: 5,
             gatherCells: [{
