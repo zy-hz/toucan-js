@@ -1,5 +1,5 @@
 {
-    "gatherSkill1":{
+    "gatherSkill":{
         "maxGatherCellCount":2,
         "gatherCells":[
             {

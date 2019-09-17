@@ -5,7 +5,7 @@
 const expect = require('chai').expect;
 const { createGatherSkillTemplate } = require('../../libs/toucan-gather-station/_gather-skill');
 
-describe('GatherSkill 测试 ', () => {
+describe('GatherSkill 测试', () => {
 
     it('createGatherSkillTemplate 数量测试', () => {
         const gatherCells = [
@@ -37,7 +37,7 @@ describe('GatherSkill 测试 ', () => {
         expect(skillTemplates[1].skillCapability,'模板数量 = 1/4').to.to.be.eq(1);
     });
 
-    it('createGatherSkillTemplate 自动平均测试 temp', () => {
+    it('createGatherSkillTemplate 自动平均测试', () => {
         const gatherCells = [
             {
                 skillName: 'http采集',

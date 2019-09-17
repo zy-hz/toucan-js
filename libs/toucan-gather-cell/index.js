@@ -17,6 +17,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
         unitInfo = {},
         // 指定构造的时间
         theTime = _.now(),
+        // 采集消息队列访问器
+        mqVisitor
     } = {}
     ) {
         // 设置默认的采集单元资料
@@ -26,6 +28,9 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
         // ToucanWorkUnit构造器
         super({ unitInfo, theTime });
+
+        //
+        this.mqVisitor = mqVisitor;
     }
 
 
