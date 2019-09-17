@@ -17,7 +17,7 @@ describe('GatherStationV1 测试', () => {
         runExpect4GatherSkill(gs.stationConfig.gatherSkill);
     });
 
-    it('初始化 temp', async () => {
+    it('初始化', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
         expect(gs.unitInfo.unitAddress).is.not.empty;
@@ -48,11 +48,31 @@ describe('GatherStationV1 内部方法测试  ', () => {
             skillKeys: ['cm.http', 'cm.browser'],
             skillCapability: 2,
         }
-        const gcs = buildGatherCells(skill,9,'test');
+        const gcs = buildGatherCells(skill, 9, 'test');
         expect(gcs).to.have.lengthOf(2);
         expect(gcs[1].mqVisitor).is.not.null;
         expect(gcs[1].unitInfo.unitNo).to.be.eq('test-10-02');
         expect(gcs[1].unitInfo.unitId).is.not.empty;
+
+    });
+
+    it('buildGatherCellPool 结果测试 temp', () => {
+        const skills = {
+            maxGatherCellCount: 5,
+            gatherCells: [{
+                skillName: 'http采集',
+                skillKeys: ['cm.http'],
+                skillCapability: 2,
+            },
+            {
+                skillName: 'http采集',
+                skillKeys: ['cm.browser'],
+                skillCapability: -1,
+            }]
+        }
+
+        const gcPool = buildGatherCellPool(skills);
+        expect(gcPool,'队列长度异常').to.have.lengthOf(skills.maxGatherCellCount);
 
     });
 });
