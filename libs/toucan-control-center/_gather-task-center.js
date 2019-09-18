@@ -1,6 +1,9 @@
 
-class GatherTaskCenter{
+class GatherTaskCenter {
 
+    async start() {
+
+    }
 }
 
 module.exports = GatherTaskCenter;
