@@ -33,10 +33,12 @@ describe('GatherStationV1 测试 ', () => {
         expect(gs.workInfo.unitStatus.isActived, '状态应为启动').to.be.true;
         expect(gs.unitInfo.unitName, '期望是机器名称').to.be.eq('DESKTOP-19SS3KS');
         expect(gs.unitInfo.unitAddress).is.not.empty;
+
+        await gs.stop();
     });
 });
 
-describe('GatherStationV1 内部方法测试  ', () => {
+describe('GatherStationV1 内部方法测试 ', () => {
 
     it('buildGatherCellPool 参数异常', () => {
         try {
@@ -70,7 +72,7 @@ describe('GatherStationV1 内部方法测试  ', () => {
 
     });
 
-    it('buildGatherCellPool 结果测试', () => {
+    it('buildGatherCellPool 结果测试 ', () => {
         const skills = {
             maxGatherCellCount: 5,
             gatherCells: [{
@@ -93,7 +95,7 @@ describe('GatherStationV1 内部方法测试  ', () => {
 
         expect(gc1.unitInfo.unitName).to.be.eq('http采集');
         expect(gc5.unitInfo.unitName).to.be.eq('browsers采集');
-        expect(gc1.mqVisitor).to.not.eq(gc5.mqVisitor);
+        expect(gc1.gatherMQ).to.not.eq(gc5.gatherMQ);
 
     });
 });

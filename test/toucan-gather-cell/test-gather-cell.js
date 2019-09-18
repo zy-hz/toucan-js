@@ -47,20 +47,20 @@ describe('ToucanGatherCell 构造测试', () => {
 describe('ToucanGatherCell 启动停止测试', () => {
 
     it('单个RabbitMQ启动 ', async () => {
-        const mqVisitor = mqFactory.create('rabbit');
-        const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, mqVisitor });
+        const gatherMQ = mqFactory.createGatherMQ('rabbit');
+        const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ });
 
         await gc.start();
         await gc.stop();
     });
 
     it('多个RabbitMQ启动 ', async () => {
-        const mqv1 = mqFactory.create('rabbit');
-        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, mqVisitor: mqv1 });
+        const mqv1 = mqFactory.createGatherMQ('rabbit');
+        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, gatherMQ: mqv1 });
         await gc1.start();
 
-        const mqv2 = mqFactory.create('rabbit');
-        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, mqVisitor: mqv2 });
+        const mqv2 = mqFactory.createGatherMQ('rabbit');
+        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, gatherMQ: mqv2 });
         await gc2.start();
 
         await gc1.stop();
@@ -68,11 +68,11 @@ describe('ToucanGatherCell 启动停止测试', () => {
     });
 
     it('共享RabbitMQ启动', async () => {
-        const mqVisitor = mqFactory.create('rabbit');
-        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, mqVisitor });
+        const gatherMQ = mqFactory.createGatherMQ('rabbit');
+        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, gatherMQ });
         await gc1.start();
 
-        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, mqVisitor });
+        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, gatherMQ });
         await gc2.start();
 
         await gc1.stop();

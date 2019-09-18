@@ -51,6 +51,17 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
         // 变更为激活状态
         this.workInfo.unitStatus.updateStatus(StatusCode.actived);
     }
+
+    // 站点停止
+    async stop() {
+        // 为每个采集单元开启消息监听模式
+        for (const gc of this.gatherCellPool.findAll()) {
+            await gc.stop();
+        }
+
+        // 变更为空闲状态
+        this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+    }
 }
 
 // 构建站点的单元资讯
@@ -90,7 +101,7 @@ function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
 
     // 创建采集消息队列
-    const mqVisitor = mqFactory.create('rabbit');
+    const gatherMQ = mqFactory.createGatherMQ('rabbit');
 
     let gcs = [];
     for (let i = 0; i < skill.skillCapability; i++) {
@@ -106,7 +117,7 @@ function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
             unitAddress
         }
 
-        gcs.push(new ToucanGatherCell({ unitInfo, mqVisitor }))
+        gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ }))
     }
     return gcs;
 }

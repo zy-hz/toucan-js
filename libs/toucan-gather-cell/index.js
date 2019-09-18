@@ -18,7 +18,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
         // 指定构造的时间
         theTime = _.now(),
         // 采集消息队列访问器
-        mqVisitor
+        gatherMQ,
     } = {}
     ) {
         // 设置默认的采集单元资料
@@ -30,18 +30,18 @@ class ToucanGatherCell extends ToucanWorkUnit {
         super({ unitInfo, theTime });
 
         //
-        this.mqVisitor = mqVisitor;
+        this.gatherMQ = gatherMQ;
     }
 
     // 启动采集单元
     async start() {
         console.log(this.unitInfo.unitName, this.unitInfo.unitId, this.unitInfo.unitNo, '启动中...')
-        await this.mqVisitor.connect();
+        await this.gatherMQ.connect();
     }
 
     async stop() {
         console.log(this.unitInfo.unitName, this.unitInfo.unitId, this.unitInfo.unitNo, '停止')
-        await this.mqVisitor.disconnect();
+        await this.gatherMQ.disconnect();
     }
 
 }
