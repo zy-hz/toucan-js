@@ -3,6 +3,7 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-cell');
+const mqFactory = require('../../libs/toucan-gather-mq');
 
 describe('ToucanGatherCell 构造测试', () => {
 
@@ -43,18 +44,39 @@ describe('ToucanGatherCell 构造测试', () => {
     });
 });
 
-describe('ToucanGatherCell 启动测试', () => {
+describe('ToucanGatherCell 启动停止测试', () => {
 
-    it('单个RabbitMQ启动 temp', async () => {
+    it('单个RabbitMQ启动 ', async () => {
+        const mqVisitor = mqFactory.create('rabbit');
+        const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, mqVisitor });
 
+        await gc.start();
+        await gc.stop();
     });
 
-    it('多个RabbitMQ启动', async () => {
+    it('多个RabbitMQ启动 ', async () => {
+        const mqv1 = mqFactory.create('rabbit');
+        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, mqVisitor: mqv1 });
+        await gc1.start();
 
+        const mqv2 = mqFactory.create('rabbit');
+        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, mqVisitor: mqv2 });
+        await gc2.start();
+
+        await gc1.stop();
+        await gc2.stop();
     });
 
     it('共享RabbitMQ启动', async () => {
+        const mqVisitor = mqFactory.create('rabbit');
+        const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, mqVisitor });
+        await gc1.start();
 
+        const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, mqVisitor });
+        await gc2.start();
+
+        await gc1.stop();
+        await gc2.stop();
     });
 });
 
