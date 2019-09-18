@@ -20,6 +20,10 @@ class ToucanWorkUnitPool {
         return this.__unitArray__[index];
     }
 
+    findAll() {
+        return this.__unitArray__;
+    }
+    
     // 获取队列的长度
     get length() {
         return this.__unitArray__.length;

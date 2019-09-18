@@ -7,7 +7,7 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 测试 temp', () => {
+describe('GatherStationV1 测试 ', () => {
     const cfgFileName = `${__dirname}/gsconfig.json`;
 
     it('读取配置文件 ', () => {
@@ -26,7 +26,7 @@ describe('GatherStationV1 测试 temp', () => {
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 
-    it('初始化-启动 ', async () => {
+    it('初始化-启动 temp', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
 
@@ -63,6 +63,7 @@ describe('GatherStationV1 内部方法测试  ', () => {
         const gcs = buildGatherCells(skill, 9, { unitId: 'test',unitAddress:'my.add.111' });
         expect(gcs).to.have.lengthOf(2);
         expect(gcs[1].mqVisitor).is.not.null;
+        expect(gcs[1].unitInfo.unitName).to.be.eq(skill.skillName);
         expect(gcs[1].unitInfo.unitId).to.be.eq('test-10');
         expect(gcs[1].unitInfo.unitNo).to.be.eq('02');
         expect(gcs[1].unitInfo.unitAddress).to.be.eq('my.add.111');

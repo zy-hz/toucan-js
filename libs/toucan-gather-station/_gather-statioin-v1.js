@@ -44,6 +44,9 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
     async start() {
 
         // 为每个采集单元开启消息监听模式
+        for (const gc of this.gatherCellPool.findAll()) {
+            console.log(gc.unitInfo.unitName, gc.unitInfo.unitId, gc.unitInfo.unitNo)
+        }
 
         // 变更为激活状态
         this.workInfo.unitStatus.updateStatus(StatusCode.actived);
@@ -82,6 +85,7 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}) {
 }
 
 // 从模板构建采集单元集合
+// index - 能力在采集单元的位置
 function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
 
