@@ -26,7 +26,7 @@ describe('GatherStationV1 测试 ', () => {
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 
-    it('初始化-启动 temp', async () => {
+    it('初始化-启动', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
 

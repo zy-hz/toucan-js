@@ -33,6 +33,11 @@ class ToucanGatherCell extends ToucanWorkUnit {
         this.mqVisitor = mqVisitor;
     }
 
+    // 启动采集单元
+    async start() {
+        console.log(this.unitInfo.unitName, this.unitInfo.unitId, this.unitInfo.unitNo, '启动中...')
+
+    }
 
 }
 

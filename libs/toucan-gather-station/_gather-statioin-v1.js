@@ -45,7 +45,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
         // 为每个采集单元开启消息监听模式
         for (const gc of this.gatherCellPool.findAll()) {
-            console.log(gc.unitInfo.unitName, gc.unitInfo.unitId, gc.unitInfo.unitNo)
+            await gc.start();
         }
 
         // 变更为激活状态
