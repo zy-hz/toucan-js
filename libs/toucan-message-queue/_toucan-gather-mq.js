@@ -1,27 +1,11 @@
 //
 // 采集消息队列
 
-class ToucanGatherMQ {
+const ToucanBaseMQ = require('./_toucan-base-mq');
 
-    constructor(mqVisitor, option = {}) {
-        this.mqVisitor = mqVisitor;
-    }
+class ToucanGatherMQ extends ToucanBaseMQ{
 
-    async connect() {
-        await this.mqVisitor.connect();
-    }
-
-    async disconnect() {
-        await this.mqVisitor.disconnect();
-    }
-
-    async send() {
-
-    }
-
-    async onReceived() {
-
-    }
+    
 }
 
 module.exports = ToucanGatherMQ;
