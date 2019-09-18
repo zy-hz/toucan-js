@@ -44,7 +44,7 @@ function getConfig(fileName = '') {
     const appConfig = readConfigFromFile(`${process.cwd()}/gsconfig.json`);
 
     // 运行时的配置最优先，用户可以在运行时指定动态的配置
-    return Object.assign(DEFALUT_CONFIG, appConfig, runConfig);
+    return Object.assign(_.cloneDeep(DEFALUT_CONFIG), appConfig, runConfig);
 }
 
 // 从指定文件读取配置

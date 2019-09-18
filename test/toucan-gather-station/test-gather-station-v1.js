@@ -30,7 +30,7 @@ describe('GatherStationV1 测试 temp', () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
         
-        expect(gs.workInfo.unitStatus.isActived).to.be.true;
+        expect(gs.workInfo.unitStatus.isActived,'状态应为启动').to.be.true;
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 });
