@@ -24,9 +24,9 @@ describe('[long] webpage fetch 测试', () => {
 
 })
 
-describe('request page fetch 测试',()=>{
+describe('[long] request page fetch 测试',()=>{
 
-    it('do s.weibo.com 搜索测试 ', async () => {
+    it('do s.weibo.com 搜索测试', async () => {
         const pageFetch = pageFetchFactory.createFetch({ fetchType: 'request' });
         const url = 'https://s.weibo.com/weibo';
         const res = await pageFetch.do(url, { params: '吴亦凡' });
@@ -35,6 +35,7 @@ describe('request page fetch 测试',()=>{
 
         // 页面解析
         const $ = cheerio.load(res.pageContent);
+
         expect($('#pl_feedtop_top').text(), '搜索框不能为空').is.not.empty;
         expect($('input', '#pl_feedtop_top').attr('value')).to.be.eq('吴亦凡')
         expect($('.name', '.card-star-fiche').text().trim()).to.be.eq('Mr_凡先生');
