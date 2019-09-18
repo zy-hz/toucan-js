@@ -4,7 +4,7 @@ const GatherTaskCenter = require('../../libs/toucan-control-center/_gather-task-
 
 describe('GatherTaskCenter 启动测试', () => {
 
-    it('构造 temp', () => {
+    it('构造', () => {
         const gtc = new GatherTaskCenter();
 
         expect(gtc).is.not.null;

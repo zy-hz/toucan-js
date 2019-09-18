@@ -3,11 +3,11 @@
 //
 //
 
-const ToucanGatherMQ = require('./_toucan-gather-mq');
+const ToucanMQVisitor = require('./_toucan-mq-visitor');
 const _ = require('lodash');
 const amqp = require('amqplib');
 
-class RabbitGatherMQ extends ToucanGatherMQ {
+class RabbitMQVisitor extends ToucanMQVisitor {
 
     constructor({
         // 支持 amqp 和 amqps
@@ -48,19 +48,6 @@ class RabbitGatherMQ extends ToucanGatherMQ {
         delete this.conn;
     }
 
-    // 发布任务
-    async publishTask(content, head = {}) {
-        const conn = await amqp.connect();
-        const ch = await conn.createChannel();
-
-        const queueName = head;
-        let ok = await ch.assertQueue(queueName);
-        await ch.sendToQueue(queueName, new Buffer(content));
-
-        await ch.close();
-        //await conn.close();
-
-    }
 }
 
-module.exports = RabbitGatherMQ;
+module.exports = RabbitMQVisitor;

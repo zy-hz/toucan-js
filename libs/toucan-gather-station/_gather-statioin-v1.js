@@ -14,7 +14,7 @@ const { createGatherSkillTemplate } = require('./_gather-skill');
 const { StatusCode } = require('../toucan-utility');
 
 const ToucanGatherCell = require('../toucan-gather-cell');
-const mqFactory = require('../toucan-gather-mq');
+const mqFactory = require('../toucan-message-queue');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {
 

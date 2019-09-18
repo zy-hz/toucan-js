@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-cell');
-const mqFactory = require('../../libs/toucan-gather-mq');
+const mqFactory = require('../../libs/toucan-message-queue');
 
 describe('ToucanGatherCell 构造测试', () => {
 
