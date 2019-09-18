@@ -6,8 +6,10 @@ const _ = require('lodash');
 
 // 默认的配置对象
 const DEFALUT_CONFIG = {
-    // 采集站点的编号
-    stationId:'',
+    // 站点名称
+    stationName:'',
+    // 采集站点的编号，
+    stationNo:'',
     // 采集站初始化完成后是否自动启动
     autoStart: true,
     // 采集能力的描述

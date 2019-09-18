@@ -6,7 +6,6 @@
 // 2. 设置工作单元资料 unitInfo
 // 3. 纪录自身的运行状态 workInfo
 
-const uuid = require('uuid/v1');
 const _ = require('lodash');
 const { StatusGroup, StatusCode } = require('../toucan-utility');
 
@@ -22,8 +21,8 @@ class ToucanWorkUnit {
             unitAlias: '',
             // 单元描述
             unitDescription: '',
-            // 单元标识 ,默认为按时间戳生成的 uuid
-            unitId: uuid(),
+            // 单元标识，注意：不能使用自动uuid
+            unitId: '',
             // 单元编号
             unitNo: '',
             // 单元地址

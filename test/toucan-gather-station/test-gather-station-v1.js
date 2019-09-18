@@ -7,7 +7,7 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 测试', () => {
+describe('GatherStationV1 测试 temp', () => {
     const cfgFileName = `${__dirname}/gsconfig.json`;
 
     it('读取配置文件 ', () => {
@@ -26,7 +26,7 @@ describe('GatherStationV1 测试', () => {
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 
-    it('初始化-启动 temp', async () => {
+    it('初始化-启动 ', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
         
