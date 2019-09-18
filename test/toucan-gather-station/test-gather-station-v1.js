@@ -29,8 +29,9 @@ describe('GatherStationV1 测试 temp', () => {
     it('初始化-启动 ', async () => {
         const gs = new ToucanGatherStation(cfgFileName);
         await gs.init();
-        
-        expect(gs.workInfo.unitStatus.isActived,'状态应为启动').to.be.true;
+
+        expect(gs.workInfo.unitStatus.isActived, '状态应为启动').to.be.true;
+        expect(gs.unitInfo.unitName, '期望是机器名称').to.be.eq('DESKTOP-19SS3KS');
         expect(gs.unitInfo.unitAddress).is.not.empty;
     });
 });
@@ -59,11 +60,12 @@ describe('GatherStationV1 内部方法测试  ', () => {
             skillKeys: ['cm.http', 'cm.browser'],
             skillCapability: 2,
         }
-        const gcs = buildGatherCells(skill, 9, 'test');
+        const gcs = buildGatherCells(skill, 9, { unitId: 'test',unitAddress:'my.add.111' });
         expect(gcs).to.have.lengthOf(2);
         expect(gcs[1].mqVisitor).is.not.null;
-        expect(gcs[1].unitInfo.unitNo).to.be.eq('test-10-02');
-        expect(gcs[1].unitInfo.unitId).is.not.empty;
+        expect(gcs[1].unitInfo.unitId).to.be.eq('test-10');
+        expect(gcs[1].unitInfo.unitNo).to.be.eq('02');
+        expect(gcs[1].unitInfo.unitAddress).to.be.eq('my.add.111');
 
     });
 

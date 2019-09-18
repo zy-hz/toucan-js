@@ -5,6 +5,7 @@
 // 1. 管理采集单元。采集单元体现采集站的能力
 //
 const _ = require('lodash');
+const os = require('os');
 const publicIp = require('public-ip');
 
 const { ToucanWorkUnit, ToucanWorkUnitPool } = require('../toucan-work-unit');
@@ -30,13 +31,10 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
     // 站点初始化
     async init() {
         // 设置站点的Ip地址
-        this.unitInfo.unitAddress = await publicIp.v4();
+        this.unitInfo = await buildStationUnitInfo(_.cloneDeep(this.stationConfig));
 
         // 构造采集单元池
-        this.gatherCellPool = buildGatherCellPool(this.stationConfig.gatherSkill, {
-            stationId: this.stationConfig.stationId,
-            stationIp: this.unitInfo.unitAddress,
-        });
+        this.gatherCellPool = buildGatherCellPool(_.cloneDeep(this.stationConfig.gatherSkill), _.cloneDeep(this.unitInfo));
 
         // 自动启动
         if (this.stationConfig.autoStart) await this.start();
@@ -52,8 +50,20 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
     }
 }
 
+// 构建站点的单元资讯
+async function buildStationUnitInfo({ stationName, stationNo }) {
+    const unitName = stationName || os.hostname();
+    const unitAddress = await publicIp.v4();
+
+    return {
+        unitName,
+        unitAddress,
+        unitNo: stationNo,
+    }
+}
+
 // 构建采集单元池
-function buildGatherCellPool(gatherSkill = {}, { stationId = 'TGS', stationIp = '' } = {}) {
+function buildGatherCellPool(gatherSkill = {}, stationInfo = {}) {
     const { maxGatherCellCount, gatherCells } = gatherSkill;
 
     if (_.isNil(maxGatherCellCount)) throw new NullArgumentError('maxGatherCellCount');
@@ -65,14 +75,14 @@ function buildGatherCellPool(gatherSkill = {}, { stationId = 'TGS', stationIp = 
     // 构建工作单元池
     const unitPool = new ToucanWorkUnitPool();
     _.forEach(skillTemplate, (skill, index) => {
-        const gc = buildGatherCells(skill, index, stationId, stationIp);
+        const gc = buildGatherCells(skill, index, stationInfo);
         unitPool.add(gc);
     })
     return unitPool
 }
 
 // 从模板构建采集单元集合
-function buildGatherCells(skill, index, stationId, unitAddress = '') {
+function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
 
     // 创建采集消息队列
@@ -80,12 +90,14 @@ function buildGatherCells(skill, index, stationId, unitAddress = '') {
 
     let gcs = [];
     for (let i = 0; i < skill.skillCapability; i++) {
-        const unitNo = `${stationId}-${_.padStart(index + 1, 2, '0')}-${_.padStart(i + 1, 2, '0')}`
+
         const unitInfo = {
             // 单元名称
             unitName: skill.skillName,
+            // 单元的id格式 = 容器id-能力编号(index)
+            unitId: `${unitId}-${_.padStart(index + 1, 2, '0')}`,
             // 单元编号
-            unitNo,
+            unitNo: _.padStart(i + 1, 2, '0'),
             // 单元地址
             unitAddress
         }
