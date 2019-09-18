@@ -3,9 +3,11 @@
 
 const ToucanBaseMQ = require('./_toucan-base-mq');
 
-class ToucanGatherMQ extends ToucanBaseMQ{
+class ToucanGatherMQ extends ToucanBaseMQ {
 
-    
+    constructor(mqVisitor, option = {}) {
+        super(mqVisitor, option);
+    }
 }
 
 module.exports = ToucanGatherMQ;

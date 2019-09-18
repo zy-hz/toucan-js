@@ -23,7 +23,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         // 连接主机的密码
         password = 'guest',
         // 指定连接的名称，可以中文
-        connection_name = 'ToucanGatherMQ'
+        connection_name = 'RabbitMQVisitor'
     }) {
         super(arguments[0]);
 
