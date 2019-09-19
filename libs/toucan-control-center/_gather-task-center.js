@@ -1,6 +1,7 @@
 //
 // 采集任务管理中心
 //
+const schedule = require('node-schedule');
 
 const { ToucanWorkUnit } = require('../toucan-work-unit')
 const { StatusCode } = require('../toucan-utility');
@@ -18,6 +19,11 @@ class GatherTaskCenter extends ToucanWorkUnit {
         await this._init();
         await this.taskMQ.connect();
         this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+
+        // 每天的凌晨1点15分30秒触发
+        this.schedule = schedule.scheduleJob('*/2 8 * * * *', async () => {
+            console.log('aaa');
+        })
     }
 
     // 初始化
@@ -27,7 +33,11 @@ class GatherTaskCenter extends ToucanWorkUnit {
     }
 
     async stop() {
+        // 关闭定时器
+        this.schedule.cancel();
+        // 关闭消息队列
         await this.taskMQ.disconnect();
+        // 更新工作状态
         this.workInfo.unitStatus.updateStatus(StatusCode.closed);
     }
 }
