@@ -98,10 +98,14 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         const ch = await this.conn.createChannel();
         try {
             if (!_.isEmpty(queue)) {
-                const opt = Object.assign({ noAck: true }, options);
+                const { queueOptions, consumOptions } = options;
+
+                // 声明队列，否在导致消息监听失败
+                await ch.assertQueue(queue, queueOptions);
 
                 // 消费消息
-                await ch.consume(queue, onMessage, opt);
+                // 默认指定noAck,这样消费消息后，就重服务器上删除
+                await ch.consume(queue, onMessage, Object.assign({ noAck: true }, consumOptions));
             } else {
                 // 
             }
