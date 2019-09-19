@@ -57,7 +57,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         const ch = await this.conn.createChannel();
         try {
             const funcName = `_prepare${_.capitalize(exType)}Exchange`;
-            await this[funcName](ch, exName, args);
+            return await this[funcName](ch, exName, args);
         }
         finally {
             await ch.close();
@@ -67,8 +67,29 @@ class RabbitMQVisitor extends ToucanMQVisitor {
 
     }
 
-    async _prepareDirectExchange(exName, { keys, options = {} }) {
+    async _prepareDirectExchange(ch, exName, args = []) {
+        let options = { durable: false };
+        if (args.length > 0) {
+            options = Object.assign(options, args[0]);
+        }
+        const ok = await ch.assertExchange(exName, 'direct', options);
+        return ok;
+    }
 
+    async deleteExchange(exName, options = {}) {
+        // 当前连接是否关闭
+        const isClosed = _.isNil(this.conn);
+        if (isClosed) await this.connect();
+
+        const ch = await this.conn.createChannel();
+        try {
+            await ch.deleteExchange(exName, options);
+        }
+        finally {
+            await ch.close();
+            // 保持调用前的状态
+            if (isClosed) await this.connect();
+        }
     }
 
     // 发送消息
@@ -116,7 +137,21 @@ class RabbitMQVisitor extends ToucanMQVisitor {
     // 发送到交换机
     // 交换机需要提前准备好
     async _sendToExchange(ch, buf, exchange, routeKey, options = {}) {
-        const { sendOptions } = options;
+        const { queueOptions, sendOptions } = options;
+
+        // 如果指定routekey,并且不包含通配符 = direct 或者 topic 类型的exchange
+        // 必须先声明队列，这样当队列不存在时候，就可以新建
+        // 如果不声明，将导致消息丢失（没有任何提示）
+        if (!_.isEmpty(routeKey) && !_.includes(routeKey, '*') && !_.includes(routeKey, '#')) {
+            
+            const q = await ch.assertQueue(routeKey, queueOptions);
+            if (_.isNil(q) || q.queue != routeKey) throw Error(`声明队列（${routeKey}）失败`);
+
+            // 队列绑定
+            await ch.bindQueue(routeKey, exchange, routeKey);
+        }
+
+        // 发布消息
         return await ch.publish(exchange, routeKey, buf, sendOptions);
     }
 

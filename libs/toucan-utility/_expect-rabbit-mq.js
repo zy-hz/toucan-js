@@ -5,9 +5,10 @@ const _ = require('lodash');
 
 class RabbitMQExpect {
 
-    async isConnected(conn){
+    async isConnected(conn) {
         return !_.isNil(conn);
     }
+
 }
 
 
