@@ -2,10 +2,12 @@
 // 采集任务管理中心
 //
 const schedule = require('node-schedule');
+const _ = require('lodash');
 
 const { ToucanWorkUnit } = require('../toucan-work-unit')
 const { StatusCode } = require('../toucan-utility');
 const mqFactory = require('../toucan-message-queue');
+const PublishTaskJob = require('./_job-publish-task');
 
 class GatherTaskCenter extends ToucanWorkUnit {
 
@@ -15,31 +17,35 @@ class GatherTaskCenter extends ToucanWorkUnit {
         super({ status });
     }
 
+    async init(autoStart = true) {
+        // 创建消息队列
+        this.taskMQ = mqFactory.createTaskMQ('rabbit');
+
+        // 自动启动
+        if (autoStart) await this.start();
+    }
+
     async start() {
-        await this._init();
+
         await this.taskMQ.connect();
         this.workInfo.unitStatus.updateStatus(StatusCode.idle);
 
-        // 每天的凌晨1点15分30秒触发
-        this.schedule = schedule.scheduleJob('*/2 8 * * * *', async () => {
-            console.log('aaa');
-        })
-    }
+        const ptJob = new PublishTaskJob({ taskMQ: this.taskMQ })
 
-    // 初始化
-    async _init() {
-        // 创建消息队列
-        this.taskMQ = mqFactory.createTaskMQ('rabbit');
+        this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
+            await ptJob.do('schedule');
+        })
     }
 
     async stop() {
         // 关闭定时器
-        this.schedule.cancel();
+        if (!_.isNil(this.schedule)) this.schedule.cancel();
         // 关闭消息队列
         await this.taskMQ.disconnect();
         // 更新工作状态
         this.workInfo.unitStatus.updateStatus(StatusCode.closed);
     }
+
 }
 
 module.exports = GatherTaskCenter;
