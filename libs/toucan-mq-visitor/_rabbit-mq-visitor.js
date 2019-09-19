@@ -48,6 +48,29 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         delete this.conn;
     }
 
+    // 预备交换机
+    async prepareExchange(exName, exType, ...args) {
+        // 当前连接是否关闭
+        const isClosed = _.isNil(this.conn);
+        if (isClosed) await this.connect();
+
+        const ch = await this.conn.createChannel();
+        try {
+            const funcName = `_prepare${_.capitalize(exType)}Exchange`;
+            await this[funcName](ch, exName, args);
+        }
+        finally {
+            await ch.close();
+            // 保持调用前的状态
+            if (isClosed) await this.connect();
+        }
+
+    }
+
+    async _prepareDirectExchange(exName, { keys, options = {} }) {
+
+    }
+
     // 发送消息
     async send(content, { exchange, routeKey, queue, options = {} }) {
         // 保证连接，可能被其他使用者断开
@@ -64,6 +87,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
                 ok = await this._sendToQueue(ch, buf, queue, options);
             } else {
                 // 
+                ok = await this._sendToExchange(ch, buf, exchange, routeKey, options);
             }
 
             // 消息发送失败，会抛出异常
@@ -87,6 +111,13 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         if (_.isNil(q) || q.queue != queue) throw Error(`声明队列（${queue}）失败`);
 
         return await ch.sendToQueue(queue, buf, sendOptions);
+    }
+
+    // 发送到交换机
+    // 交换机需要提前准备好
+    async _sendToExchange(ch, buf, exchange, routeKey, options = {}) {
+        const { sendOptions } = options;
+        return await ch.publish(exchange, routeKey, buf, sendOptions);
     }
 
     // 监听消息
