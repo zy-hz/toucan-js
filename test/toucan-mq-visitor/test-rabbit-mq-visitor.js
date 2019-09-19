@@ -106,7 +106,8 @@ describe('RabbitMQVisitor 综合测试', () => {
             await mqv.deleteQueue(routeKey);
         });
 
-    })
+    });
+    
 });
 
 
