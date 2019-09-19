@@ -92,6 +92,22 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         }
     }
 
+    async deleteQueue(queue){
+        // 当前连接是否关闭
+        const isClosed = _.isNil(this.conn);
+        if (isClosed) await this.connect();
+
+        const ch = await this.conn.createChannel();
+        try {
+            await ch.deleteQueue(queue);
+        }
+        finally {
+            await ch.close();
+            // 保持调用前的状态
+            if (isClosed) await this.connect();
+        }
+    }
+
     // 发送消息
     async send(content, { exchange, routeKey, queue, options = {} }) {
         // 保证连接，可能被其他使用者断开
@@ -143,7 +159,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         // 必须先声明队列，这样当队列不存在时候，就可以新建
         // 如果不声明，将导致消息丢失（没有任何提示）
         if (!_.isEmpty(routeKey) && !_.includes(routeKey, '*') && !_.includes(routeKey, '#')) {
-            
+
             const q = await ch.assertQueue(routeKey, queueOptions);
             if (_.isNil(q) || q.queue != routeKey) throw Error(`声明队列（${routeKey}）失败`);
 
