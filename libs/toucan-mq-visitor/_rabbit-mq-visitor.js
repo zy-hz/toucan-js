@@ -48,6 +48,69 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         delete this.conn;
     }
 
+    // 发送消息
+    async send(content, { exchange, routeKey, queue, options = {} }) {
+        // 保证连接，可能被其他使用者断开
+        await this.connect();
+
+        // 创建通道
+        const ch = await this.conn.createConfirmChannel();
+        try {
+            const buf = Buffer.from(content);
+            let ok;
+            if (!_.isEmpty(queue)) {
+
+                // 使用指定队列发送模式
+                ok = await this._sendToQueue(ch, buf, queue, options);
+            } else {
+                // 
+            }
+
+            // 消息发送失败，会抛出异常
+            await ch.waitForConfirms();
+            return ok;
+        }
+        finally {
+            // 关闭通道
+            await ch.close();
+        }
+
+    }
+
+    // 发送到队列
+    async _sendToQueue(ch, buf, queue, options = {}) {
+        const { queueOptions, sendOptions } = options;
+
+        // 必须先声明队列，这样当队列不存在时候，就可以新建
+        // 如果不声明，将导致消息丢失（没有任何提示）
+        const q = await ch.assertQueue(queue, queueOptions);
+        if (_.isNil(q) || q.queue != queue) throw Error(`声明队列（${queue}）失败`);
+
+        return await ch.sendToQueue(queue, buf, sendOptions);
+    }
+
+    // 监听消息
+    async receive(onMessage, { queue, options = {} }) {
+        // 保证连接，可能被其他使用者断开
+        await this.connect();
+
+        // 创建通道
+        const ch = await this.conn.createChannel();
+        try {
+            if (!_.isEmpty(queue)) {
+                const opt = Object.assign({ noAck: true }, options);
+
+                // 消费消息
+                await ch.consume(queue, onMessage, opt);
+            } else {
+                // 
+            }
+        }
+        finally {
+            // 关闭通道
+            await ch.close();
+        }
+    }
 }
 
 module.exports = RabbitMQVisitor;

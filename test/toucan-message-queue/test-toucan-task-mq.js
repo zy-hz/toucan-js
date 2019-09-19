@@ -9,7 +9,7 @@ describe('ToucanTaskMQ 测试', () => {
         expect(taskMQ).is.not.empty;
     });
 
-    it('连接和断开 temp', async () => {
+    it('连接和断开', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
         await taskMQ.connect();
 
