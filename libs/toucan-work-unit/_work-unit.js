@@ -11,7 +11,7 @@ const { StatusGroup, StatusCode } = require('../toucan-utility');
 
 class ToucanWorkUnit {
 
-    constructor({ unitInfo = {}, theTime = _.now() } = {}) {
+    constructor({ unitInfo = {}, theTime = _.now(), status = [StatusCode.idle, StatusCode.actived, StatusCode.suspend] } = {}) {
 
         // 单元资料，构造时确定，以后不会发生变化
         this.unitInfo = Object.assign({
@@ -32,7 +32,7 @@ class ToucanWorkUnit {
         // 工作信息
         this.__work__ = {
             //   - 工作单元的状态
-            unitStatus: new StatusGroup([StatusCode.idle, StatusCode.actived, StatusCode.suspend], theTime),
+            unitStatus: new StatusGroup(status, theTime),
             //   - 开始工作时间
             unitStartTime: theTime,
             //   - 上个运行任务的开始时间

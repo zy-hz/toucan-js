@@ -98,6 +98,8 @@ function statusDurationTimeAttrName(code) {
 const StatusCode = {
     // 激活中
     actived: 'actived',
+    // 关闭中
+    closed: 'closed',
     // 空闲中
     idle: 'idle',
     // 挂起中

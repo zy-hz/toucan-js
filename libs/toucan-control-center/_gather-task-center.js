@@ -9,14 +9,15 @@ const mqFactory = require('../toucan-message-queue');
 class GatherTaskCenter extends ToucanWorkUnit {
 
     constructor(cfgFileName = '') {
-        super();
+        // 工作单元的状态
+        const status = [StatusCode.closed, StatusCode.idle, StatusCode.actived, StatusCode.suspend]
+        super({ status });
     }
 
     async start() {
         await this._init();
         await this.taskMQ.connect();
-
-        this.workInfo.unitStatus.updateStatus(StatusCode.actived);
+        this.workInfo.unitStatus.updateStatus(StatusCode.idle);
     }
 
     // 初始化
@@ -27,7 +28,7 @@ class GatherTaskCenter extends ToucanWorkUnit {
 
     async stop() {
         await this.taskMQ.disconnect();
-        this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+        this.workInfo.unitStatus.updateStatus(StatusCode.closed);
     }
 }
 
