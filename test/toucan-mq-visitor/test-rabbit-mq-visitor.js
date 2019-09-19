@@ -46,23 +46,4 @@ describe('RabbitMQVisitor 发送接收 temp', () => {
         }, { queue })
     });
 
-    it('waitMessage', async () => {
-        const queue = 'test-waitm';
-        const msg = '我是测试 ' + uuid();
-
-        let count = 0
-        // 这行函数不能添加await ，会导致阻塞
-        mqv.receive((x) => {
-            //expect(x.content.toString(), '接收消息内对比').to.be.eq(msg);
-            count = count + 1;
-        }, { queue })
-
-        await sleep(500);
-        await mqv.send(msg, { queue });
-        await mqv.send(msg, { queue });
-        await mqv.send(msg, { queue });
-
-        await sleep(500);
-        expect(count, '3次接收').to.be.eq(3);
-    });
 })
