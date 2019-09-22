@@ -7,7 +7,7 @@ const _ = require('lodash');
 const { ToucanWorkUnit } = require('../toucan-work-unit')
 const { StatusCode } = require('../toucan-utility');
 const mqFactory = require('../toucan-message-queue');
-const PublishTaskJob = require('./_job-publish-task');
+const PublishGatherTaskJob = require('./_job-publish-gather-task');
 
 class GatherTaskCenter extends ToucanWorkUnit {
 
@@ -30,10 +30,10 @@ class GatherTaskCenter extends ToucanWorkUnit {
         await this.taskMQ.connect();
         this.workInfo.unitStatus.updateStatus(StatusCode.idle);
 
-        const ptJob = new PublishTaskJob({ taskMQ: this.taskMQ })
+        const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ })
 
         this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
-            await ptJob.do('schedule');
+            await pgtJob.do('schedule');
         })
     }
 
