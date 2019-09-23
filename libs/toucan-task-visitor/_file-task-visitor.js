@@ -3,6 +3,8 @@
 //
 // 
 const _ = require('lodash');
+const moment = require('moment');
+
 const fs = require('fs');
 
 class FileTaskVisitor {
@@ -13,13 +15,20 @@ class FileTaskVisitor {
 
     // 同步读取任务
     async readTaskSync({ maxCount = 1 } = {}) {
-        this.__taskPool = _.orderBy(this.__taskPool, (x) => { return x.lastPublishTime || 0 });
 
-        const tasks = _.forEach(_.slice(this.__taskPool, 0, maxCount), (x) => { x.lastPublishTime = _.now() });
-        return _.map(tasks, (x) => {
+        // 找出超时队列
+        let readyTasks = _.filter(this.__taskPool,(x)=>{ return _.isNil(x.nextPublishTime) || x.nextPublishTime < _.now()});
+        
+        // 按照下次发布时间排序，从小到大
+        readyTasks = _.orderBy(readyTasks, (x) => { return x.nextPublishTime || 0 });
+
+        // 按照数量获取队列
+        readyTasks = _.slice(readyTasks, 0, maxCount)
+        return _.map(readyTasks, (x) => {
+            x.nextPublishTime = moment().add(5, 'seconds').valueOf()
             return {
                 taskType: 'GatherTask',
-                taskBody: x,
+                taskBody: _.cloneDeep(x),
             }
         })
     }
