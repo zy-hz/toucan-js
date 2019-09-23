@@ -13,21 +13,24 @@ const PublishGatherTaskJob = require('./_job-publish-gather-task');
 class GatherTaskCenter extends ToucanWorkUnit {
 
     constructor(cfgFileName = '') {
-        
+
         // 工作单元的状态
         const status = [StatusCode.closed, StatusCode.idle, StatusCode.actived, StatusCode.suspend]
         super({ status });
+
+        // 读取配置
+        this.config = require('./_gather-task-center.config')(cfgFileName);
     }
 
-    async init(autoStart = true) {
+    async init(autoStart) {
         // 创建消息队列
-        this.taskMQ = mqFactory.createTaskMQ('rabbit');
+        this.taskMQ = mqFactory.createTaskMQ(this.config.taskMQType);
         // 创建任务读取接口
-        this.taskV = tvFactory.create('');
+        this.taskV = tvFactory.create(this.config.taskDbVisitor);
         // 指定交换机
-        this.exchange = 'toucan.gather.task';
+        this.exchange = this.config.exchangeName;
         // 自动启动
-        if (autoStart) await this.start();
+        if (autoStart || this.config.autoStart) await this.start();
     }
 
     async start() {
@@ -37,7 +40,7 @@ class GatherTaskCenter extends ToucanWorkUnit {
             await this.taskMQ.connect();
 
             // 构建定时作业
-            const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ,taskV:this.taskV,exchange:this.exchange })
+            const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ, taskV: this.taskV, exchange: this.exchange })
 
             // 启动定时作业
             this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
