@@ -23,6 +23,7 @@ const fakeTaskGroup = [
         taskType: 'GatherTask',
         taskBody: {
             targetUrl: 'www.sohu.com',
+            spiderType:'http',
             depth: 0,
         }
     }
@@ -30,6 +31,7 @@ const fakeTaskGroup = [
         taskType: 'GatherTask',
         taskBody: {
             targetUrl: 'www.baidu.com',
+            spiderType:'browser',
             depth: 0,
         }
     },

@@ -39,6 +39,11 @@ class ToucanSpiderFactory {
         const opt = Object.assign(spiderOption, { spiderType });
         return new spiderClass(opt);
     }
+
+    // 活动蜘蛛编号为采集目标
+    getSpiderId4Target({ targetUrl, sipderType = '' }) {
+
+    }
 }
 
 // 根据蜘蛛的类型创建蜘蛛

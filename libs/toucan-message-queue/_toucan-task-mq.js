@@ -8,12 +8,12 @@ const _ = require('lodash');
 
 class ToucanTaskMQ extends ToucanBaseMQ {
 
-    constructor(mqVisitor, option = {}) {
-        super(mqVisitor, option);
+    constructor(mqVisitor, options = {}) {
+        super(mqVisitor, options);
     }
 
     // 发布任务
-    async publishTask(tasks, options = {}) {
+    async publishTask(tasks) {
 
         try {
             // 检查空对象
@@ -23,6 +23,9 @@ class ToucanTaskMQ extends ToucanBaseMQ {
             const ary = _.concat([], tasks);
 
             // 发布任务
+            for (const t of ary) {
+                await this.mqVisitor.send(t.taskBody, t.taskOptions)
+            }
 
             return {
                 hasException: false,
