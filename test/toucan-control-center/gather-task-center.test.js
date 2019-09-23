@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const GatherTaskCenter = require('../../libs/toucan-control-center/_gather-task-center');
+const { sleep } = require('../../libs/toucan-utility');
 
-describe('GatherTaskCenter 综合测试 ', () => {
+describe('GatherTaskCenter 综合测试 temp', () => {
 
     describe('基础', () => {
 
@@ -12,7 +13,7 @@ describe('GatherTaskCenter 综合测试 ', () => {
             expect(gtc).is.not.null;
         });
 
-        it('启动', async () => {
+        it('[long]启动', async () => {
             const gtc = new GatherTaskCenter();
 
             // 站点处于关闭状态
@@ -22,6 +23,9 @@ describe('GatherTaskCenter 综合测试 ', () => {
             // 初始化后自动启动
             await gtc.init();
             expect(gtc.workInfo.unitStatus.isIdle).to.be.true;
+
+            // 等待
+            await sleep(11000);
 
             // 站点处于激活状态
             await gtc.stop();

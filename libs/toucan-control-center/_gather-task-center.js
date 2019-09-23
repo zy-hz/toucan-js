@@ -7,6 +7,7 @@ const _ = require('lodash');
 const { ToucanWorkUnit } = require('../toucan-work-unit')
 const { StatusCode } = require('../toucan-utility');
 const mqFactory = require('../toucan-message-queue');
+const tvFactory = require('../toucan-task-visitor');
 const PublishGatherTaskJob = require('./_job-publish-gather-task');
 
 class GatherTaskCenter extends ToucanWorkUnit {
@@ -21,7 +22,10 @@ class GatherTaskCenter extends ToucanWorkUnit {
     async init(autoStart = true) {
         // 创建消息队列
         this.taskMQ = mqFactory.createTaskMQ('rabbit');
-
+        // 创建任务读取接口
+        this.taskV = tvFactory.create('');
+        // 指定交换机
+        this.exchange = 'toucan.gather.task';
         // 自动启动
         if (autoStart) await this.start();
     }
@@ -33,7 +37,7 @@ class GatherTaskCenter extends ToucanWorkUnit {
             await this.taskMQ.connect();
 
             // 构建定时作业
-            const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ })
+            const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ,taskV:this.taskV,exchange:this.exchange })
 
             // 启动定时作业
             this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
