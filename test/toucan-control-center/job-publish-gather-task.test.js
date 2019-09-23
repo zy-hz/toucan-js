@@ -9,7 +9,7 @@ describe('PublishTaskJob 综合测试 temp', () => {
     describe('do', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
         const taskV = tvFactory.create('fake');
-        const job = new PublishTaskJob({ taskMQ, taskV });
+        const job = new PublishTaskJob({ taskMQ, taskV, exchange: 'test.toucan.gather.task' });
 
         after(async () => {
             await taskMQ.disconnect();
@@ -20,7 +20,6 @@ describe('PublishTaskJob 综合测试 temp', () => {
             resultExpect(result, false, 1);
 
         });
-
 
         it('two task', async () => {
             const result = await job.do({ caller: 'test', maxCount: 2 });

@@ -7,9 +7,13 @@ const spiderFactory = require('../toucan-page-spider');
 
 class PublishGatherTaskJob {
 
-    constructor({ taskMQ, taskV }) {
+    constructor({ taskMQ, taskV, exchange }) {
         this.taskMQ = taskMQ;
         this.taskV = taskV;
+
+        // 指定交换机
+        // 用于rabbitmq
+        this.exchange = exchange;
     }
 
     // 执行作业（发布采集任务）
@@ -20,9 +24,9 @@ class PublishGatherTaskJob {
 
         // 从任务构建发布采集任务的选项
         // 为task添加taskOptions属性
-        _.forEach(tasks, (t) => {
-            t.taskOptions = this.buildTaskOptions(t);
-        });
+        for (const t of tasks) {
+            t.taskOptions = await this.buildTaskOptions(t);
+        }
 
         // 推送采集任务到采集任务消息队列
         return await this.taskMQ.publishTask(_.cloneDeep(tasks));
@@ -36,10 +40,10 @@ class PublishGatherTaskJob {
     // 分析taskBody
     async buildTaskOptions(task) {
         // exchange ,routeKey,options
-        const exchange = 'toucan.gather.task';
-        const routeKey = spiderFactory.getSpiderId({} || task.taskBody)
-
-        return { exchange, routeKey }
+        const routeKey = spiderFactory.getSpiderId(task.taskBody)
+        // 准备exchange
+        await this.taskMQ.mqVisitor.prepareExchange(this.exchange, 'direct', { durable: true });
+        return { exchange: this.exchange, routeKey }
     }
 }
 
