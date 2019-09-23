@@ -2,6 +2,8 @@ const ToucanHttpPageSpider = require('./_http-page-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
+const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl } = require('./util');
+
 // 大嘴鸟的蜘蛛工厂
 class ToucanSpiderFactory {
 
@@ -12,9 +14,9 @@ class ToucanSpiderFactory {
             // 第一优先：蜘蛛的类型，http - http协议蜘蛛, browser - 浏览器蜘蛛
             spiderType = '',
             // 第二优先：任务目标，例如：ali,ali-1688,jd
-            taskTarget = '',
+            targetName = '',
             // 第三优先：任务的链接
-            taskUrl = '',
+            targetUrl = '',
 
         } = {},
         // 蜘蛛的参数
@@ -28,10 +30,10 @@ class ToucanSpiderFactory {
         if (!_.isEmpty(spiderType)) spiderClass = createSpiderClassBySpiderType(spiderType);
 
         // 根据任务目标的类型创建蜘蛛
-        if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(taskTarget)) spiderClass = createSpiderClassByTarget(taskTarget);
+        if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(targetName)) spiderClass = createSpiderClassByTarget(targetName);
 
         // 根据任务的url创建蜘蛛
-        if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(taskUrl)) spiderClass = createSpiderClassByUrl(taskUrl);
+        if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(targetUrl)) spiderClass = createSpiderClassByUrl(targetUrl);
 
         // 如果都不是，创建默认蜘蛛 (http蜘蛛)
         if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpPageSpider;
@@ -41,7 +43,22 @@ class ToucanSpiderFactory {
     }
 
     // 活动蜘蛛编号为采集目标
-    getSpiderId4Target({ targetUrl, sipderType = '' }) {
+    getSpiderId({
+        // 第一优先：蜘蛛的类型，http - http协议蜘蛛, browser - 浏览器蜘蛛
+        spiderType = '',
+        // 第二优先：任务目标，例如：ali,ali-1688,jd
+        targetName = '',
+        // 第三优先：任务的链接
+        targetUrl = '',
+    } = {}) {
+        let spiderId = getSpiderIdBySpiderType(spiderType);
+        if (!_.isEmpty(spiderId)) return spiderId;
+
+        spiderId = getSpiderIdByTargetName(targetName);
+        if (!_.isEmpty(spiderId)) return spiderId;
+
+        return getSpiderIdByTargetUrl(targetUrl);
+
 
     }
 }
@@ -72,5 +89,6 @@ function loadSpiderClass(
 
     return require('./' + className);
 }
+
 
 module.exports = new ToucanSpiderFactory();
