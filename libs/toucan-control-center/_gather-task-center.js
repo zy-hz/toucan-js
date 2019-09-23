@@ -12,6 +12,7 @@ const PublishGatherTaskJob = require('./_job-publish-gather-task');
 class GatherTaskCenter extends ToucanWorkUnit {
 
     constructor(cfgFileName = '') {
+        
         // 工作单元的状态
         const status = [StatusCode.closed, StatusCode.idle, StatusCode.actived, StatusCode.suspend]
         super({ status });
@@ -27,14 +28,25 @@ class GatherTaskCenter extends ToucanWorkUnit {
 
     async start() {
 
-        await this.taskMQ.connect();
-        this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+        try {
+            // 启动消息队列的连接
+            await this.taskMQ.connect();
 
-        const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ })
+            // 构建定时作业
+            const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ })
 
-        this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
-            await pgtJob.do('schedule');
-        })
+            // 启动定时作业
+            this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
+                await pgtJob.do('schedule');
+            })
+
+            // 设置状态
+            this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+        }
+        catch (error) {
+            // 设置状态
+            this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
+        }
     }
 
     async stop() {
