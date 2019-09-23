@@ -57,7 +57,31 @@
                 "test",
                 "--no-timeouts",
                 "--recursive",
-                "--bail" // 发现错误后停止
+                "--bail", // 发现错误后停止
+                "--grep", 
+                "isapp",
+                "--invert", // 排除以上标记
+                "true"
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Run as app",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "test",
+                "--no-timeouts",
+                "--recursive",
+                "--bail", // 发现错误后停止
+                "--grep", 
+                "[[isapp]]",
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,

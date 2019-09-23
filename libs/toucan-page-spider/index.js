@@ -57,9 +57,11 @@ class ToucanSpiderFactory {
         spiderId = getSpiderIdByTargetName(targetName);
         if (!_.isEmpty(spiderId)) return spiderId;
 
-        return getSpiderIdByTargetUrl(targetUrl);
+        spiderId = getSpiderIdByTargetUrl(targetUrl);
+        if (!_.isEmpty(spiderId)) return spiderId;
 
-
+        // 默认使用http蜘蛛
+        return getSpiderIdBySpiderType('http');
     }
 }
 
