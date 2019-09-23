@@ -75,7 +75,7 @@ describe('RabbitMQVisitor 综合测试', () => {
         });
     });
 
-    describe('direct模式_收发 ', () => {
+    describe('direct模式_收发', () => {
         const mqv = mqvCreate('rabbit');
         const exchange = 'testEx-direct-send';
 

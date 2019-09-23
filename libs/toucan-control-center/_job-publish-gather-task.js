@@ -37,7 +37,7 @@ class PublishGatherTaskJob {
     async buildTaskOptions(task) {
         // exchange ,routeKey,options
         const exchange = 'toucan.gather.task';
-        const routeKey = spiderFactory.getSpiderId4Target({} || task.taskBody)
+        const routeKey = spiderFactory.getSpiderId({} || task.taskBody)
 
         return { exchange, routeKey }
     }

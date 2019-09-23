@@ -4,7 +4,7 @@ const PublishTaskJob = require('../../libs/toucan-control-center/_job-publish-ga
 const mqFactory = require('../../libs/toucan-message-queue');
 const tvFactory = require('../../libs/toucan-task-visitor');
 
-describe('PublishTaskJob 综合测试', () => {
+describe('PublishTaskJob 综合测试 temp', () => {
 
     describe('do', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
