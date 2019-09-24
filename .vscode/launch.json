@@ -7,6 +7,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/demo/task-center/start.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Temp 测试指定用例",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
@@ -36,7 +42,7 @@
                 "--no-timeouts",
                 "--recursive",
                 "--bail", // 发现错误后停止
-                "--grep", 
+                "--grep",
                 "[[long]]",
                 "--invert", // 排除以上标记
                 "true"
@@ -58,7 +64,7 @@
                 "--no-timeouts",
                 "--recursive",
                 "--bail", // 发现错误后停止
-                "--grep", 
+                "--grep",
                 "isapp",
                 "--invert", // 排除以上标记
                 "true"
@@ -80,7 +86,7 @@
                 "--no-timeouts",
                 "--recursive",
                 "--bail", // 发现错误后停止
-                "--grep", 
+                "--grep",
                 "[[isapp]]"
             ],
             "cwd": "${workspaceRoot}",

@@ -35,15 +35,18 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
     // 启动采集单元
     async start() {
-        console.log(this.unitInfo.unitName, this.unitInfo.unitId, this.unitInfo.unitNo, '启动中...')
+        console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
         await this.gatherMQ.connect();
     }
 
     async stop() {
-        console.log(this.unitInfo.unitName, this.unitInfo.unitId, this.unitInfo.unitNo, '停止')
+        console.log(`${buildGatherCellId(this.unitInfo)} 停止`);
         await this.gatherMQ.disconnect();
     }
+}
 
+function buildGatherCellId(unitInfo){
+    return `采集单元 [${unitInfo.unitName}] 编号[${unitInfo.unitId} ${unitInfo.unitNo}]`
 }
 
 module.exports = ToucanGatherCell;

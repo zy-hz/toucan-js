@@ -3,6 +3,7 @@
 //
 const fs = require('fs');
 const _ = require('lodash');
+const path = require('path');
 
 // 默认的配置对象
 const DEFALUT_CONFIG = {
@@ -19,12 +20,26 @@ const DEFALUT_CONFIG = {
 function getConfig(fileName = '') {
     // 运行时指定的文件
     const runConfig = readConfigFromFile(fileName);
-    // app目录下的文件
-    const appConfig = readConfigFromFile(`${process.cwd()}/taskcenter.config.json`);
 
     // 运行时的配置最优先，用户可以在运行时指定动态的配置
-    return Object.assign(_.cloneDeep(DEFALUT_CONFIG), appConfig, runConfig);
+    let cfg =  Object.assign(_.cloneDeep(DEFALUT_CONFIG), runConfig);
+    cfg.taskDbVisitor = fixPath(cfg.taskDbVisitor,fileName);
+
+    return cfg;
 }
+
+// 修复路径
+function fixPath(fn,referPath){
+    if(_.isEmpty(fn)) return fn;
+    if(fs.existsSync(fn)) return fn;
+
+    const dir = path.dirname(referPath);
+    let tryName = path.resolve(dir,fn);
+    if(fs.existsSync(tryName)) return tryName.replace(/\\/img,'/');
+
+    return fn;
+}
+
 
 // 从指定文件读取配置
 function readConfigFromFile(fileName) {

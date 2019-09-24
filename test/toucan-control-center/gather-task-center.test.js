@@ -34,10 +34,9 @@ describe('GatherTaskCenter 综合测试', () => {
 
     });
 
-
 });
 
-describe('[isapp] GatherTaskCenter', () => {
+describe('[isapp1] GatherTaskCenter', () => {
 
     it('', async () => {
         const gtc = new GatherTaskCenter(`${__dirname}/gather-task-config.json`);

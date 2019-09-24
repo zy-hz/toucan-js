@@ -7,7 +7,7 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 综合测试 temp', () => {
+describe('GatherStationV1 综合测试', () => {
 
     describe('GatherStationV1 测试 ', () => {
         const cfgFileName = `${__dirname}/gsconfig.json`;
@@ -102,26 +102,28 @@ describe('GatherStationV1 综合测试 temp', () => {
         });
     });
 
+    function runExpect4GatherSkill(gatherSkill) {
+
+        expect(gatherSkill.maxGatherCellCount, 'maxGatherCellCount 需要大于0').to.be.greaterThan(0);
+
+        runExpect4GatherCells(gatherSkill.gatherCells);
+    }
+
+    function runExpect4GatherCells(gatherCells) {
+        expect(Array.isArray(gatherCells), '采集单元是个数组').to.be.true;
+        expect(gatherCells, '采集单元不能是空数组').is.not.empty;
+
+        _.forEach(gatherCells, runExpect4SkillCell)
+    }
+
+    // 技能单元测试
+    function runExpect4SkillCell(skillCell) {
+        expect(skillCell.skillName, '能力名称不能空').is.not.empty;
+        expect(_.isArray(skillCell.skillKeys), '能力关键词是个数组').to.be.true;
+        expect(skillCell.skillKeys, '能力关键词不能为空').is.not.empty;
+    }
 })
 
+describe('[isapp]GatherStation',()=>{
 
-function runExpect4GatherSkill(gatherSkill) {
-
-    expect(gatherSkill.maxGatherCellCount, 'maxGatherCellCount 需要大于0').to.be.greaterThan(0);
-
-    runExpect4GatherCells(gatherSkill.gatherCells);
-}
-
-function runExpect4GatherCells(gatherCells) {
-    expect(Array.isArray(gatherCells), '采集单元是个数组').to.be.true;
-    expect(gatherCells, '采集单元不能是空数组').is.not.empty;
-
-    _.forEach(gatherCells, runExpect4SkillCell)
-}
-
-// 技能单元测试
-function runExpect4SkillCell(skillCell) {
-    expect(skillCell.skillName, '能力名称不能空').is.not.empty;
-    expect(_.isArray(skillCell.skillKeys), '能力关键词是个数组').to.be.true;
-    expect(skillCell.skillKeys, '能力关键词不能为空').is.not.empty;
-}
+})
