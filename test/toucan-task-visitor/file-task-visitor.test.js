@@ -4,7 +4,7 @@ const tvFactory = require('../../libs/toucan-task-visitor');
 const _ = require('lodash');
 const {sleep} = require('../../libs/toucan-utility');
 
-describe('FileTaskVisitor 测试 temp', () => {
+describe('FileTaskVisitor 测试', () => {
     const fileName = __dirname + '/./file-task-visitor.data.txt';
 
     it('create', () => {
@@ -31,7 +31,7 @@ describe('FileTaskVisitor 测试 temp', () => {
             expect(task).have.lengthOf(3);
         });
 
-        it('间隔再次读取',async()=>{
+        it('间隔再次读取 等待6000ms',async()=>{
             let task = await tv.readTaskSync();
             expect(task).have.lengthOf(0);
 

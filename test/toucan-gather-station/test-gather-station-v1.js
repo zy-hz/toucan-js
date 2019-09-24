@@ -7,7 +7,7 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 综合测试', () => {
+describe('GatherStationV1 综合测试 temp', () => {
 
     describe('GatherStationV1 测试 ', () => {
         const cfgFileName = `${__dirname}/gsconfig.json`;
@@ -19,7 +19,7 @@ describe('GatherStationV1 综合测试', () => {
             runExpect4GatherSkill(gs.stationConfig.gatherSkill);
         });
 
-        it('初始化-不启动', async () => {
+        it('初始化-不启动 ', async () => {
             const gs = new ToucanGatherStation(cfgFileName);
             gs.stationConfig.autoStart = false;
             await gs.init();

@@ -81,7 +81,7 @@
                 "--recursive",
                 "--bail", // 发现错误后停止
                 "--grep", 
-                "[[isapp]]",
+                "[[isapp]]"
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,

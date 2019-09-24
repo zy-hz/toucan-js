@@ -6,12 +6,11 @@
 //
 const _ = require('lodash');
 const os = require('os');
-const publicIp = require('public-ip');
 
 const { ToucanWorkUnit, ToucanWorkUnitPool } = require('../toucan-work-unit');
 const { NullArgumentError } = require('../toucan-error');
 const { createGatherSkillTemplate } = require('./_gather-skill');
-const { StatusCode } = require('../toucan-utility');
+const { StatusCode, getIpAdress } = require('../toucan-utility');
 
 const ToucanGatherCell = require('../toucan-gather-cell');
 const mqFactory = require('../toucan-message-queue');
@@ -67,7 +66,9 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 // 构建站点的单元资讯
 async function buildStationUnitInfo({ stationName, stationNo }) {
     const unitName = stationName || os.hostname();
-    const unitAddress = await publicIp.v4();
+    // 这个方法有点慢，暂时不用
+    //const unitAddress = await publicIp.v4();
+    const unitAddress = getIpAdress();
 
     return {
         unitName,
