@@ -37,6 +37,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
     async start() {
         console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
         await this.gatherMQ.connect();
+
+        await this.gatherMQ.subscribeTask();
     }
 
     async stop() {
@@ -45,6 +47,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
     }
 }
 
+// 构建采集单元的标记
 function buildGatherCellId(unitInfo){
     return `采集单元 [${unitInfo.unitName}] 编号[${unitInfo.unitId} ${unitInfo.unitNo}]`
 }

@@ -92,7 +92,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         }
     }
 
-    async deleteQueue(queue){
+    async deleteQueue(queue) {
         // 当前连接是否关闭
         const isClosed = _.isNil(this.conn);
         if (isClosed) await this.connect();
@@ -117,7 +117,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         const ch = await this.conn.createConfirmChannel();
         try {
             // 把对象转为支付串
-            if(!_.isString(content)) content= JSON.stringify(content);
+            if (!_.isString(content)) content = JSON.stringify(content);
             const buf = Buffer.from(content);
             let ok;
             if (!_.isEmpty(queue)) {
@@ -180,16 +180,20 @@ class RabbitMQVisitor extends ToucanMQVisitor {
 
         // 创建通道
         const ch = await this.conn.createChannel();
+
         try {
             if (!_.isEmpty(queue)) {
-                const { queueOptions, consumOptions } = options;
+                const { queueOptions, consumeOptions } = options;
 
                 // 声明队列，否在导致消息监听失败
                 await ch.assertQueue(queue, queueOptions);
 
+                // 设置每次读1个任务
+                await ch['prefetch'](1, false);
+
                 // 消费消息
-                // 默认指定noAck,这样消费消息后，就重服务器上删除
-                await ch.consume(queue, onMessage, Object.assign({ noAck: true }, consumOptions));
+                // 指定noAck = true ,这样消费消息后，就从服务器上删除
+                await ch.consume(queue, onMessage, Object.assign({ noAck: false }, consumeOptions));
             } else {
                 // 
             }
