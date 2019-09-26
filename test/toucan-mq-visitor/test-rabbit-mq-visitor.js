@@ -2,9 +2,10 @@
 const expect = require('chai').expect;
 const mqvCreate = require('../../libs/toucan-mq-visitor');
 const RabbitMQExpect = require('../../libs/toucan-utility/_expect-rabbit-mq');
+const { sleep } = require('../../libs/toucan-utility');
 const uuid = require('uuid').v4;
 
-describe('RabbitMQVisitor 综合测试 temp', () => {
+describe('RabbitMQVisitor 综合测试 ', () => {
 
     describe('基础', () => {
 
@@ -24,7 +25,7 @@ describe('RabbitMQVisitor 综合测试 temp', () => {
 
     });
 
-    describe('queue收发_删除 ', () => {
+    describe('queue收发_删除', () => {
         const mqv = mqvCreate('rabbit');
         const queue = 'test-send2q';
 
@@ -42,15 +43,52 @@ describe('RabbitMQVisitor 综合测试 temp', () => {
             let result = await mqv.send(msg, { queue });
 
             expect(result).to.be.true;
+            await sleep(500);
 
             let count = 0;
-            await mqv.receive((x) => {
+            await mqv.receive(async (x) => {
                 const resultMsg = x.content.toString()
                 expect(resultMsg, '接收消息内对比').to.be.eq(msg);
                 count = 1;
+
+                await sleep(100);
+                return true;
             }, { queue })
             expect(count).to.be.eq(1);
+        });
 
+    });
+
+    describe('queue接收 temp', () => {
+        const mqv = mqvCreate('rabbit');
+        const queue = 'test-receivefromqueue';
+
+        before(async () => {
+            await mqv.connect();
+            await mqv.deleteQueue(queue);
+        });
+
+        after(async () => {
+            await mqv.disconnect();
+        })
+
+        it('nack', async () => {
+            const msg = '我是测试 ' + uuid();
+            let result = await mqv.send(msg, { queue });
+
+            expect(result).to.be.true;
+            await sleep(500);
+
+            let count = 0;
+            await mqv.receive(async (x) => {
+                const resultMsg = x.content.toString()
+                expect(resultMsg, '接收消息内对比').to.be.eq(msg);
+                count = 1;
+
+                await sleep(100);
+                return false;
+            }, { queue, consumeOptions: { noAck: true } })
+            expect(count).to.be.eq(1);
         });
 
     });
@@ -79,10 +117,12 @@ describe('RabbitMQVisitor 综合测试 temp', () => {
     describe('direct模式_收发', () => {
         const mqv = mqvCreate('rabbit');
         const exchange = 'testEx-direct-send';
+        const routeKey = 'test-direct-01';
 
         before(async () => {
             await mqv.connect();
             await mqv.prepareExchange(exchange, 'direct');
+            await mqv.deleteQueue(routeKey);
         });
 
         after(async () => {
@@ -93,7 +133,7 @@ describe('RabbitMQVisitor 综合测试 temp', () => {
         it('routekey = queue', async () => {
             const msg = '我是测试 ' + uuid();
 
-            const routeKey = 'test-direct-01';
+
             let result = await mqv.send(msg, { exchange, routeKey });
             expect(result).to.be.true;
 
@@ -104,11 +144,11 @@ describe('RabbitMQVisitor 综合测试 temp', () => {
             }, { queue: routeKey })
 
             expect(count, '消息没有收到').to.be.eq(1);
-            await mqv.deleteQueue(routeKey);
+
         });
 
     });
-    
+
 });
 
 
