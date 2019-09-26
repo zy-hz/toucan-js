@@ -4,7 +4,7 @@ const mqvCreate = require('../../libs/toucan-mq-visitor');
 const RabbitMQExpect = require('../../libs/toucan-utility/_expect-rabbit-mq');
 const uuid = require('uuid').v4;
 
-describe('RabbitMQVisitor 综合测试', () => {
+describe('RabbitMQVisitor 综合测试 temp', () => {
 
     describe('基础', () => {
 
@@ -24,11 +24,13 @@ describe('RabbitMQVisitor 综合测试', () => {
 
     });
 
-    describe('queue收发_删除', () => {
+    describe('queue收发_删除 ', () => {
         const mqv = mqvCreate('rabbit');
+        const queue = 'test-send2q';
 
         before(async () => {
             await mqv.connect();
+            await mqv.deleteQueue(queue);
         });
 
         after(async () => {
@@ -36,7 +38,6 @@ describe('RabbitMQVisitor 综合测试', () => {
         })
 
         it('', async () => {
-            const queue = 'test-send2q';
             const msg = '我是测试 ' + uuid();
             let result = await mqv.send(msg, { queue });
 
@@ -44,12 +45,12 @@ describe('RabbitMQVisitor 综合测试', () => {
 
             let count = 0;
             await mqv.receive((x) => {
-                expect(x.content.toString(), '接收消息内对比').to.be.eq(msg);
+                const resultMsg = x.content.toString()
+                expect(resultMsg, '接收消息内对比').to.be.eq(msg);
                 count = 1;
             }, { queue })
             expect(count).to.be.eq(1);
 
-            await mqv.deleteQueue(queue);
         });
 
     });

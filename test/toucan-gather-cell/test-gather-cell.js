@@ -5,7 +5,7 @@ const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell temp', () => {
+describe('ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试', async () => {
