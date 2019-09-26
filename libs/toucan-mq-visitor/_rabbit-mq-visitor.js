@@ -200,27 +200,20 @@ class RabbitMQVisitor extends ToucanMQVisitor {
                 await ch.prefetch(opt.waitAckNumber, false);
 
                 // 消费消息
-                await ch.consume(queue, async (msg) => {
-                    try {
-                        // 回调处理接收到的消息
-                        const ok = await onMessage(msg);
-                        if (ok) {
-                            // 发生消息正确处理
-                            if (!opt.noAck) await ch.ack(msg);
-                        }else{
-                            // 重新推送消息到队列
-                            if (opt.noAck) await ch.nack(msg);
-                        }
-                    }
-                    catch (e) {
-                        console.log(e.stack)
-                        // 发生任何异常的时候，重新推送消息到队列
-                        await ch.nack(msg);
-                        // 将异常抛出
-                        throw e;
-                    }
+                const msg = await ch.get(queue, opt);
 
-                }, opt);
+                // 回调处理接收到的消息
+                const ok = await onMessage(msg);
+                if (ok) {
+                    // 发生消息正确处理
+                    if (!opt.noAck) await ch.ack(msg);
+                } else {
+                    // 当noAck = true 时，消费者获得消息后，就从服务器删除该消息了
+                    // 所以，当消息处理失败的时候，需要重新推送消息到队列
+                    // TODO::这个功能没有生效，请不要使用noAck = true 来发送
+                    if (opt.noAck) await ch.nack(msg);
+                }
+
             } else {
                 // 
             }

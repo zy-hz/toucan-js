@@ -5,7 +5,7 @@ const RabbitMQExpect = require('../../libs/toucan-utility/_expect-rabbit-mq');
 const { sleep } = require('../../libs/toucan-utility');
 const uuid = require('uuid').v4;
 
-describe('RabbitMQVisitor 综合测试 ', () => {
+describe('RabbitMQVisitor 综合测试 temp', () => {
 
     describe('基础', () => {
 
@@ -59,7 +59,7 @@ describe('RabbitMQVisitor 综合测试 ', () => {
 
     });
 
-    describe('queue接收 temp', () => {
+    describe('queue接收 ', () => {
         const mqv = mqvCreate('rabbit');
         const queue = 'test-receivefromqueue';
 
@@ -72,7 +72,7 @@ describe('RabbitMQVisitor 综合测试 ', () => {
             await mqv.disconnect();
         })
 
-        it('nack', async () => {
+        it('when noAck = false,接收处理成功', async () => {
             const msg = '我是测试 ' + uuid();
             let result = await mqv.send(msg, { queue });
 
@@ -86,9 +86,39 @@ describe('RabbitMQVisitor 综合测试 ', () => {
                 count = 1;
 
                 await sleep(100);
-                return false;
-            }, { queue, consumeOptions: { noAck: true } })
+                return true;
+            }, { queue, consumeOptions: { noAck: false } })
             expect(count).to.be.eq(1);
+
+            await sleep(500);
+            const mqExpect = new RabbitMQExpect();
+            const qCount = await mqExpect.getQueueCount(mqv.conn,queue);
+            expect(qCount).to.be.equal(0);
+        });
+
+        it('when noAck = false,接收处理失败', async () => {
+            const msg = '我是测试 ' + uuid();
+            let result = await mqv.send(msg, { queue });
+
+            expect(result).to.be.true;
+            await sleep(500);
+
+            let count = 0;
+            await mqv.receive(async (x) => {
+                const resultMsg = x.content.toString()
+                expect(resultMsg, '接收消息内对比').to.be.eq(msg);
+                count = 1;
+
+                await sleep(100);
+                // 模拟处理失败
+                return false;
+            }, { queue, consumeOptions: { noAck: false } })
+            expect(count).to.be.eq(1);
+
+            await sleep(500);
+            const mqExpect = new RabbitMQExpect();
+            const qCount = await mqExpect.getQueueCount(mqv.conn,queue);
+            expect(qCount).to.be.equal(1);
         });
 
     });
