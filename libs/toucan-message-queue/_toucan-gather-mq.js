@@ -11,18 +11,16 @@ class ToucanGatherMQ extends ToucanBaseMQ {
     }
 
     // 订阅采集任务
-    async subscribeTask(options = {}) {
+    async subscribeTask() {
 
         await this.mqVisitor.receive(async (msg) => {
 
             console.log(msg.content.toString());
             await sleep(1000);
+            return true;
 
         }, {
-            queue: 'toucan.cm.http',
-            options: {
-                consumeOptions: { noAck: false }
-            }
+            queue: 'toucan.cm.http'
         })
     }
 }

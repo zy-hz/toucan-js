@@ -16,7 +16,4 @@ describe('ToucanTaskMQ 测试', () => {
         await taskMQ.disconnect();
     });
 
-    it('publishTask', async () => {
-
-    });
 });
