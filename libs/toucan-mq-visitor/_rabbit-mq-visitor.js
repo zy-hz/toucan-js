@@ -99,7 +99,9 @@ class RabbitMQVisitor extends ToucanMQVisitor {
 
         const ch = await this.conn.createChannel();
         try {
-            await ch.deleteQueue(queue);
+            for(const q of _.concat([],queue)){
+                await ch.deleteQueue(q);
+            }
         }
         finally {
             await ch.close();
