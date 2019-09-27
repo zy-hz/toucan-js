@@ -5,7 +5,7 @@ const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell temp', () => {
+describe('ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试', async () => {
@@ -59,7 +59,7 @@ describe('ToucanGatherCell temp', () => {
             const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ ,skillKeys});
 
             await gc.start();
-            await gc.stop();
+            //await gc.stop();
         });
 
         it('多个RabbitMQ启动', async () => {

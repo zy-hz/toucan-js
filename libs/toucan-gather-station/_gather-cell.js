@@ -9,7 +9,7 @@
 
 const { ToucanWorkUnit } = require('../toucan-work-unit');
 const { StatusCode } = require('../toucan-utility');
-const SubscribeGatherTaskJob = require('../toucan-gather-cell/_job-subscribe-gather-task');
+const { SubscribeGatherTaskJob } = require('../toucan-job');
 
 const _ = require('lodash');
 const schedule = require('node-schedule');

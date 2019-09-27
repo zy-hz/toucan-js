@@ -12,9 +12,9 @@ class SubscribeGatherTaskJob {
 
         try {
 
-            console.log('beg',moment().format());
+            console.log('beg', moment().format());
             await sleep(7000);
-            console.log('end',moment().format());
+            console.log('end', moment().format());
         }
         catch (error) {
 
@@ -22,4 +22,4 @@ class SubscribeGatherTaskJob {
     }
 }
 
-module.exports = SubscribeGatherTaskJob;
+module.exports = { SubscribeGatherTaskJob };
