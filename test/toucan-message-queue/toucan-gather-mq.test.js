@@ -62,7 +62,8 @@ describe('ToucanGatherMQ 测试 ', () => {
             const qs = _.at(testQueues, 0);
             gatherMQ.bindTaskQueue(qs);
 
-            await gatherMQ.subscribeTask();
+            const msg = await gatherMQ.subscribeTask();
+            expect(msg.content.toString()).to.be.eq(task1.taskBody);
         });
     });
 });

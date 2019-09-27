@@ -39,13 +39,8 @@ class ToucanGatherMQ extends ToucanBaseMQ {
         // 获得订阅的队列名称，例如：toucan.cm.http
         const queue = this.popTaskQueue();
 
-        await this.mqVisitor.receive(async (msg) => {
-
-            console.log(msg.content.toString());
-            await sleep(1000);
-            return true;
-
-        }, { queue })
+        // 从服务器获得消息
+        return await this.mqVisitor.read({ queue })
     }
 }
 

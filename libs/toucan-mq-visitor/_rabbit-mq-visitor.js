@@ -99,7 +99,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
 
         const ch = await this.conn.createChannel();
         try {
-            for(const q of _.concat([],queue)){
+            for (const q of _.concat([], queue)) {
                 await ch.deleteQueue(q);
             }
         }
@@ -175,7 +175,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         return await ch.publish(exchange, routeKey, buf, sendOptions);
     }
 
-    // 监听消息
+    // 监听消息-通过回调通知
     async receive(onMessage, { queue, queueOptions, consumeOptions }) {
         // 保证连接，可能被其他使用者断开
         await this.connect();
@@ -219,6 +219,40 @@ class RabbitMQVisitor extends ToucanMQVisitor {
             } else {
                 // 
             }
+        }
+        finally {
+            // 关闭通道
+            // 
+            await ch.close();
+        }
+    }
+
+    // 从消息队列获得一个消息
+    async read({ queue, queueOptions, consumeOptions }) {
+        // 保证连接，可能被其他使用者断开
+        await this.connect();
+
+        // 创建通道
+        const ch = await this.conn.createChannel();
+
+        try {
+            // 声明队列，否在导致消息监听失败
+            await ch.assertQueue(queue, queueOptions);
+
+            // 设置消费参数
+            const opt = Object.assign({
+                // 消费消息后，需要给服务器发送确认信息
+                // 当指定noAck = true ,这样消费消息后，就从服务器上删除
+                noAck: true,
+                // 同时等待ack确认信息的数量为1
+                waitAckNumber: 1
+            }, consumeOptions);
+
+            // 设置每次读1个任务
+            await ch.prefetch(opt.waitAckNumber, false);
+
+            // 消费消息
+            return await ch.get(queue, opt);
         }
         finally {
             // 关闭通道
