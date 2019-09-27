@@ -2,6 +2,7 @@
 const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 
+
 describe('ToucanTaskMQ 测试', () => {
 
     it('构造', () => {
@@ -15,5 +16,6 @@ describe('ToucanTaskMQ 测试', () => {
 
         await taskMQ.disconnect();
     });
+
 
 });

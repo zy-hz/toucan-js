@@ -47,7 +47,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
         await this.gatherMQ.connect();
 
         // 订阅采集任务
-        await this.gatherMQ.subscribeTask(this.skillKeys);
+        await this.gatherMQ.subscribeTask();
     }
 
     async stop() {
