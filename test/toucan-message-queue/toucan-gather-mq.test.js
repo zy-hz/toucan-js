@@ -42,14 +42,22 @@ describe('ToucanGatherMQ 测试 ', () => {
         const task2 = {
             taskBody: 'i am second task',
             taskOptions: {
+                queue: testQueues[0]
+            }
+        };
+
+        const task3 = {
+            taskBody: 'i am third task',
+            taskOptions: {
                 queue: testQueues[1]
             }
         };
 
-        before(async () => {
+        beforeEach(async () => {
             await taskMQ.mqVisitor.deleteQueue(testQueues);
             await taskMQ.publishTask(task1);
             await taskMQ.publishTask(task2);
+            await taskMQ.publishTask(task3);
         });
 
         after(async () => {
@@ -57,13 +65,31 @@ describe('ToucanGatherMQ 测试 ', () => {
             await gatherMQ.disconnect();
         })
 
-        it('subscribe ONE queue ', async () => {
-            // 读取一个队列
+        it('subscribe ONE queue', async () => {
             const qs = _.at(testQueues, 0);
             gatherMQ.bindTaskQueue(qs);
 
             let msg = await gatherMQ.subscribeTask();
             expect(msg.content.toString()).to.be.eq(task1.taskBody);
+
+            msg = await gatherMQ.subscribeTask();
+            expect(msg.content.toString()).to.be.eq(task2.taskBody);
+
+            msg = await gatherMQ.subscribeTask();
+            expect(msg,'队列没有应该任务了').is.false;
+        });
+
+        it('subscribe TWO queue ', async () => {
+            gatherMQ.bindTaskQueue(testQueues);
+
+            let msg = await gatherMQ.subscribeTask();
+            expect(msg.content.toString()).to.be.eq(task1.taskBody);
+
+            msg = await gatherMQ.subscribeTask();
+            expect(msg.content.toString(),'获取第二个队列的任务').to.be.eq(task3.taskBody);
+
+            msg = await gatherMQ.subscribeTask();
+            expect(msg.content.toString(),'获取第一个队列的任务').to.be.eq(task2.taskBody);
 
             msg = await gatherMQ.subscribeTask();
             expect(msg, '队列没有应该任务了').is.false;
