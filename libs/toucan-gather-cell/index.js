@@ -19,6 +19,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
         theTime = _.now(),
         // 采集消息队列访问器
         gatherMQ,
+        // 拥有的技能
+        skillKeys = [],
     } = {}
     ) {
         // 设置默认的采集单元资料
@@ -29,16 +31,23 @@ class ToucanGatherCell extends ToucanWorkUnit {
         // ToucanWorkUnit构造器
         super({ unitInfo, theTime });
 
-        //
+        // 设置采集消息队列
         this.gatherMQ = gatherMQ;
+
+        // 设置拥有的采集技能
+        this.skillKeys = skillKeys;
     }
 
     // 启动采集单元
     async start() {
         console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
+        // 制定采集任务的消息队列
+        this.gatherMQ.bindTaskQueue(this.skillKeys)
+        // 启动消息队列的连接
         await this.gatherMQ.connect();
 
-        await this.gatherMQ.subscribeTask();
+        // 订阅采集任务
+        await this.gatherMQ.subscribeTask(this.skillKeys);
     }
 
     async stop() {

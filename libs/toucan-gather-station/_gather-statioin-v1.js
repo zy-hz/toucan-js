@@ -118,7 +118,7 @@ function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
             unitAddress
         }
 
-        gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ }))
+        gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ, skillKeys: skill.skillKeys }))
     }
     return gcs;
 }

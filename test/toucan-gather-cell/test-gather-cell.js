@@ -43,44 +43,52 @@ describe('ToucanGatherCell', () => {
             expect(gatherCell.workInfo.unitStatus.suspendDurationTime, '挂起时间 = 0').to.be.eq(0);
 
         });
+
+        it('skillKeys 测试1个技能', () => {
+            const skillKeys = ['cm.http'];
+            const gatherCell = new ToucanGatherCell({ skillKeys });
+            expect(gatherCell.skillKeys).to.be.eq(skillKeys);
+        })
     });
 
     describe('启动停止', () => {
+        const skillKeys = ['cm.http'];
 
         it('单个RabbitMQ启动', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
-            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ });
-    
+            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ ,skillKeys});
+
             await gc.start();
             await gc.stop();
         });
-    
+
         it('多个RabbitMQ启动', async () => {
             const mqv1 = mqFactory.createGatherMQ('rabbit');
             const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, gatherMQ: mqv1 });
             await gc1.start();
-    
+
             const mqv2 = mqFactory.createGatherMQ('rabbit');
             const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, gatherMQ: mqv2 });
             await gc2.start();
-    
+
             await gc1.stop();
             await gc2.stop();
         });
-    
+
         it('共享RabbitMQ启动', async () => {
+            
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
             const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, gatherMQ });
             await gc1.start();
-    
+
             const gc2 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-2' }, gatherMQ });
             await gc2.start();
-    
+
             await gc1.stop();
             await gc2.stop();
         });
     });
-    
+
 });
 
 

@@ -7,12 +7,12 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 综合测试 temp', () => {
+describe('GatherStationV1 综合测试', () => {
 
     describe('GatherStationV1 测试 ', () => {
         const cfgFileName = `${__dirname}/gsconfig.json`;
 
-        it('读取配置文件 ', () => {
+        it('读取配置文件', () => {
             const gs = new ToucanGatherStation(cfgFileName);
             expect(_.isNil(gs)).to.be.false;
 

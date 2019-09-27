@@ -10,7 +10,14 @@ class ToucanGatherMQ extends ToucanBaseMQ {
         super(mqVisitor, options);
     }
 
+    // 绑定采集任务的队列
+    // fromQueues - 订阅的队列列表，例如：toucan.cm.http,toucan.sp.com.ali
+    bindTaskQueue(fromQueues = []){
+
+    }
+
     // 订阅采集任务
+
     async subscribeTask() {
 
         await this.mqVisitor.receive(async (msg) => {
