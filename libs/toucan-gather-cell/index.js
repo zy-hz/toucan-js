@@ -8,7 +8,11 @@
 // 
 
 const { ToucanWorkUnit } = require('../toucan-work-unit');
+const { StatusCode } = require('../toucan-utility');
+const SubscribeGatherTaskJob = require('./_job-subscribe-gather-task');
+
 const _ = require('lodash');
+const schedule = require('node-schedule');
 
 class ToucanGatherCell extends ToucanWorkUnit {
 
@@ -41,23 +45,50 @@ class ToucanGatherCell extends ToucanWorkUnit {
     // 启动采集单元
     async start() {
         console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
-        // 制定采集任务的消息队列
-        this.gatherMQ.bindTaskQueue(this.skillKeys)
-        // 启动消息队列的连接
-        await this.gatherMQ.connect();
 
-        // 订阅采集任务
-        await this.gatherMQ.subscribeTask();
+        try {
+            // 制定采集任务的消息队列
+            this.gatherMQ.bindTaskQueue(this.skillKeys)
+            // 启动消息队列的连接
+            await this.gatherMQ.connect();
+
+            // 订阅的作业
+            const sgtJob = new SubscribeGatherTaskJob({ gatherMQ: this.gatherMQ });
+
+            // 启动定时作业
+            const scheduleRule = '*/3 * * * * *'
+            this.schedule = schedule.scheduleJob(scheduleRule, async () => {
+                this.schedule.cancel();
+
+                this.workInfo.unitStatus.updateStatus(StatusCode.actived);
+                await sgtJob.do();
+                this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+
+                this.schedule.reschedule(scheduleRule);
+            });
+
+            // 设置状态
+            this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+        }
+        catch (error) {
+            // 设置状态
+            this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
+        }
+
     }
 
     async stop() {
         console.log(`${buildGatherCellId(this.unitInfo)} 停止`);
+        // 关闭定时器
+        if (!_.isNil(this.schedule)) this.schedule.cancel();
+        // 断开采集消息队列
         await this.gatherMQ.disconnect();
     }
+
 }
 
 // 构建采集单元的标记
-function buildGatherCellId(unitInfo){
+function buildGatherCellId(unitInfo) {
     return `采集单元 [${unitInfo.unitName}] 编号[${unitInfo.unitId} ${unitInfo.unitNo}]`
 }
 

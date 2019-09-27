@@ -54,12 +54,12 @@ describe('ToucanGatherCell', () => {
     describe('启动停止', () => {
         const skillKeys = ['cm.http'];
 
-        it('单个RabbitMQ启动', async () => {
+        it('单个RabbitMQ启动 temp', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
             const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ ,skillKeys});
 
             await gc.start();
-            await gc.stop();
+            //await gc.stop();
         });
 
         it('多个RabbitMQ启动', async () => {

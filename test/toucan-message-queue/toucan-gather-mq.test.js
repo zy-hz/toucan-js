@@ -27,7 +27,7 @@ describe('ToucanGatherMQ 测试 ', () => {
         expect(queue).to.be.eq('toucan.cm.http');
     });
 
-    describe('subscribeTask temp', () => {
+    describe('subscribeTask ', () => {
         const gatherMQ = mqFactory.createGatherMQ('rabbit');
         const taskMQ = mqFactory.createTaskMQ('rabbit');
         const testQueues = ['test.cm.http', 'test.sp.com.sohu'];
