@@ -12,7 +12,7 @@ const { NullArgumentError } = require('../toucan-error');
 const { createGatherSkillTemplate } = require('./_gather-skill');
 const { StatusCode, getIpAdress } = require('../toucan-utility');
 
-const ToucanGatherCell = require('../toucan-gather-cell');
+const ToucanGatherCell = require('./_gather-cell');
 const mqFactory = require('../toucan-message-queue');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {

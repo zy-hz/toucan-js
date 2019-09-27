@@ -2,10 +2,10 @@
 const expect = require('chai').expect;
 const _ = require('lodash');
 const { sleep, StatusCode } = require('../../libs/toucan-utility');
-const ToucanGatherCell = require('../../libs/toucan-gather-cell');
+const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell', () => {
+describe('ToucanGatherCell temp', () => {
 
     describe('构造', () => {
         it('workInfo 测试', async () => {
@@ -54,12 +54,12 @@ describe('ToucanGatherCell', () => {
     describe('启动停止', () => {
         const skillKeys = ['cm.http'];
 
-        it('单个RabbitMQ启动 temp', async () => {
+        it('单个RabbitMQ启动 temp ', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
             const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ ,skillKeys});
 
             await gc.start();
-            //await gc.stop();
+            await gc.stop();
         });
 
         it('多个RabbitMQ启动', async () => {
