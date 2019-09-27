@@ -36,11 +36,21 @@ class ToucanGatherMQ extends ToucanBaseMQ {
 
     // 订阅采集任务
     async subscribeTask() {
-        // 获得订阅的队列名称，例如：toucan.cm.http
-        const queue = this.popTaskQueue();
+        // 尝试从每个队列中获得任务，如果发现任务，下次就从下一个开始
+        const maxTryCount = this.__taskBindQueue.length;
+        let tryNum = 0;
+        while (tryNum < maxTryCount) {
+            // 获得订阅的队列名称，例如：toucan.cm.http
+            const queue = this.popTaskQueue();
 
-        // 从服务器获得消息
-        return await this.mqVisitor.read({ queue })
+            // 从服务器获得消息
+            const msg = await this.mqVisitor.read({ queue })
+
+            if (msg != false ) return msg;
+            tryNum = tryNum + 1;
+        }
+
+        return false;
     }
 }
 

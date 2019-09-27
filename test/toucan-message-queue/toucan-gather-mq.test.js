@@ -52,7 +52,7 @@ describe('ToucanGatherMQ 测试 ', () => {
             await taskMQ.publishTask(task2);
         });
 
-        after(async()=>{
+        after(async () => {
             await taskMQ.disconnect();
             await gatherMQ.disconnect();
         })
@@ -62,8 +62,11 @@ describe('ToucanGatherMQ 测试 ', () => {
             const qs = _.at(testQueues, 0);
             gatherMQ.bindTaskQueue(qs);
 
-            const msg = await gatherMQ.subscribeTask();
+            let msg = await gatherMQ.subscribeTask();
             expect(msg.content.toString()).to.be.eq(task1.taskBody);
+
+            msg = await gatherMQ.subscribeTask();
+            expect(msg, '队列没有应该任务了').is.false;
         });
     });
 });
