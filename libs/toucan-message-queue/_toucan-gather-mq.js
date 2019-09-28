@@ -2,7 +2,6 @@
 // 采集消息队列
 
 const ToucanBaseMQ = require('./_toucan-base-mq');
-const { sleep } = require('../toucan-utility');
 const _ = require('lodash');
 
 class ToucanGatherMQ extends ToucanBaseMQ {

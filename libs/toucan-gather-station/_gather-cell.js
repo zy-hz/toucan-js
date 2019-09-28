@@ -53,6 +53,9 @@ class ToucanGatherCell extends ToucanWorkUnit {
             // 启动消息队列的连接
             await this.gatherMQ.connect();
 
+            // 绑定需要订阅消息队列
+            this.gatherMQ.bindTaskQueue(this.skillKeys);
+
             // 订阅的作业
             const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ });
 
