@@ -44,13 +44,12 @@ function getSpiderIdByTargetUrl(targetUrl) {
 function findAllSpiderNames() {
 
     let spiders = [];
-    _.forEach(fs.readdirSync(__dirname + '/../'), (x) => {
+    _.forEach(fs.readdirSync(__dirname + '/../toucan.sp/'), (x) => {
 
-        const match = x.match(/_sp-(.*?).js/im);
+        const match = x.match(/_(.*?).js/im);
         if (!_.isNil(match)) {
             spiders.push(match[1].replace(/-/img, '.'));
         }
-
     });
 
     return spiders;

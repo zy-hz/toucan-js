@@ -1,4 +1,4 @@
-const ToucanHttpPageSpider = require('./_http-page-spider');
+const ToucanHttpSpider = require('./toucan.cm/_http-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
@@ -36,7 +36,7 @@ class ToucanSpiderFactory {
         if (!isClass(spiderClass, baseSpiderClassName) && !_.isEmpty(targetUrl)) spiderClass = createSpiderClassByUrl(targetUrl);
 
         // 如果都不是，创建默认蜘蛛 (http蜘蛛)
-        if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpPageSpider;
+        if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpSpider;
 
         const opt = Object.assign(spiderOption, { spiderType });
         return new spiderClass(opt);
@@ -86,10 +86,10 @@ function loadSpiderClass(
     pos = 'both'
 ) {
     let className = '';
-    if (pos === 'prefix') className = `_${specialFlag}-page-spider`;
-    if (pos === 'postfix') className = `_page-spider-${specialFlag}`;
+    if (pos === 'prefix') className = `_${specialFlag}-spider`;
+    if (pos === 'postfix') className = `_spider-${specialFlag}`;
 
-    return require('./' + className);
+    return require('./toucan.cm/' + className);
 }
 
 

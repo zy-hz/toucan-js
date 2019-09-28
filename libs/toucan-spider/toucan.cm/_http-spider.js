@@ -1,7 +1,7 @@
-const { ToucanBaseSpider } = require('./_base-spider');
-const pageFetchFactory = require('../toucan-page-fetch');
+const { ToucanBaseSpider } = require('../_base-spider');
+const pageFetchFactory = require('../../toucan-page-fetch');
 
-class ToucanHttpPageSpider extends ToucanBaseSpider {
+class ToucanHttpSpider extends ToucanBaseSpider {
 
     constructor(option = {}) {
         // 继承基类的创建参数
@@ -13,4 +13,4 @@ class ToucanHttpPageSpider extends ToucanBaseSpider {
 
 }
 
-module.exports = ToucanHttpPageSpider;
+module.exports = ToucanHttpSpider;
