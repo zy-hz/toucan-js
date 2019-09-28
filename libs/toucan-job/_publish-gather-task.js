@@ -26,7 +26,7 @@ class PublishGatherTaskJob {
         // 为task添加taskOptions属性
         for (const t of tasks) {
             t.taskOptions = await this.buildTaskOptions(t);
-            console.log('准备发布作业',t.taskBody);
+            console.log('准备发布作业', t.taskBody);
         }
 
         // 推送采集任务到采集任务消息队列
@@ -48,4 +48,4 @@ class PublishGatherTaskJob {
     }
 }
 
-module.exports = PublishGatherTaskJob;
+module.exports = { PublishGatherTaskJob };

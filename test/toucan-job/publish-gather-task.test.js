@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
-const PublishTaskJob = require('../../libs/toucan-control-center/_job-publish-gather-task');
+const { PublishGatherTaskJob } = require('../../libs/toucan-job');
 const mqFactory = require('../../libs/toucan-message-queue');
 const tvFactory = require('../../libs/toucan-task-visitor');
 
-describe('PublishTaskJob 综合测试', () => {
+describe('PublishGatherTaskJob 综合测试', () => {
 
     describe('do', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
         const taskV = tvFactory.create();
-        const job = new PublishTaskJob({ taskMQ, taskV, exchange: 'test.toucan.gather.task' });
+        const job = new PublishGatherTaskJob({ taskMQ, taskV, exchange: 'test.toucan.gather.task' });
 
         after(async () => {
             await taskMQ.disconnect();

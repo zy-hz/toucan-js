@@ -8,7 +8,7 @@ const { ToucanWorkUnit } = require('../toucan-work-unit')
 const { StatusCode } = require('../toucan-utility');
 const mqFactory = require('../toucan-message-queue');
 const tvFactory = require('../toucan-task-visitor');
-const PublishGatherTaskJob = require('./_job-publish-gather-task');
+const { PublishGatherTaskJob } = require('../toucan-job');
 
 class GatherTaskCenter extends ToucanWorkUnit {
 
