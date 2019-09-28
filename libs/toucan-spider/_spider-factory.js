@@ -23,7 +23,7 @@ class ToucanSpiderFactory {
         spiderOption = {}
     ) {
         // 蜘蛛基类的名称
-        const baseSpiderClassName = 'ToucanPageSpider';
+        const baseSpiderClassName = 'ToucanBaseSpider';
         let spiderClass = {};
 
         // 根据类型创造蜘蛛
