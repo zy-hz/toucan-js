@@ -8,7 +8,7 @@
 // 
 
 const { ToucanWorkUnit } = require('../toucan-work-unit');
-const { StatusCode } = require('../toucan-utility');
+const { StatusCode, sleep } = require('../toucan-utility');
 const { SubscribeGatherTaskJob } = require('../toucan-job');
 
 const _ = require('lodash');
@@ -56,14 +56,26 @@ class ToucanGatherCell extends ToucanWorkUnit {
             const sgtJob = new SubscribeGatherTaskJob({ gatherMQ: this.gatherMQ });
 
             // 启动定时作业
-            const scheduleRule = '*/3 * * * * *'
+            const scheduleRule = '* * * * * *'
             this.schedule = schedule.scheduleJob(scheduleRule, async () => {
                 this.schedule.cancel();
 
                 this.workInfo.unitStatus.updateStatus(StatusCode.actived);
-                await sgtJob.do();
-                this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+                try {
+                    const result = await sgtJob.do();
+                    this.workInfo.unitStatus.updateStatus(StatusCode.idle);
 
+                    // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
+                    if (result.jobCount === 0) await sleep(1000 * 5);
+
+                } catch (error) {
+                    // 作业发生错误时，采集单元的状态为挂起
+                    // 注意：这些错误应该时系统没有办法处理的异常
+                    this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
+                    await sleep(1000 * 60);
+                }
+
+                // 重新启动定时计划
                 this.schedule.reschedule(scheduleRule);
             });
 
