@@ -2,8 +2,8 @@ const ToucanHttpSpider = require('./toucan.cm/_http-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
-const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl,
-    createSpiderClassBySpiderType, createSpiderClassByTarget, createSpiderClassByUrl } = require('./util');
+const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl} = require('./util/_func-spider-id');
+const {createSpiderClassBySpiderType, createSpiderClassByTarget, createSpiderClassByUrl } = require('./util/_func-create-spider');
 
 // 大嘴鸟的蜘蛛工厂
 class ToucanSpiderFactory {
