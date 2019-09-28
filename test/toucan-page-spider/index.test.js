@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const sipderFactory = require('../../libs/toucan-page-spider');
 const { isClass } = require('../../libs/toucan-utility');
 
-describe('ToucanSpiderFactory 测试', () => {
+describe('ToucanSpiderFactory 测试 temp', () => {
 
     describe('create', () => {
         it('蜘蛛参数测试', () => {
@@ -25,18 +25,20 @@ describe('ToucanSpiderFactory 测试', () => {
         });
     })
 
-    describe('getSpiderId', () => {
+    describe('getSpiderId ', () => {
 
-        it('sipderType', () => {
+        it('sipderType ', () => {
             expect(sipderFactory.getSpiderId({ spiderType: 'http' })).to.be.eq('toucan.cm.http');
             expect(sipderFactory.getSpiderId({ spiderType: 'browser' })).to.be.eq('toucan.cm.browser');
-            expect(sipderFactory.getSpiderId()).is.empty;
+            expect(sipderFactory.getSpiderId(),'类型为空，默认http蜘蛛').to.be.eq('toucan.cm.http');
         });
 
         it('targetUrl', () => {
             expect(sipderFactory.getSpiderId({ targetUrl: 'www.sohu.com' })).to.be.eq('toucan.sp.com.sohu');
             expect(sipderFactory.getSpiderId({ targetUrl: 'news.sohu.com' })).to.be.eq('toucan.sp.com.sohu.news');
             expect(sipderFactory.getSpiderId({ targetUrl: 'ad.sohu.com' })).to.be.eq('toucan.sp.com.sohu');
+
+            expect(sipderFactory.getSpiderId({ targetUrl: 'abc.com' })).to.be.eq('toucan.cm.http');
         });
 
 
