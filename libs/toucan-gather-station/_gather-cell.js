@@ -53,7 +53,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             await this.gatherMQ.connect();
 
             // 订阅的作业
-            const sgtJob = new SubscribeGatherTaskJob({ gatherMQ: this.gatherMQ });
+            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ });
 
             // 启动定时作业
             const scheduleRule = '* * * * * *'
@@ -62,11 +62,12 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
                 this.workInfo.unitStatus.updateStatus(StatusCode.actived);
                 try {
-                    const result = await sgtJob.do();
+                    const result = await sgtJob.do() || {};
                     this.workInfo.unitStatus.updateStatus(StatusCode.idle);
 
+                    const { jobCount, jobSpan } = result;
                     // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
-                    if (result.jobCount === 0) await sleep(1000 * 5);
+                    if (jobCount === 0) await sleep(jobSpan || 1000 * 5);
 
                 } catch (error) {
                     // 作业发生错误时，采集单元的状态为挂起
@@ -97,11 +98,15 @@ class ToucanGatherCell extends ToucanWorkUnit {
         await this.gatherMQ.disconnect();
     }
 
+    createScheduleJob(options) {
+        return new SubscribeGatherTaskJob(options);
+    }
 }
 
 // 构建采集单元的标记
 function buildGatherCellId(unitInfo) {
     return `采集单元 [${unitInfo.unitName}] 编号[${unitInfo.unitId} ${unitInfo.unitNo}]`
 }
+
 
 module.exports = ToucanGatherCell;

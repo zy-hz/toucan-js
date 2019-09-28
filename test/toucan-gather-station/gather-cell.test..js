@@ -1,11 +1,12 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const _ = require('lodash');
+const moment = require('moment');
 const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell temp', () => {
+describe('ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试 ', async () => {
@@ -89,6 +90,36 @@ describe('ToucanGatherCell temp', () => {
         });
     });
 
+    describe('work loop zero job temp', () => {
+        const skillKeys = ['cm.http'];
+        const gatherMQ = mqFactory.createGatherMQ('rabbit');
+
+        const waitSecond = 1000 * 30;
+        const jobSpan = 1000 * 3;
+        // 全局计数器
+        let runCount = 0;
+
+        class TestGatherCell extends ToucanGatherCell {
+            createScheduleJob() {
+                return {
+                    do() {
+                        runCount = runCount + 1;
+                        console.log(moment().format('HH:mm:ss'), `[${runCount}]find zero job ...`);
+                        return { jobCount: 0, jobSpan };
+                    }
+                }
+            }
+        }
+
+        it('', async () => {
+            const gc = new TestGatherCell({ unitInfo: { unitName: 'zero job 测试' }, gatherMQ, skillKeys });
+            await gc.start();
+
+            await sleep(waitSecond);
+
+            await gc.stop();
+        });
+    });
 });
 
 
