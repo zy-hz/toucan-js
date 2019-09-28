@@ -8,10 +8,10 @@ const mqFactory = require('../../libs/toucan-message-queue');
 describe('ToucanGatherCell', () => {
 
     describe('构造', () => {
-        it('workInfo 测试', async () => {
+        it('workInfo 测试 ', async () => {
             // 固定时间
             const theTime = _.now()
-            const gatherCell = new ToucanGatherCell({ unitInfo: { unitNo: 'N1988' } });
+            const gatherCell = new ToucanGatherCell({ unitInfo: { unitNo: 'N1988' }, theTime });
             const { unitInfo, workInfo } = gatherCell;
 
             expect(_.isNil(gatherCell), '对象不能为空').to.be.false;
@@ -54,12 +54,12 @@ describe('ToucanGatherCell', () => {
     describe('启动停止', () => {
         const skillKeys = ['cm.http'];
 
-        it('单个RabbitMQ启动 temp ', async () => {
+        it('单个RabbitMQ启动 ', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
-            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ ,skillKeys});
+            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ, skillKeys });
 
             await gc.start();
-            //await gc.stop();
+            await gc.stop();
         });
 
         it('多个RabbitMQ启动', async () => {
@@ -76,7 +76,7 @@ describe('ToucanGatherCell', () => {
         });
 
         it('共享RabbitMQ启动', async () => {
-            
+
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
             const gc1 = new ToucanGatherCell({ unitInfo: { unitName: '多个RabbitMQ-1' }, gatherMQ });
             await gc1.start();
