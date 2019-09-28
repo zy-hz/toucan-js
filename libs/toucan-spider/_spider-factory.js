@@ -2,7 +2,8 @@ const ToucanHttpSpider = require('./toucan.cm/_http-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
-const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl } = require('./util');
+const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl,
+    createSpiderClassBySpiderType, createSpiderClassByTarget, createSpiderClassByUrl } = require('./util');
 
 // 大嘴鸟的蜘蛛工厂
 class ToucanSpiderFactory {
@@ -42,7 +43,8 @@ class ToucanSpiderFactory {
         return new spiderClass(opt);
     }
 
-    // 活动蜘蛛编号为采集目标
+    // 根据采集目标获得蜘蛛标识
+    // 例如：toucan.cm.http,toucan.sp.com.ali.1688
     getSpiderId({
         // 第一优先：蜘蛛的类型，http - http协议蜘蛛, browser - 浏览器蜘蛛
         spiderType = '',
@@ -51,12 +53,15 @@ class ToucanSpiderFactory {
         // 第三优先：任务的链接
         targetUrl = '',
     } = {}) {
+        // 根据类型获得蜘蛛标识
         let spiderId = getSpiderIdBySpiderType(spiderType);
         if (!_.isEmpty(spiderId)) return spiderId;
 
+        // 根据任务目标的类型获得蜘蛛标识
         spiderId = getSpiderIdByTargetName(targetName);
         if (!_.isEmpty(spiderId)) return spiderId;
 
+        // 根据任务的url获得蜘蛛标识
         spiderId = getSpiderIdByTargetUrl(targetUrl);
         if (!_.isEmpty(spiderId)) return spiderId;
 
@@ -64,33 +69,5 @@ class ToucanSpiderFactory {
         return getSpiderIdBySpiderType('http');
     }
 }
-
-// 根据蜘蛛的类型创建蜘蛛
-function createSpiderClassBySpiderType(spiderType) {
-    return loadSpiderClass(spiderType, 'prefix');
-}
-
-// 根据目标创建蜘蛛
-function createSpiderClassByTarget(targetName) {
-    return require('./_base-spider');
-}
-
-function createSpiderClassByUrl(url) {
-    return require('./_base-spider');
-}
-
-// 载入蜘蛛类
-function loadSpiderClass(
-    specialFlag,
-    // 标记所在的位置 prefix - 前置，postfix - 后置
-    pos = 'both'
-) {
-    let className = '';
-    if (pos === 'prefix') className = `_${specialFlag}-spider`;
-    if (pos === 'postfix') className = `_spider-${specialFlag}`;
-
-    return require('./toucan.cm/' + className);
-}
-
 
 module.exports = { spiderFactory: new ToucanSpiderFactory() };
