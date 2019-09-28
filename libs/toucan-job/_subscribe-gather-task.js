@@ -1,4 +1,4 @@
-const spiderFactory = require('../toucan-spider');
+const {spiderFactory} = require('../toucan-spider');
 
 class SubscribeGatherTaskJob {
     constructor({
