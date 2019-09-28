@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
-const sipderFactory = require('../../libs/toucan-page-spider');
+const sipderFactory = require('../../libs/toucan-spider');
 const { isClass } = require('../../libs/toucan-utility');
 
 describe('ToucanSpiderFactory 测试', () => {

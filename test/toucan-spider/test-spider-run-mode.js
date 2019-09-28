@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
-const spiderFactory = require('../../libs/toucan-page-spider');
+const spiderFactory = require('../../libs/toucan-spider');
 
 describe('page spider run mode 测试', () => {
 

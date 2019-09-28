@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const uuid = require('uuid/v1');
-const sipderFactory = require('../../libs/toucan-page-spider');
+const sipderFactory = require('../../libs/toucan-spider');
 
 describe('http 蜘蛛抓取测试', () => {
 

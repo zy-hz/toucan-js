@@ -3,7 +3,7 @@
 //
 
 const _ = require('lodash');
-const spiderFactory = require('../toucan-page-spider');
+const spiderFactory = require('../toucan-spider');
 
 class PublishGatherTaskJob {
 
