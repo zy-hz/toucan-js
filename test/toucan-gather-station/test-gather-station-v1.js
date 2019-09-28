@@ -9,7 +9,7 @@ const buildGatherCells = lib.__get__('buildGatherCells');
 
 describe('GatherStationV1 综合测试', () => {
 
-    describe('GatherStationV1 测试 ', () => {
+    describe('GatherStationV1 测试', () => {
         const cfgFileName = `${__dirname}/gsconfig.json`;
 
         it('读取配置文件', () => {

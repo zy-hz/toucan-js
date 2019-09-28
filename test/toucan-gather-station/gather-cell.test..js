@@ -6,7 +6,7 @@ const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('[long]ToucanGatherCell', () => {
+describe('ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试 ', async () => {
@@ -97,11 +97,11 @@ describe('[long]ToucanGatherCell', () => {
         });
     });
 
-    describe('work loop zero job temp', () => {
+    describe('work loop zero job', () => {
         const skillKeys = ['cm.http'];
         const gatherMQ = mqFactory.createGatherMQ('rabbit');
 
-        const waitSecond = 1000 * 30;
+        const waitSecond = 1000 * 10;
         const jobSpan = 1000 * 3;
         // 全局计数器
         let runCount = 0;
@@ -127,10 +127,12 @@ describe('[long]ToucanGatherCell', () => {
             await gc.start();
 
             await sleep(waitSecond);
-
             await gc.stop();
+
+            expect(runCount,'运行次数').to.be.eq(Math.floor(waitSecond/1000/(jobSpan/1000+1)) + 1);
         });
     });
+
 });
 
 

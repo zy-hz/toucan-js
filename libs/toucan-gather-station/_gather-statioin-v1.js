@@ -53,9 +53,15 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
     // 站点停止
     async stop() {
-        // 为每个采集单元开启消息监听模式
+        // 停止每个采集单元的消息监听模式
         for (const gc of this.gatherCellPool.findAll()) {
             await gc.stop();
+        }
+
+        // 清理消息队列的连接
+        const mqList = _.map(_.uniqWith(this.gatherCellPool.__unitArray__, (a, b) => { return a.gatherMQ === b.gatherMQ }), 'gatherMQ');
+        for (const mq of mqList) {
+            await mq.disconnect();
         }
 
         // 变更为空闲状态
