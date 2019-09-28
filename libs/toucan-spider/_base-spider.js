@@ -134,4 +134,4 @@ function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallb
 
 }
 
-module.exports = ToucanBaseSpider;
+module.exports = { ToucanBaseSpider };

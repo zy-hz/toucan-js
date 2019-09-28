@@ -1,4 +1,4 @@
-const ToucanBaseSpider = require('./_base-spider');
+const { ToucanBaseSpider } = require('./_base-spider');
 const pageFetchFactory = require('../toucan-page-fetch');
 
 class ToucanHttpPageSpider extends ToucanBaseSpider {
