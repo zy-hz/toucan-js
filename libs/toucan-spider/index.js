@@ -72,11 +72,11 @@ function createSpiderClassBySpiderType(spiderType) {
 
 // 根据目标创建蜘蛛
 function createSpiderClassByTarget(targetName) {
-    return require('./_base-page-spider');
+    return require('./_base-spider');
 }
 
 function createSpiderClassByUrl(url) {
-    return require('./_base-page-spider');
+    return require('./_base-spider');
 }
 
 // 载入蜘蛛类

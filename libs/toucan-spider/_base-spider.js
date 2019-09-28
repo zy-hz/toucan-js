@@ -15,7 +15,7 @@ const _ = require('lodash');
 const { sleep, getObjectClassName } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 
-class ToucanPageSpider {
+class ToucanBaseSpider {
 
     // 构造页面蜘蛛
     constructor({
@@ -134,4 +134,4 @@ function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallb
 
 }
 
-module.exports = ToucanPageSpider;
+module.exports = ToucanBaseSpider;

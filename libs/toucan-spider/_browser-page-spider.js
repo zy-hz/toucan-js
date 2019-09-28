@@ -2,9 +2,9 @@
 // 浏览器页面蜘蛛
 // 
 
-const ToucanPageSipder = require('./_base-page-spider');
+const ToucanBaseSpider = require('./_base-spider');
 
-class ToucanBrowserPageSpider extends ToucanPageSipder{
+class ToucanBrowserPageSpider extends ToucanBaseSpider{
 
 }
 
