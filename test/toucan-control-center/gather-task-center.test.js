@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const GatherTaskCenter = require('../../libs/toucan-control-center/_gather-task-center');
 const { sleep } = require('../../libs/toucan-utility');
 
-describe('GatherTaskCenter 综合测试', () => {
+describe('GatherTaskCenter 综合测试 temp', () => {
 
     describe('基础', () => {
 
@@ -35,11 +35,3 @@ describe('GatherTaskCenter 综合测试', () => {
     });
 
 });
-
-describe('[isapp1] GatherTaskCenter', () => {
-
-    it('', async () => {
-        const gtc = new GatherTaskCenter(`${__dirname}/gather-task-config.json`);
-        await gtc.init(true);
-    });
-})
