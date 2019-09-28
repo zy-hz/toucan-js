@@ -6,7 +6,7 @@ const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell', () => {
+describe('[long]ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试 ', async () => {
@@ -55,12 +55,14 @@ describe('ToucanGatherCell', () => {
     describe('启动停止', () => {
         const skillKeys = ['cm.http'];
 
-        it('单个RabbitMQ启动 ', async () => {
+        it('单个RabbitMQ启动', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
             const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ, skillKeys });
 
             await gc.start();
             await gc.stop();
+
+            await gatherMQ.disconnect();
         });
 
         it('多个RabbitMQ启动', async () => {
@@ -74,6 +76,9 @@ describe('ToucanGatherCell', () => {
 
             await gc1.stop();
             await gc2.stop();
+
+            await mqv1.disconnect();
+            await mqv2.disconnect();
         });
 
         it('共享RabbitMQ启动', async () => {
@@ -87,6 +92,8 @@ describe('ToucanGatherCell', () => {
 
             await gc1.stop();
             await gc2.stop();
+
+            await gatherMQ.disconnect();
         });
     });
 
@@ -110,6 +117,10 @@ describe('ToucanGatherCell', () => {
                 }
             }
         }
+
+        after(async () => {
+            await gatherMQ.disconnect();
+        });
 
         it('', async () => {
             const gc = new TestGatherCell({ unitInfo: { unitName: 'zero job 测试' }, gatherMQ, skillKeys });

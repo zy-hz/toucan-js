@@ -45,6 +45,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
     // 启动采集单元
     async start() {
         console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
+        this.__stopFlag = false;
 
         try {
             // 制定采集任务的消息队列
@@ -76,8 +77,17 @@ class ToucanGatherCell extends ToucanWorkUnit {
                     await sleep(1000 * 60);
                 }
 
-                // 重新启动定时计划
-                this.schedule.reschedule(scheduleRule);
+                // 检查是否停止工作
+                if (this.__stopFlag) {
+                    // 注意：不用断开采集消息队列，因为这个消息队列可能和其他人共用
+                    // await this.gatherMQ.disconnect();
+
+                    // 设置单元状态
+                    this.workInfo.unitStatus.updateStatus(StatusCode.closed);
+                } else {
+                    // 重新启动定时计划
+                    this.schedule.reschedule(scheduleRule);
+                }
             });
 
             // 设置状态
@@ -91,11 +101,14 @@ class ToucanGatherCell extends ToucanWorkUnit {
     }
 
     async stop() {
-        console.log(`${buildGatherCellId(this.unitInfo)} 停止`);
-        // 关闭定时器
-        if (!_.isNil(this.schedule)) this.schedule.cancel();
-        // 断开采集消息队列
-        await this.gatherMQ.disconnect();
+        console.log(`${buildGatherCellId(this.unitInfo)} 停止中...`);
+        // 设置关闭标记，开始关闭流程
+        this.__stopFlag = true;
+
+        while (!this.workInfo.unitStatus.isClosed) {
+            await sleep(1000);
+        }
+        console.log(`${buildGatherCellId(this.unitInfo)} 已停止`);
     }
 
     createScheduleJob(options) {
