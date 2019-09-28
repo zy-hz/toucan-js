@@ -19,6 +19,7 @@ class TaskVisitorFactory {
 // 从参数种获得类型
 function getVisitorType(args) {
     if(_.isNil(args)) return '';
+    if(_.isEmpty(args)) return '';
 
     if(_.isString(args)) return parseVisitorType(args);
     return args.visitoryType;
