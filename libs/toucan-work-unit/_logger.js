@@ -27,6 +27,11 @@ class ToucanLogger {
     error(...optionalParams) {
         this.__output__(console.error, 'error', optionalParams);
     }
+    // 分割线
+    split(splitChar = '*', msg = '') {
+        const padStr = _.padEnd('', Math.floor(72/2 - msg.length/2), splitChar);
+        this.log(`${padStr}${msg}${padStr}`);
+    }
 
     __output__(func, type, optionalParams) {
         let pms = [];
