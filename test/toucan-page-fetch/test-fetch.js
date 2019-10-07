@@ -76,4 +76,13 @@ describe('speical 测试',()=>{
         expect(res.pageCharset, '页面编码为 utf-8').to.match(/^utf-8$/im);
 
     });
+
+    it('[long] www.sina.com测试',async()=>{
+        const pageFetch = pageFetchFactory.createFetch({ fetchType: 'request' });
+        const res = await pageFetch.do('www.sina.com');
+        expect(res, '页面抓取结果不能为空').to.be.not.empty;
+        expect(res.statusCode, '状态码为成功').to.be.eq(200);
+        expect(res.pageCharset, '页面编码为 utf-8').to.match(/^utf-8$/im);
+
+    });
 });

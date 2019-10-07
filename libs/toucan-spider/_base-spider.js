@@ -12,7 +12,7 @@
 
 const _ = require('lodash');
 
-const { sleep, getObjectClassName } = require('../toucan-utility');
+const { sleep } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 
@@ -26,8 +26,6 @@ class ToucanBaseSpider {
         spiderType,
         // 空闲的时候，暂停的时间
         idleSleep,
-        // 任务完成，
-        onTaskDone,
     } = {}) {
         this._self = this;
 
@@ -82,9 +80,10 @@ class ToucanBaseSpider {
             }
 
             // 设置页面对象
-            const thePage = {
+            let thePage = {
                 pageUrl: url,
                 pageBeginTime: _.now(),
+                pageLayerIndex: layerIndex,
                 spiderName: this.spiderName,
                 spiderType: this.spiderType
             }
@@ -93,11 +92,12 @@ class ToucanBaseSpider {
                 // 防止爬行过快
                 await sleep(1000);
 
-                const response = await this.crawlOnePage(theTask, thePage, submitGatherResult);
+                const { crawlResult, extractUrlResult } = await this.crawlOnePage(theTask, thePage, submitGatherResult);
+                thePage = Object.assign(thePage, extractUrlResult);
 
                 // 触发一个页面完成
                 theTask.taskDonePageCount = theTask.taskDonePageCount + 1
-                await onPageDone(false, theTask, thePage, response, submitGatherResult);
+                await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
             }
             catch (error) {
                 // 触发一个页面异常
@@ -115,9 +115,31 @@ class ToucanBaseSpider {
     // 爬行一个页面
     async crawlOnePage(theTask, thePage) {
         // 获得页面的采集结果
-        const response = await this.pageFetch.do(thePage.pageUrl);
+        const response = await this.pageFetch.do(thePage.pageUrl.url);
+        console.log(response);
 
-        return response;
+        // 解析页面的结果
+        const extractUrlResult = {
+            urlCountInPage: 0,
+            extractUrlSuccess: false
+        }
+
+        try {
+            // 解析页面中的下级链接
+            extractUrlResult.urlCountInPage = this.extractUrl(thePage);
+            extractUrlResult.extractUrlSuccess = true;
+        }
+        catch (error) {
+            extractUrlResult.extractUrlError = error;
+
+        }
+
+        return { crawlResult: response, extractUrlResult };
+    }
+
+    // 从页面中提取链接
+    extractUrl(thePage) {
+        return 0;
     }
 
 }

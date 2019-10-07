@@ -2,13 +2,14 @@
 const expect = require('chai').expect;
 const { ToucanBaseSpider } = require('../../libs/toucan-spider/_base-spider');
 
-describe('base spider 测试 temp', () => {
+describe('base spider 测试', () => {
 
     describe('爬行循环测试', () => {
         // 测试爬行用得蜘蛛
         class CrawlTestSpider extends ToucanBaseSpider {
 
             async crawlOnePage(theTask, thePage) {
+                return {}
             }
         }
 
@@ -30,6 +31,8 @@ describe('base spider 测试 temp', () => {
                 if (this.__count__ < 5) {
                     this._targetUrlPool.push('testUrl' + this.__count__, this.__count__);
                 }
+
+                return {}
             }
         }
 
