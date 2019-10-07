@@ -75,7 +75,7 @@ class ToucanBaseSpider {
             if (_.isEmpty(url)) break;
 
             // 是否有同层的连接？
-            if (!this._targetUrlPool.hasUrl(layerIndex)) {
+            if (this._targetUrlPool.residualCount(layerIndex) === 0) {
                 // 如果没有同层的连接时，开始爬行下一层，如果有则继续保持同层
                 // 设置下一层的连接
                 layerIndex = layerIndex + 1;

@@ -44,6 +44,18 @@ class LayerUrlTaskPool {
             return false;
         })
     }
+
+    // 剩余url任务的数量
+    // 如果layerIndex == undefined，查询所有的层
+    residualCount(layerIndex) {
+        return _.sumBy(this.__urls__, (x) => {
+            // 返回所有层，没有pop的数量
+            if (_.isNil(layerIndex)) return x.isPop ? 0 : 1;
+
+            // 返回指定层，没有pop的数量
+            return !x.isPop && x.layerIndex === layerIndex ? 1 : 0;
+        })
+    }
 }
 
 module.exports = LayerUrlTaskPool;

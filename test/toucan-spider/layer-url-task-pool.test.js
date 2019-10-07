@@ -47,4 +47,24 @@ describe('layer url task pool 测试', () => {
             expect(up.isExist('a1')).is.true;
         })
     });
+
+    describe('residualCount 测试 temp',()=>{
+
+        it('',()=>{
+            const up = new UrlPool();
+
+            up.push('a1',1);
+            up.push('b1',2);
+
+            expect(up.residualCount(1)).to.be.eq(1);
+            expect(up.residualCount(2)).to.be.eq(1);
+            
+            expect(up.residualCount()).to.be.eq(2);
+
+            up.pop(1);
+            expect(up.residualCount(1)).to.be.eq(0);
+            expect(up.residualCount()).to.be.eq(1);
+
+        })
+    });
 })
