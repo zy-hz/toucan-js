@@ -1,4 +1,4 @@
-const {spiderFactory} = require('../toucan-spider');
+const { spiderFactory } = require('../toucan-spider');
 
 class SubscribeGatherTaskJob {
     constructor({
@@ -19,9 +19,17 @@ class SubscribeGatherTaskJob {
 
         // 获得采集任务
         const task = JSON.parse(msg.content.toString());
+        // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
+        // 启动采集蜘蛛
+        await spider.run(Object.assign(task, { submitGatherResult: this.submitGatherResult }));
 
         return { jobCount: 1 };
+    }
+
+    // 发布采集结果
+    async submitGatherResult(result) {
+
     }
 }
 

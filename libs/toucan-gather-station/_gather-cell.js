@@ -56,7 +56,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             // 绑定需要订阅消息队列
             this.gatherMQ.bindTaskQueue(this.skillKeys);
 
-            // 订阅的作业
+            // 创建订阅的作业，继承的基类可以重载该方法，实现自己的计划作业
             const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ });
 
             // 启动定时作业

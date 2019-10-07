@@ -1,4 +1,4 @@
-// 页面蜘蛛
+// 页面蜘蛛 (测试版本)
 //
 // 功能描述：
 // 从来源读取需要抓取的网页地址（抓取任务）
@@ -41,8 +41,50 @@ class ToucanBaseSpider {
         this.onTaskDone = onTaskDone;
     }
 
+    // 蜘蛛开始运行
+    async start() {
+        // 强制停止标记
+        this.forceStop = false;
+
+        try {
+            // 设置正在运行的标记
+            this.isRunning = true;
+            // 运行体
+            while (!this.forceStop) {
+
+                await sleep(this.idleSleep);
+            }
+        }
+        finally {
+            this.isRunning = false
+        }
+
+    }
+
+    // 停止蜘蛛的工作
+    async stop({
+        // 延时停止的毫秒
+        delay = 10,
+        // 等待蜘蛛停止成功。0 表示不等待, -1 表示一直等待，其他整数表示等待的毫秒
+        expectWaitMillionSecond = -1
+    } = {}) {
+        await sleep(delay);
+        // 设置停止标记
+        this.forceStop = true;
+
+        // 如果 -1 表示一直等待，设置为一天
+        expectWaitMillionSecond = expectWaitMillionSecond === -1 ? 1000 * 60 * 60 * 24 : expectWaitMillionSecond;
+        // 等待的毫秒
+        let waitMillionSecond = 0
+        while (this.isRunning && waitMillionSecond < expectWaitMillionSecond) {
+
+            await sleep(100);
+            waitMillionSecond = waitMillionSecond + 100;
+        }
+    }
+
     // 执行一个抓取任务
-    async run(task = {}) {
+    async do(task = {}) {
         const {
             targetUrl,
             // 可以指定任务运行时的完成处理
