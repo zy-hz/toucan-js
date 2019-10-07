@@ -44,7 +44,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
     // 启动采集单元
     async start() {
-        console.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
+        this.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
         this.__stopFlag = false;
 
         try {
@@ -104,14 +104,14 @@ class ToucanGatherCell extends ToucanWorkUnit {
     }
 
     async stop() {
-        console.log(`${buildGatherCellId(this.unitInfo)} 停止中...`);
+        this.log(`${buildGatherCellId(this.unitInfo)} 停止中...`);
         // 设置关闭标记，开始关闭流程
         this.__stopFlag = true;
 
         while (!this.workInfo.unitStatus.isClosed) {
             await sleep(1000);
         }
-        console.log(`${buildGatherCellId(this.unitInfo)} 已停止`);
+        this.log(`${buildGatherCellId(this.unitInfo)} 已停止`);
     }
 
     createScheduleJob(options) {

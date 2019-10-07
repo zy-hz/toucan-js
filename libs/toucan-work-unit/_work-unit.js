@@ -8,11 +8,13 @@
 
 const _ = require('lodash');
 const { StatusGroup, StatusCode } = require('../toucan-utility');
+const { ToucanLogger } = require('./_logger');
 
-class ToucanWorkUnit {
+class ToucanWorkUnit extends ToucanLogger {
 
     constructor({ unitInfo = {}, theTime = _.now(), status = [StatusCode.idle, StatusCode.actived, StatusCode.suspend] } = {}) {
-
+        super();
+        
         // 单元资料，构造时确定，以后不会发生变化
         this.unitInfo = Object.assign({
             // 单元名称
