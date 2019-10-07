@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-// 是否为相同支付串
+// 是否为相同字符串
 function isEqualString(strA, strB, ignoreCase = false) {
 
     return ignoreCase ?

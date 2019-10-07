@@ -14,7 +14,7 @@ const _ = require('lodash');
 
 const { sleep, getObjectClassName } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
-const TargetUrlPool = require('./_target-url-pool');
+const TargetUrlPool = require('./_layer-url-task-pool');
 
 class ToucanBaseSpider {
 
