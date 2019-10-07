@@ -12,9 +12,11 @@
 
 const _ = require('lodash');
 
-const { sleep } = require('../toucan-utility');
+const { sleep, isEqualString } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
+const cheerio = require("cheerio");
+const URL = require('url');
 
 class ToucanBaseSpider {
 
@@ -63,7 +65,13 @@ class ToucanBaseSpider {
         this._targetUrlPool = new TargetUrlPool(targetUrl, 0);
 
         // 任务开始时间
-        const theTask = Object.assign(task, { taskBeginTime: _.now(), taskDonePageCount: 0, taskErrorPageCount: 0 })
+        const theTask = Object.assign(task, {
+            taskBeginTime: _.now(),
+            taskDonePageCount: 0,
+            taskErrorPageCount: 0,
+            extractUrlTotalCount: 0,
+            extractUrlErrorCount: 0,
+        });
         // 爬行的循环
         let layerIndex = 0;
         while (layerIndex <= maxLayerIndex) {
@@ -92,11 +100,16 @@ class ToucanBaseSpider {
                 // 防止爬行过快
                 await sleep(1000);
 
-                const { crawlResult, extractUrlResult } = await this.crawlOnePage(theTask, thePage, submitGatherResult);
+                const { crawlResult, extractUrlResult } = await this.crawlOnePage(theTask, thePage, layerIndex);
                 thePage = Object.assign(thePage, extractUrlResult);
 
+                //  采集成功的页面数量增加
+                theTask.taskDonePageCount = theTask.taskDonePageCount + 1;
+                // 纪录页面的链接数量
+                theTask.extractUrlTotalCount = theTask.extractUrlTotalCount + extractUrlResult.urlCountInPage;
+                // 纪录解析错误的次数
+                theTask.extractUrlErrorCount = theTask.extractUrlErrorCount + extractUrlResult.extractUrlSuccess ? 0 : 1;
                 // 触发一个页面完成
-                theTask.taskDonePageCount = theTask.taskDonePageCount + 1
                 await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
             }
             catch (error) {
@@ -113,10 +126,10 @@ class ToucanBaseSpider {
     }
 
     // 爬行一个页面
-    async crawlOnePage(theTask, thePage) {
+    async crawlOnePage(theTask, thePage, layerIndex = 0) {
         // 获得页面的采集结果
-        const response = await this.pageFetch.do(thePage.pageUrl.url);
-        console.log(response);
+        const response = await this.pageFetch.do(thePage.pageUrl);
+
 
         // 解析页面的结果
         const extractUrlResult = {
@@ -126,7 +139,7 @@ class ToucanBaseSpider {
 
         try {
             // 解析页面中的下级链接
-            extractUrlResult.urlCountInPage = this.extractUrl(thePage);
+            extractUrlResult.urlCountInPage = this.extractUrl(thePage.pageUrl, response.pageContent, layerIndex);
             extractUrlResult.extractUrlSuccess = true;
         }
         catch (error) {
@@ -138,8 +151,32 @@ class ToucanBaseSpider {
     }
 
     // 从页面中提取链接
-    extractUrl(thePage) {
-        return 0;
+    extractUrl(pageUrl, content, layerIndex = 0) {
+        const entryUri = URL.parse(formatHref(pageUrl), true, true);
+
+        const $ = cheerio.load(content);
+        _.forEach($('a'), (x) => {
+            const ui = this.convert2SiteUrl(entryUri, x.attribs.href)
+            if (ui.isSameHost) this._targetUrlPool.push(ui.href, layerIndex);
+        });
+        return this._targetUrlPool.residualCount();
+    }
+
+    // 转换为站点的链接
+    convert2SiteUrl(entryUri, href) {
+        if (_.isNil(href)) return {};
+
+        // 处理没有协议号的链接
+        href = formatHref(href);
+
+        let theUri = URL.parse(href, true, true);
+        theUri.isSameHost = isEqualString(entryUri.host, theUri.host);
+
+        theUri.protocol = theUri.protocol || 'http';
+        theUri.href = URL.format(theUri);
+
+        theUri.isScript = href.indexOf(':;') >= 0
+        return theUri;
     }
 
 }
@@ -150,7 +187,7 @@ async function onPageDone(hasException, theTask, thePage, result, eventCallback)
     const pageEndTime = _.now();
     const pageSpendTime = pageEndTime - thePage.pageBeginTime;
 
-    thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime, result })
+    thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime }, result)
 
     if (typeof eventCallback === 'function') {
         // 事件回调
@@ -170,6 +207,12 @@ function onTaskDone(task) {
     const taskSpendTime = taskEndTime - task.taskBeginTime;
 
     return Object.assign(task, { taskEndTime, taskSpendTime })
+}
+
+// 格式化 href
+function formatHref(href){
+    if (href.indexOf('//') < 0 && href.indexOf(':;') < 0) href = '//' + href;
+    return href;
 }
 
 module.exports = { ToucanBaseSpider };

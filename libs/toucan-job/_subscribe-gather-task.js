@@ -24,7 +24,7 @@ class SubscribeGatherTaskJob {
         // 启动采集蜘蛛
         task = await spider.run(task, this.submitGatherResult);
 
-        return { jobCount: 1 };
+        return { jobCount: 1, task };
     }
 
     // 发布采集结果

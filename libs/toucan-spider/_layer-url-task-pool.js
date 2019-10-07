@@ -21,15 +21,15 @@ class LayerUrlTaskPool {
         this.__urls__.push({ url, layerIndex, isPop: false });
     }
 
-    // 弹出连接
+    // 弹出连接链接
     pop(layerIndex = 0) {
         // 同层，没有弹出
         const obj = _.find(this.__urls__, { layerIndex, isPop: false });
-        if (!_.isNil(obj)) {
-            obj.isPop = true;
-        }
+        if (_.isNil(obj)) return ''
 
-        return obj;
+        // 设置弹出标记
+        obj.isPop = true;
+        return obj.url;
     }
 
     // 比较连接是否存在

@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const { ToucanBaseSpider } = require('../../libs/toucan-spider/_base-spider');
+const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
+const fs = require('fs');
+const URL = require('url');
 
 describe('base spider 测试', () => {
 
@@ -58,7 +61,7 @@ describe('base spider 测试', () => {
             expect(task.taskErrorPageCount).to.be.eq(1);
         });
 
-        it('多层测试', async () => {
+        it('多层测试 ', async () => {
             const spider = new CrawlMulitLayerSpider({ spiderName: '多层蜘蛛', spiderType: 'CrawlMulitLayerSpider' });
             const task = await spider.run({ targetUrl: '多层', depth: 10 }, async (task, page) => {
                 expect(page.pageSpendTime).is.greaterThan(0);
@@ -67,6 +70,40 @@ describe('base spider 测试', () => {
             expect(task.taskDonePageCount).to.be.eq(5);
             expect(task.taskErrorPageCount).to.be.eq(0);
             expect(task.taskSpendTime).is.greaterThan(0);
+        })
+    })
+
+    describe('extractUrl 测试', () => {
+        const up = new ToucanBaseSpider();
+        up._targetUrlPool = new TargetUrlPool();
+        const entryUri = URL.parse('//www.19lou.com', true, true);
+
+        it('19lou', () => {
+            const html = fs.readFileSync(__dirname + '/sample/page-19lou-com.html', 'utf-8');
+            const cnt = up.extractUrl(entryUri, html, 1);
+            expect(cnt).is.greaterThan(10);
+
+            expect(up._targetUrlPool.residualCount(0)).to.be.eq(0);
+            expect(up._targetUrlPool.residualCount(1)).to.be.eq(cnt);
+        })
+    })
+
+    describe('convert2SiteUrl 测试', () => {
+        const up = new ToucanBaseSpider();
+        const entryUri = URL.parse('//www.19lou.com', true, true);
+
+        it('https://www.19lou.com/r/1/nsxqcvjx.html', () => {
+            const ui = up.convert2SiteUrl(entryUri, 'www.19lou.com/r/1/nsxqcvjx.html');
+            expect(ui.isSameHost).is.true;
+            expect(ui.isScript).is.false;
+            expect(ui.href).to.be.equal('http://www.19lou.com/r/1/nsxqcvjx.html')
+        });
+
+        it('javascript:;', () => {
+            const ui = up.convert2SiteUrl(entryUri, 'javascript:;');
+            expect(ui.isSameHost).is.false;
+            expect(ui.isScript).is.true;
+            expect(ui.href).to.be.equal('javascript:;')
         })
     })
 })
