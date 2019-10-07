@@ -8,16 +8,36 @@ describe('base spider 测试 temp', () => {
         // 测试爬行用得蜘蛛
         class CrawlTestSpider extends ToucanBaseSpider {
 
-            async crawlOnePage(thePage, theTask, submitGatherResult) {
-
+            async crawlOnePage(theTask, thePage) {
             }
         }
 
-        it('0 层测试', async () => {
-            const spider = new CrawlTestSpider();
-            const task = await spider.run({ targetUrl: 'i am test', depth: 0 })
-            expect(task.totalDonePageCount).to.be.eq(1);
-            expect(task.totalErrorPageCount).to.be.eq(0);
+        // 测试爬行异常的蜘蛛
+        class CrawlErrorSpider extends ToucanBaseSpider {
+
+            async crawlOnePage(theTask, thePage) {
+                throw Error('我错误了');
+            }
+        }
+
+        it('0 层正常测试', async () => {
+            const spider = new CrawlTestSpider({ spiderName: 'mocha蜘蛛', spiderType: 'CrawlTestSpider' });
+            const task = await spider.run({ targetUrl: 'i am test', depth: 0 }, async (task, result) => {
+
+            });
+
+            expect(task.taskDonePageCount).to.be.eq(1);
+            expect(task.taskErrorPageCount).to.be.eq(0);
+        });
+
+        it('0 层异常测试', async () => {
+            const spider = new CrawlErrorSpider({ spiderName: '异常蜘蛛', spiderType: 'CrawlTesCrawlErrorSpidertSpider' });
+            const task = await spider.run({ targetUrl: 'i am test', depth: 0 }, async (task, result) => {
+
+            });
+
+            expect(task.taskDonePageCount).to.be.eq(0);
+            expect(task.taskErrorPageCount).to.be.eq(1);
         });
     })
 })

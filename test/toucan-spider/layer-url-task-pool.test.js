@@ -48,7 +48,7 @@ describe('layer url task pool 测试', () => {
         })
     });
 
-    describe('residualCount 测试 temp',()=>{
+    describe('residualCount 测试',()=>{
 
         it('',()=>{
             const up = new UrlPool();

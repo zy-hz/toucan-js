@@ -84,14 +84,21 @@ class ToucanBaseSpider {
             // 设置页面对象
             const thePage = {
                 pageUrl: url,
-                pageBeginTime: _.now()
+                pageBeginTime: _.now(),
+                spiderName: this.spiderName,
+                spiderType: this.spiderType
             }
 
             try {
-                await this.crawlOnePage(thePage, theTask, submitGatherResult);
+                const response = await this.crawlOnePage(theTask, thePage, submitGatherResult);
+
+                // 触发一个页面完成
+                theTask.taskDonePageCount = theTask.taskDonePageCount + 1
+                await onPageDone(false, theTask, thePage, response, submitGatherResult);
             }
             catch (error) {
                 // 触发一个页面异常
+                theTask.taskErrorPageCount = theTask.taskErrorPageCount + 1;
                 await onPageDone(true, theTask, thePage, error, submitGatherResult);
             }
 
@@ -103,29 +110,29 @@ class ToucanBaseSpider {
     }
 
     // 爬行一个页面
-    async crawlOnePage(thePage, theTask, submitGatherResult) {
+    async crawlOnePage(theTask, thePage) {
         // 获得页面的采集结果
         const response = await this.pageFetch.do(thePage.pageUrl);
 
-        // 触发一个页面完成
-        await onPageDone(false, theTask, thePage, response, submitGatherResult);
+        return response;
     }
+
 }
 
 // 触发任务完成得事件
-async function onPageDone(hasException, taskSpider, task, result, eventCallback) {
+async function onPageDone(hasException, theTask, thePage, result, eventCallback) {
 
-    const taskEndTime = _.now();
-    const taskSpendTime = taskEndTime - task.taskBeginTime;
+    const pageEndTime = _.now();
+    const pageSpendTime = pageEndTime - thePage.taskBeginTime;
 
-    task = Object.assign(task, { hasException, taskEndTime, taskSpendTime, taskSpider, taskResult: result })
+    thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime, result })
 
     if (typeof eventCallback === 'function') {
         // 事件回调
-        await eventCallback(task)
+        await eventCallback(theTask, thePage)
     }
     else {
-        let msg = `${getObjectClassName(taskSpider)} ${taskSpider.spiderName}[${taskSpider.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
+        let msg = `${thePage.spiderName}[${thePage.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
         msg = `***** 没有发现可用的 eventCallback ***** \r\n ${msg}`;
         console.log(msg, result);
     }
