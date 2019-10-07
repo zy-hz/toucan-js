@@ -22,13 +22,13 @@ class SubscribeGatherTaskJob {
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
         // 启动采集蜘蛛
-        await spider.run(Object.assign(task, { submitGatherResult: this.submitGatherResult }));
+        await spider.run(task, this.submitGatherResult);
 
         return { jobCount: 1 };
     }
 
     // 发布采集结果
-    async submitGatherResult(result) {
+    async submitGatherResult({ task, result }) {
 
     }
 }

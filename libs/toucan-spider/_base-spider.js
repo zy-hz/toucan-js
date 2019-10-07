@@ -42,12 +42,13 @@ class ToucanBaseSpider {
     }
 
     // 执行一个抓取任务
-    async run(task = {}) {
-        const {
-            targetUrl,
-            // 可以指定任务运行时的完成处理
-            onTaskDone = this.onTaskDone,
-        } = task;
+    async run(
+        // 采集任务的参数
+        task,
+        // 提交采集的结果
+        submitGatherResult) {
+
+        const { targetUrl, depth = 0 } = task;
 
         // 任务开始时间
         task = Object.assign(task, { taskBeginTime: _.now() })
@@ -59,11 +60,11 @@ class ToucanBaseSpider {
             const response = await this.pageFetch.do(targetUrl)
 
             // 触发任务完成的事件
-            triggleTaskDoneEvent(false, this._self, task, response, onTaskDone)
+            await triggleTaskDoneEvent(false, this._self, task, response, submitGatherResult)
         }
         catch (error) {
             // 触发任务完成的事件
-            triggleTaskDoneEvent(true, this._self, task, error, onTaskDone)
+            await triggleTaskDoneEvent(true, this._self, task, error, submitGatherResult)
         }
 
     }
@@ -71,7 +72,7 @@ class ToucanBaseSpider {
 }
 
 // 触发任务完成得事件
-function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallback) {
+async function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallback) {
 
     const taskEndTime = _.now();
     const taskSpendTime = taskEndTime - task.taskBeginTime;
@@ -80,7 +81,7 @@ function triggleTaskDoneEvent(hasException, taskSpider, task, result, eventCallb
 
     if (typeof eventCallback === 'function') {
         // 事件回调
-        eventCallback(task)
+        await eventCallback(task)
     }
     else {
         let msg = `${getObjectClassName(taskSpider)} ${taskSpider.spiderName}[${taskSpider.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
