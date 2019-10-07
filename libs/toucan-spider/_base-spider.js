@@ -155,7 +155,8 @@ class ToucanBaseSpider {
 
         const $ = cheerio.load(content);
         _.forEach($('a'), (x) => {
-            if (exURL.isSameHost(pageUrl, x)) this._targetUrlPool.push(x, layerIndex);
+            const url = x.attribs.href
+            if (exURL.isSameHost(pageUrl, url)) this._targetUrlPool.push(url, layerIndex);
         });
         return this._targetUrlPool.residualCount();
     }

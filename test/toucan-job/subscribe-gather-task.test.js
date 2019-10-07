@@ -12,7 +12,7 @@ describe('SubscribeGatherTaskJob 测试 ', () => {
     const taskBody = {
         targetUrl: 'www.19lou.com',
         spiderType: 'http',
-        depth: 1
+        depth: 0
     }
 
     before(async () => {
@@ -53,6 +53,10 @@ describe('SubscribeGatherTaskJob 测试 ', () => {
 });
 
 function expectTask(task) {
-
+    // 完成页面为1
     expect(task.taskDonePageCount).to.be.equal(1);
+    expect(task.taskErrorPageCount).to.be.equal(0);
+    expect(task.extractUrlTotalCount).is.greaterThan(100);
+    expect(task.extractUrlErrorCount).to.be.equal(0); 
+
 }
