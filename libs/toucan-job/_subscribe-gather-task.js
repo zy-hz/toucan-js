@@ -28,7 +28,7 @@ class SubscribeGatherTaskJob {
     }
 
     // 发布采集结果
-    async submitGatherResult({ task, result }) {
+    async submitGatherResult({ task, page }) {
 
     }
 }

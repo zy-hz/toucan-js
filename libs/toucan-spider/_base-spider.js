@@ -90,6 +90,9 @@ class ToucanBaseSpider {
             }
 
             try {
+                // 防止爬行过快
+                await sleep(1000);
+
                 const response = await this.crawlOnePage(theTask, thePage, submitGatherResult);
 
                 // 触发一个页面完成
@@ -119,11 +122,11 @@ class ToucanBaseSpider {
 
 }
 
-// 触发任务完成得事件
+// 触发页面完成的事件
 async function onPageDone(hasException, theTask, thePage, result, eventCallback) {
 
     const pageEndTime = _.now();
-    const pageSpendTime = pageEndTime - thePage.taskBeginTime;
+    const pageSpendTime = pageEndTime - thePage.pageBeginTime;
 
     thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime, result })
 
@@ -139,6 +142,7 @@ async function onPageDone(hasException, theTask, thePage, result, eventCallback)
 
 }
 
+// 触发任务完成的事件
 function onTaskDone(task) {
     const taskEndTime = _.now();
     const taskSpendTime = taskEndTime - task.taskBeginTime;
