@@ -76,6 +76,9 @@ class ToucanBaseSpider {
         let layerIndex = 0;
         while (layerIndex <= maxLayerIndex) {
 
+            // 防止爬行过快
+            await sleep(this.idleSleep);
+
             // 从连接池中获取当前爬行层的一个连接
             const url = this._targetUrlPool.pop(layerIndex);
             if (_.isEmpty(url)) break;
@@ -97,8 +100,6 @@ class ToucanBaseSpider {
             }
 
             try {
-                // 防止爬行过快
-                await sleep(1000);
 
                 const { crawlResult, extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false } } = await this.crawlOnePage(theTask, thePage, layerIndex);
                 thePage = Object.assign(thePage, extractUrlResult);
