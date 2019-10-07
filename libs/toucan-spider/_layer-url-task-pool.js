@@ -2,6 +2,7 @@
 // 层连接池
 //
 const _ = require('lodash');
+const { exURL } = require('../toucan-utility');
 
 class LayerUrlTaskPool {
 
@@ -35,13 +36,7 @@ class LayerUrlTaskPool {
     // 比较连接是否存在
     isExist(url) {
         return _.some(this.__urls__, (x) => {
-            const actualUrl = url.toLowerCase();
-            const expectUrl = x.url.toLowerCase();
-
-            if (expectUrl.indexOf(actualUrl) >= 0) return true;
-            if (actualUrl.indexOf(expectUrl) >= 0) return true;
-
-            return false;
+            return exURL.isSameUrl(url,x.url);
         })
     }
 

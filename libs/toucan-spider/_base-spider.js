@@ -12,11 +12,11 @@
 
 const _ = require('lodash');
 
-const { sleep, isEqualString } = require('../toucan-utility');
+const { sleep, isEqualString, exURL } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 const cheerio = require("cheerio");
-const URL = require('url');
+
 
 class ToucanBaseSpider {
 
@@ -100,7 +100,7 @@ class ToucanBaseSpider {
                 // 防止爬行过快
                 await sleep(1000);
 
-                const { crawlResult, extractUrlResult } = await this.crawlOnePage(theTask, thePage, layerIndex);
+                const { crawlResult, extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false } } = await this.crawlOnePage(theTask, thePage, layerIndex);
                 thePage = Object.assign(thePage, extractUrlResult);
 
                 //  采集成功的页面数量增加
@@ -152,31 +152,12 @@ class ToucanBaseSpider {
 
     // 从页面中提取链接
     extractUrl(pageUrl, content, layerIndex = 0) {
-        const entryUri = URL.parse(formatHref(pageUrl), true, true);
 
         const $ = cheerio.load(content);
         _.forEach($('a'), (x) => {
-            const ui = this.convert2SiteUrl(entryUri, x.attribs.href)
-            if (ui.isSameHost) this._targetUrlPool.push(ui.href, layerIndex);
+            if (exURL.isSameHost(pageUrl, x)) this._targetUrlPool.push(x, layerIndex);
         });
         return this._targetUrlPool.residualCount();
-    }
-
-    // 转换为站点的链接
-    convert2SiteUrl(entryUri, href) {
-        if (_.isNil(href)) return {};
-
-        // 处理没有协议号的链接
-        href = formatHref(href);
-
-        let theUri = URL.parse(href, true, true);
-        theUri.isSameHost = isEqualString(entryUri.host, theUri.host);
-
-        theUri.protocol = theUri.protocol || 'http';
-        theUri.href = URL.format(theUri);
-
-        theUri.isScript = href.indexOf(':;') >= 0
-        return theUri;
     }
 
 }
@@ -207,12 +188,6 @@ function onTaskDone(task) {
     const taskSpendTime = taskEndTime - task.taskBeginTime;
 
     return Object.assign(task, { taskEndTime, taskSpendTime })
-}
-
-// 格式化 href
-function formatHref(href){
-    if (href.indexOf('//') < 0 && href.indexOf(':;') < 0) href = '//' + href;
-    return href;
 }
 
 module.exports = { ToucanBaseSpider };

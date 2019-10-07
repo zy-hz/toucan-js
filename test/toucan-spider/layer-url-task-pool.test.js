@@ -5,21 +5,14 @@ const UrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 describe('layer url task pool 测试', () => {
 
     describe('isExist 测试', () => {
-        it('先长后短', () => {
+        it('不全格式比较', () => {
             const up = new UrlPool();
-            up.push('abc123', 0);
-            expect(up.isExist('abc')).is.true;
-            expect(up.isExist('bC123')).is.true;
-            expect(up.isExist('1234')).is.false;
+            up.push('www.19lou.com', 0);
+            expect(up.isExist('//www.19lou.com/')).is.true;
+            expect(up.isExist('www.19lou.com/a/')).is.false;
+            expect(up.isExist('https://www.19lou.com/')).is.true;
         });
 
-        it('先短后长', () => {
-            const up = new UrlPool();
-            up.push('123', 0);
-            expect(up.isExist('abc123')).is.true;
-            expect(up.isExist('bC123')).is.true;
-            expect(up.isExist('1234')).is.true;
-        });
     });
 
     describe('pop 测试', () => {

@@ -5,7 +5,7 @@ const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 const fs = require('fs');
 const URL = require('url');
 
-describe('base spider 测试', () => {
+describe('base spider 测试 ', () => {
 
     describe('爬行循环测试', () => {
         // 测试爬行用得蜘蛛
@@ -42,7 +42,7 @@ describe('base spider 测试', () => {
 
         it('0 层正常测试', async () => {
             const spider = new CrawlTestSpider({ spiderName: 'mocha蜘蛛', spiderType: 'CrawlTestSpider' });
-            const task = await spider.run({ targetUrl: 'i am test', depth: 0 }, async (task, page) => {
+            const task = await spider.run({ targetUrl: 'www.19lou.com', depth: 0 }, async (task, page) => {
                 expect(page.pageSpendTime).is.greaterThan(0);
             });
 
@@ -61,7 +61,7 @@ describe('base spider 测试', () => {
             expect(task.taskErrorPageCount).to.be.eq(1);
         });
 
-        it('多层测试 ', async () => {
+        it('多层测试', async () => {
             const spider = new CrawlMulitLayerSpider({ spiderName: '多层蜘蛛', spiderType: 'CrawlMulitLayerSpider' });
             const task = await spider.run({ targetUrl: '多层', depth: 10 }, async (task, page) => {
                 expect(page.pageSpendTime).is.greaterThan(0);
