@@ -18,11 +18,11 @@ class SubscribeGatherTaskJob {
         }
 
         // 获得采集任务
-        const task = JSON.parse(msg.content.toString());
+        let task = JSON.parse(msg.content.toString());
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
         // 启动采集蜘蛛
-        await spider.run(task, this.submitGatherResult);
+        task = await spider.run(task, this.submitGatherResult);
 
         return { jobCount: 1 };
     }
