@@ -74,4 +74,4 @@ class ToucanWorkUnit extends ToucanLogger {
 
 }
 
-module.exports = ToucanWorkUnit;
+module.exports = {ToucanWorkUnit};

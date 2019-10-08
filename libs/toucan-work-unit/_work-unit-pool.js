@@ -31,4 +31,4 @@ class ToucanWorkUnitPool {
 
 }
 
-module.exports = ToucanWorkUnitPool;
+module.exports = {ToucanWorkUnitPool};

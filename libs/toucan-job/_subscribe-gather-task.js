@@ -1,9 +1,11 @@
 const { spiderFactory } = require('../toucan-spider');
+const { ToucanJob } = require('./_base-job');
 
-class SubscribeGatherTaskJob {
+class SubscribeGatherTaskJob extends ToucanJob {
     constructor({
         gatherMQ
     }) {
+        super();
         this.gatherMQ = gatherMQ;
     }
 
