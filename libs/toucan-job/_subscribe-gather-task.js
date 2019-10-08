@@ -1,7 +1,7 @@
 const { spiderFactory } = require('../toucan-spider');
-const { ToucanJob } = require('./_base-job');
+const { TaskJob } = require('./_base-task-job');
 
-class SubscribeGatherTaskJob extends ToucanJob {
+class SubscribeGatherTaskJob extends TaskJob {
     constructor({
         gatherMQ
     }) {
@@ -24,14 +24,18 @@ class SubscribeGatherTaskJob extends ToucanJob {
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
         // 启动采集蜘蛛
-        task = await spider.run(task, this.submitGatherResult);
+        task = await spider.run(task, async ({ task, page }) => { this.onPageDone(task, page) });
 
         return { jobCount: 1, task };
     }
 
-    // 发布采集结果
-    async submitGatherResult({ task, page }) {
+    // 采集一个页面结束
+    async onPageDone(task, page) {
+        
+        // 纪录页面日志
+        this.logTaskPageDone(task,page);
 
+        // 提交结果到服务器
     }
 }
 

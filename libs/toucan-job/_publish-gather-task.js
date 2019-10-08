@@ -4,10 +4,13 @@
 
 const _ = require('lodash');
 const { spiderFactory } = require('../toucan-spider');
+const { TaskJob } = require('./_base-task-job');
 
-class PublishGatherTaskJob {
+class PublishGatherTaskJob extends TaskJob {
 
     constructor({ taskMQ, taskV, exchange }) {
+        super();
+        
         this.taskMQ = taskMQ;
         this.taskV = taskV;
 

@@ -83,13 +83,6 @@ class ToucanBaseSpider {
             const url = this._targetUrlPool.pop(layerIndex);
             if (_.isEmpty(url)) break;
 
-            // 是否有同层的连接？
-            if (this._targetUrlPool.residualCount(layerIndex) === 0) {
-                // 如果没有同层的连接时，开始爬行下一层，如果有则继续保持同层
-                // 设置下一层的连接
-                layerIndex = layerIndex + 1;
-            }
-
             // 设置页面对象
             let thePage = {
                 pageUrl: url,
@@ -101,7 +94,11 @@ class ToucanBaseSpider {
 
             try {
 
-                const { crawlResult, extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false } } = await this.crawlOnePage(theTask, thePage, layerIndex);
+                const {
+                    crawlResult,
+                    extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false }
+                } = await this.crawlOnePage(theTask, thePage, layerIndex);
+
                 thePage = Object.assign(thePage, extractUrlResult);
 
                 //  采集成功的页面数量增加
@@ -119,6 +116,13 @@ class ToucanBaseSpider {
                 await onPageDone(true, theTask, thePage, error, submitGatherResult);
             }
 
+            // 是否有同层的连接？
+            if (this._targetUrlPool.residualCount(layerIndex) === 0) {
+                // 如果没有同层的连接时，开始爬行下一层，如果有则继续保持同层
+                // 设置下一层的连接
+                layerIndex = layerIndex + 1;
+            }
+
         }
 
         // 设置任务完成得信息
@@ -130,7 +134,6 @@ class ToucanBaseSpider {
     async crawlOnePage(theTask, thePage, layerIndex = 0) {
         // 获得页面的采集结果
         const response = await this.pageFetch.do(thePage.pageUrl);
-
 
         // 解析页面的结果
         const extractUrlResult = {
@@ -152,12 +155,13 @@ class ToucanBaseSpider {
     }
 
     // 从页面中提取链接
-    extractUrl(pageUrl, content, layerIndex = 0) {
+    extractUrl(pageUrl, content, layerIndex) {
 
         const $ = cheerio.load(content);
         _.forEach($('a'), (x) => {
             const url = x.attribs.href
-            if (exURL.isSameHost(pageUrl, url)) this._targetUrlPool.push(url, layerIndex);
+            // 提前链接的属于当前层的下一层，所以layerIndex需要+1
+            if (exURL.isSameHost(pageUrl, url)) this._targetUrlPool.push(url, layerIndex + 1);
         });
         return this._targetUrlPool.residualCount();
     }
@@ -174,7 +178,7 @@ async function onPageDone(hasException, theTask, thePage, result, eventCallback)
 
     if (typeof eventCallback === 'function') {
         // 事件回调
-        await eventCallback(theTask, thePage)
+        await eventCallback({ task: theTask, page: thePage })
     }
     else {
         let msg = `${thePage.spiderName}[${thePage.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
