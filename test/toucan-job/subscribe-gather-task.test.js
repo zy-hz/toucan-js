@@ -63,9 +63,9 @@ describe('SubscribeGatherTaskJob 测试', () => {
         expect(result.jobCount).to.be.equal(1);
     });
 
-    it('[long]多层 temp', async () => {
+    it('[long]多层 ', async () => {
         // 发布一个任务到队列
-        const mulitLayerTask = Object.assign(taskBody, { depth: 1,spiderType: 'browser' });
+        const mulitLayerTask = Object.assign(taskBody, { depth: 1, spiderType: 'http' });
         await taskMQ.publishTask({ taskBody: mulitLayerTask, taskOptions: { queue: fromQueues[0] } });
 
         const job = new SubscribeGatherTaskJob({ gatherMQ });

@@ -71,6 +71,7 @@ class ToucanBaseSpider {
             taskErrorPageCount: 0,
             extractUrlTotalCount: SiteUrlCount(),
             extractUrlErrorCount: 0,
+            depth: maxLayerIndex,
         });
         // 爬行的循环
         let layerIndex = 0;
@@ -114,6 +115,8 @@ class ToucanBaseSpider {
                     //  采集成功的页面数量增加
                     theTask.taskDonePageCount = theTask.taskDonePageCount + 1;
                 }
+                // 计算任务计划要采集的估计数量
+                theTask.taskPlanPageCount = this._targetUrlPool.sumLessThan(layerIndex); 
 
                 // 触发一个页面完成
                 await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);

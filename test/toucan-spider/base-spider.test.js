@@ -49,7 +49,7 @@ describe('base spider 测试', () => {
         it('0 层正常测试 ', async () => {
             const spider = new CrawlTestSpider({ spiderName: 'mocha蜘蛛', spiderType: 'CrawlTestSpider' });
             const task = await spider.run({ targetUrl: 'www.19lou.com', depth: 0 }, async ({ task, page }) => {
-                expect(page.pageSpendTime).is.greaterThan(0);
+                expect(page.pageSpendTime,'pageSpendTime').is.greaterThan(0);
             });
 
             expect(task.taskDonePageCount,'taskDonePageCount').to.be.eq(1);

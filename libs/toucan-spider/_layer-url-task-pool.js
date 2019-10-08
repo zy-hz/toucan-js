@@ -52,6 +52,14 @@ class LayerUrlTaskPool {
             return !x.isPop && x.layerIndex === layerIndex ? 1 : 0;
         })
     }
+
+    // 小于等于本层的所有数量
+    sumLessThan(layerIndex){
+        return _.sumBy(this.__urls__, (x) => {
+            // 返回指定层，没有pop的数量
+            return x.layerIndex <= layerIndex ? 1 : 0;
+        })
+    }
 }
 
 module.exports = LayerUrlTaskPool;

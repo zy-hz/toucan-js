@@ -7,8 +7,9 @@
         "taskSpendTime":122,
         "taskDonePageCount": 1,
         "taskErrorPageCount": 0,
-        "extractUrlTotalCount": 153,
-        "extractUrlErrorCount": 0
+        "extractUrlTotalCount": {"innerUrl":153},
+        "extractUrlErrorCount": 0,
+        "taskPlanPageCount":1
     },
     "page": {
         "pageUrl": "www.19lou.com",

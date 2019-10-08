@@ -1,6 +1,6 @@
 // 任务作业
 const { ToucanJob } = require('./_base-job');
-const moment = require('moment');
+const _ = require('lodash');
 
 class TaskJob extends ToucanJob {
 
@@ -31,7 +31,8 @@ function buildTaskPageDoneSuccess(task, page) {
 function buildTaskPageProcess(task, msg, { pageLayerIndex, pageSpendTime, pageUrl, urlCountInPage = {} } = {}) {
     const totalSpend = Math.ceil(task.taskSpendTime / 1000) + '秒';
     const urlCountInfo = buildUrlCountInfo(urlCountInPage);
-    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/第${pageLayerIndex + 1}层${msg}，本页用时${pageSpendTime}毫秒/累计用时${totalSpend}。页面入口 - ${pageUrl} (${urlCountInfo})`;
+    const depthInfo = `${pageLayerIndex}/${task.depth}`;
+    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/共${task.taskPlanPageCount}页${msg}，本页用时${pageSpendTime}毫秒/累计用时${totalSpend}。页面入口 - ${pageUrl} (${urlCountInfo})。采集深度：${depthInfo}`;
 }
 
 function buildErrorInfo({ code, errno, message, stack }) {
