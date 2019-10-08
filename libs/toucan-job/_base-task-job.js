@@ -28,13 +28,18 @@ function buildTaskPageDoneSuccess(task, page) {
     return taskInfo;
 }
 
-function buildTaskPageProcess(task, msg, { pageLayerIndex, pageSpendTime, pageUrl, urlCountInPage = 0 } = {}) {
+function buildTaskPageProcess(task, msg, { pageLayerIndex, pageSpendTime, pageUrl, urlCountInPage = {} } = {}) {
     const totalSpend = Math.ceil(task.taskSpendTime / 1000) + '秒';
-    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/第${pageLayerIndex + 1}层${msg}，本页用时${pageSpendTime}毫秒/累计用时${totalSpend}。页面入口 - ${pageUrl} (本站链接：${urlCountInPage}个)`;
+    const urlCountInfo = buildUrlCountInfo(urlCountInPage);
+    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/第${pageLayerIndex + 1}层${msg}，本页用时${pageSpendTime}毫秒/累计用时${totalSpend}。页面入口 - ${pageUrl} (${urlCountInfo})`;
 }
 
 function buildErrorInfo({ code, errno, message, stack }) {
     return `${message}. (code:${code} , errno:${errno})\n${stack}`;
+}
+
+function buildUrlCountInfo({ innerUrl = 0, outerUrl = 0, scriptUrl = 0 } = {}) {
+    return `内链：${innerUrl}个，外链：${outerUrl}个，动链：${scriptUrl}个`;
 }
 
 module.exports = { TaskJob }

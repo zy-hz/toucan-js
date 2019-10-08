@@ -102,7 +102,7 @@ class ToucanBaseSpider {
                 // 页面链接的解析结果
                 thePage = Object.assign(thePage, extractUrlResult);
                 // 纪录页面的链接数量
-                theTask.extractUrlTotalCount.add(extractUrlResult.urlCountInPage);
+                theTask.extractUrlTotalCount = theTask.extractUrlTotalCount.add(extractUrlResult.urlCountInPage);
                 // 纪录解析错误的次数
                 theTask.extractUrlErrorCount = theTask.extractUrlErrorCount + extractUrlResult.extractUrlSuccess ? 0 : 1;
 
