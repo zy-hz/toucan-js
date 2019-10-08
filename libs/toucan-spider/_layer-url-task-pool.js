@@ -17,9 +17,10 @@ class LayerUrlTaskPool {
     // 加入连接
     push(url, layerIndex) {
         // 检查url是否存在，如果存在，就放弃该url
-        if (this.isExist(url)) return;
+        if (this.isExist(url)) return 0;
 
         this.__urls__.push({ url, layerIndex, isPop: false });
+        return 1;
     }
 
     // 弹出连接链接

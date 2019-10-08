@@ -4,6 +4,7 @@
         "spiderType": "http",
         "depth": 0,
         "taskBeginTime": 1570496189975,
+        "taskSpendTime":221122,
         "taskDonePageCount": 1,
         "taskErrorPageCount": 0,
         "extractUrlTotalCount": 153,

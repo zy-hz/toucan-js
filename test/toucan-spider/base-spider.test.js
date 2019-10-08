@@ -2,16 +2,20 @@
 const expect = require('chai').expect;
 const { ToucanBaseSpider } = require('../../libs/toucan-spider/_base-spider');
 const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
+const { SiteUrlCount } = require('../../libs/toucan-utility');
 const fs = require('fs');
 
-describe('base spider 测试 ', () => {
+describe('base spider 测试', () => {
 
     describe('爬行循环测试', () => {
         // 测试爬行用得蜘蛛
         class CrawlTestSpider extends ToucanBaseSpider {
 
             async crawlOnePage(theTask, thePage) {
-                return {}
+                return {
+                    crawlResult: { hasException: false },
+                    extractUrlResult: { urlCountInPage: SiteUrlCount({ innerUrl: 1 }), extractUrlSuccess: true }
+                }
             }
         }
 
@@ -34,20 +38,23 @@ describe('base spider 测试 ', () => {
                     this._targetUrlPool.push('testUrl' + this.__count__, this.__count__);
                 }
 
-                return {}
+                return {
+                    crawlResult: { hasException: false },
+                    extractUrlResult: { urlCountInPage: SiteUrlCount({ innerUrl: 1 }), extractUrlSuccess: true }
+                }
             }
         }
 
 
-        it('0 层正常测试', async () => {
+        it('0 层正常测试 ', async () => {
             const spider = new CrawlTestSpider({ spiderName: 'mocha蜘蛛', spiderType: 'CrawlTestSpider' });
             const task = await spider.run({ targetUrl: 'www.19lou.com', depth: 0 }, async ({ task, page }) => {
                 expect(page.pageSpendTime).is.greaterThan(0);
             });
 
-            expect(task.taskDonePageCount).to.be.eq(1);
-            expect(task.taskErrorPageCount).to.be.eq(0);
-            expect(task.taskSpendTime).is.greaterThan(0);
+            expect(task.taskDonePageCount,'taskDonePageCount').to.be.eq(1);
+            expect(task.taskErrorPageCount,'taskErrorPageCount').to.be.eq(0);
+            expect(task.taskSpendTime,'taskSpendTime').is.greaterThan(0);
         });
 
         it('0 层异常测试', async () => {
@@ -60,7 +67,7 @@ describe('base spider 测试 ', () => {
             expect(task.taskErrorPageCount).to.be.eq(1);
         });
 
-        it('多层测试', async () => {
+        it('多层测试 ', async () => {
             const spider = new CrawlMulitLayerSpider({ spiderName: '多层蜘蛛', spiderType: 'CrawlMulitLayerSpider' });
             const task = await spider.run({ targetUrl: '多层', depth: 10 }, async ({ task, page }) => {
                 expect(page.pageSpendTime).is.greaterThan(0);
@@ -80,10 +87,12 @@ describe('base spider 测试 ', () => {
         it('19lou', () => {
             const html = fs.readFileSync(__dirname + '/sample/page-19lou-com.html', 'utf-8');
             const cnt = up.extractUrl(entryUri, html, 0);
-            expect(cnt).is.greaterThan(10);
+            expect(cnt.innerUrl).to.be.eq(156);
+            expect(cnt.outerUrl).to.be.eq(125);
+            expect(cnt.scriptUrl).to.be.eq(17);
 
             expect(up._targetUrlPool.residualCount(0)).to.be.eq(0);
-            expect(up._targetUrlPool.residualCount(1)).to.be.eq(cnt);
+            expect(up._targetUrlPool.residualCount(1)).to.be.eq(cnt.innerUrl);
         })
     })
 })

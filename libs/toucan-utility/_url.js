@@ -15,14 +15,14 @@ class exURL {
         const uA = URL.parse(a);
         const uB = URL.parse(b);
 
-        if(uA.host != uB.host) return false;
-        if(uA.hostname != uB.hostname) return false;
-        if(uA.path != uB.path) return false;
+        if (uA.host != uB.host) return false;
+        if (uA.hostname != uB.hostname) return false;
+        if (uA.path != uB.path) return false;
 
         return true;
     }
 
-    isSameHost(a,b){
+    isSameHost(a, b) {
         if (_.isEmpty(a) || _.isEmpty(b)) return false;
 
         a = this.fillProtocol(a);
@@ -31,10 +31,18 @@ class exURL {
         const uA = URL.parse(a);
         const uB = URL.parse(b);
 
-        if(uA.host != uB.host) return false;
+        if (uA.host != uB.host) return false;
         return true;
     }
 
+    // 是否为脚本
+    isScript(a) {
+        if (_.isEmpty(a)) return false;
+        const uA = URL.parse(a);
+        if(_.isEmpty(uA.protocol)) return false;
+
+        return uA.protocol.indexOf('script') >= 0;
+    }
 
     // 为链接添加协议
     fillProtocol(url, p = 'http') {

@@ -12,7 +12,7 @@
 
 const _ = require('lodash');
 
-const { sleep, exURL } = require('../toucan-utility');
+const { sleep, exURL, SiteUrlCount } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 const cheerio = require("cheerio");
@@ -69,7 +69,7 @@ class ToucanBaseSpider {
             taskBeginTime: _.now(),
             taskDonePageCount: 0,
             taskErrorPageCount: 0,
-            extractUrlTotalCount: 0,
+            extractUrlTotalCount: SiteUrlCount(),
             extractUrlErrorCount: 0,
         });
         // 爬行的循环
@@ -96,13 +96,13 @@ class ToucanBaseSpider {
 
                 const {
                     crawlResult,
-                    extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false }
+                    extractUrlResult = { urlCountInPage: SiteUrlCount(), extractUrlSuccess: false }
                 } = await this.crawlOnePage(theTask, thePage, layerIndex);
 
                 // 页面链接的解析结果
                 thePage = Object.assign(thePage, extractUrlResult);
                 // 纪录页面的链接数量
-                theTask.extractUrlTotalCount = theTask.extractUrlTotalCount + extractUrlResult.urlCountInPage;
+                theTask.extractUrlTotalCount.add(extractUrlResult.urlCountInPage);
                 // 纪录解析错误的次数
                 theTask.extractUrlErrorCount = theTask.extractUrlErrorCount + extractUrlResult.extractUrlSuccess ? 0 : 1;
 
@@ -145,7 +145,7 @@ class ToucanBaseSpider {
 
         // 解析页面的结果
         const extractUrlResult = {
-            urlCountInPage: 0,
+            urlCountInPage: {},
             extractUrlSuccess: false
         }
 
@@ -164,14 +164,21 @@ class ToucanBaseSpider {
 
     // 从页面中提取链接
     extractUrl(pageUrl, content, layerIndex) {
-
+        let urlCount = SiteUrlCount();
         const $ = cheerio.load(content);
         _.forEach($('a'), (x) => {
             const url = x.attribs.href
             // 提前链接的属于当前层的下一层，所以layerIndex需要+1
-            if (exURL.isSameHost(pageUrl, url)) this._targetUrlPool.push(url, layerIndex + 1);
+            if (exURL.isSameHost(pageUrl, url)) {
+                urlCount.innerUrl = urlCount.innerUrl + this._targetUrlPool.push(url, layerIndex + 1);
+            } else if (exURL.isScript(url)) {
+                urlCount.scriptUrl = urlCount.scriptUrl + 1;
+            }
+            else {
+                urlCount.outerUrl = urlCount.outerUrl + 1;
+            }
         });
-        return this._targetUrlPool.residualCount();
+        return urlCount;
     }
 
 }
@@ -181,8 +188,10 @@ async function onPageDone(hasException, theTask, thePage, result, eventCallback)
 
     const pageEndTime = _.now();
     const pageSpendTime = pageEndTime - thePage.pageBeginTime;
+    const taskSpendTime = pageEndTime - theTask.taskBeginTime;
 
     thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime }, result)
+    theTask = Object.assign(theTask, { taskSpendTime });
 
     if (typeof eventCallback === 'function') {
         // 事件回调

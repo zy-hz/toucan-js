@@ -50,7 +50,7 @@ describe('SubscribeGatherTaskJob 测试', () => {
         expect(result.jobCount, '再次订阅应该没有消息了').to.be.equal(0);
     });
 
-    it('[long]多层 temp', async () => {
+    it('[long]多层', async () => {
         // 发布一个任务到队列
         const mulitLayerTask = Object.assign(taskBody, { depth: 1 });
         await taskMQ.publishTask({ taskBody: mulitLayerTask, taskOptions: { queue: fromQueues[0] } });
