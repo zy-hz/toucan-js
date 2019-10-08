@@ -19,4 +19,9 @@ describe('ToucanLogger 测试 temp', () => {
         logger.warn('abc', 'ccc');
     })
 
+    it('object ',()=>{
+        const logger = new TestLogger();
+        logger.log({ obj1: 'abc' }, Date.now());
+    });
+
 })

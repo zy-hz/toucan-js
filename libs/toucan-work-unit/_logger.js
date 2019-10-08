@@ -29,7 +29,7 @@ class ToucanLogger {
     }
     // 分割线
     split(splitChar = '*', msg = '') {
-        const padStr = _.padEnd('', Math.floor(72/2 - msg.length/2), splitChar);
+        const padStr = _.padEnd('', Math.floor(72 / 2 - msg.length / 2), splitChar);
         this.log(`${padStr}${msg}${padStr}`);
     }
 
@@ -59,7 +59,9 @@ function buildTimeInfo(fm) {
 }
 
 function buildInfo(optionalParams) {
-    return optionalParams.join(' ');
+    return _.map(optionalParams, (x) => {
+        return typeof x === 'object' ? JSON.stringify(x) : x;
+    }).join(' ')
 }
 
 module.exports = { ToucanLogger };
