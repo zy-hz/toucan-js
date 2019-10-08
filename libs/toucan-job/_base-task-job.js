@@ -18,7 +18,8 @@ class TaskJob extends ToucanJob {
 
 function buildTaskPageDoneError(task, page) {
     const taskInfo = buildTaskPageProcess(task, '采集失败', page);
-    return taskInfo;
+    const errorInfo = buildErrorInfo(page);
+    return taskInfo + '\n' + errorInfo + `\n\n累计失败：${task.taskErrorPageCount}次`;
 }
 
 function buildTaskPageDoneSuccess(task, page) {
@@ -26,8 +27,12 @@ function buildTaskPageDoneSuccess(task, page) {
     return taskInfo;
 }
 
-function buildTaskPageProcess(task, msg, { pageLayerIndex, pageSpendTime } = {}) {
-    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/第${pageLayerIndex + 1}层${msg}，用时${pageSpendTime}毫秒`;
+function buildTaskPageProcess(task, msg, { pageLayerIndex, pageSpendTime, pageUrl } = {}) {
+    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/第${pageLayerIndex + 1}层${msg}，用时${pageSpendTime}毫秒。页面入口 - ${pageUrl}`;
+}
+
+function buildErrorInfo({ code, errno, message, stack }) {
+    return `${message}. (code:${code} , errno:${errno})\n${stack}`;
 }
 
 module.exports = { TaskJob }

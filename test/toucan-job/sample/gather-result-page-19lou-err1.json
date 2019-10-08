@@ -1,0 +1,30 @@
+{
+    "task": {
+        "targetUrl": "www.19lou.com",
+        "spiderType": "http",
+        "depth": 0,
+        "taskBeginTime": 1570496189975,
+        "taskDonePageCount": 1,
+        "taskErrorPageCount": 0,
+        "extractUrlTotalCount": 153,
+        "extractUrlErrorCount": 0
+    },
+    "page": {
+        "pageUrl": "//www.19lou.com/topic/html/renzheng.html",
+        "pageBeginTime": 1570503684369,
+        "pageLayerIndex": 1,
+        "spiderName": "unknown",
+        "spiderType": "http",
+        "urlCountInPage": 0,
+        "extractUrlSuccess": false,
+        "extractUrlError": {},
+        "hasException": true,
+        "pageEndTime": 1570503686385,
+        "pageSpendTime": 2016,
+        "fetchType": "request",
+        "code": "ECONNREFUSED",
+        "errno": "ECONNREFUSED",
+        "message": "connect ECONNREFUSED 127.0.0.1:80",
+        "stack": "Error: connect ECONNREFUSED 127.0.0.1:80\n    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1104:14)"
+    }
+}

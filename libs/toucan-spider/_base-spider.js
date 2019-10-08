@@ -12,7 +12,7 @@
 
 const _ = require('lodash');
 
-const { sleep, isEqualString, exURL } = require('../toucan-utility');
+const { sleep, exURL } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 const cheerio = require("cheerio");
@@ -99,14 +99,22 @@ class ToucanBaseSpider {
                     extractUrlResult = { urlCountInPage: 0, extractUrlSuccess: false }
                 } = await this.crawlOnePage(theTask, thePage, layerIndex);
 
+                // 页面链接的解析结果
                 thePage = Object.assign(thePage, extractUrlResult);
-
-                //  采集成功的页面数量增加
-                theTask.taskDonePageCount = theTask.taskDonePageCount + 1;
                 // 纪录页面的链接数量
                 theTask.extractUrlTotalCount = theTask.extractUrlTotalCount + extractUrlResult.urlCountInPage;
                 // 纪录解析错误的次数
                 theTask.extractUrlErrorCount = theTask.extractUrlErrorCount + extractUrlResult.extractUrlSuccess ? 0 : 1;
+
+                // 采集的结果
+                if (crawlResult.hasException) {
+                    //  采集失败的页面数量增加
+                    theTask.taskErrorPageCount = theTask.taskErrorPageCount + 1;
+                } else {
+                    //  采集成功的页面数量增加
+                    theTask.taskDonePageCount = theTask.taskDonePageCount + 1;
+                }
+
                 // 触发一个页面完成
                 await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
             }
@@ -133,7 +141,7 @@ class ToucanBaseSpider {
     // 爬行一个页面
     async crawlOnePage(theTask, thePage, layerIndex = 0) {
         // 获得页面的采集结果
-        const response = await this.pageFetch.do(thePage.pageUrl);
+        const response = await this.pageFetch.do(exURL.fillProtocol(thePage.pageUrl));
 
         // 解析页面的结果
         const extractUrlResult = {

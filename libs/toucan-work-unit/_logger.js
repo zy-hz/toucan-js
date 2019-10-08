@@ -42,7 +42,7 @@ class ToucanLogger {
         pms.push(buildInfo(optionalParams));
 
         // 调用实际得输出
-        func(pms.join(' '));
+        func(pms.join(' ').replace(/\n/img, '\n     - '));
     }
 }
 
