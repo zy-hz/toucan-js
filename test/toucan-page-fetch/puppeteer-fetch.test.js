@@ -8,14 +8,18 @@ const cheerio = require('cheerio');
 describe('puppeteer 测试 ', () => {
 
     describe('操作测试', () => {
+        // 定义自动滚动类
+        class ScrollPageFetch extends PuppeteerPageFetch {
+            async specialOp(page, options = {}) {
+                await this.autoScroll(page);
+            }
+        }
 
-        it('滚动 temp', async () => {
-            const pageFetch = new PuppeteerPageFetch();
+        it('滚动', async () => {
+            const pageFetch = new ScrollPageFetch();
             const url1 = 'https://m.1688.com/offer/602752160064.html?spm=a260j.12536015.jr601u7p.2.145d700eMEM6by';
             const url2 = 'https://detail.1688.com/offer/601818890874.html?spm=a2633q.13149856.jzcrmzl2.6.6af151d0ZID7Jp&scm=1007.26309.139606.0&udsPoolId=1373831&resourceId=1124979&__noNativeRedirect__=1';
-
-            //const result = await pageFetch.do(url1, { pageLoadDoneFlag: '#offer-template-0', headless: false });
-            const result = await pageFetch.do(url1, {  headless: false });
+            const result = await pageFetch.do(url1, { headless: false });
             expect(result.hasException, 'hasException').is.false;
 
             const content = exHTML.extractContent(result.pageContent, true);

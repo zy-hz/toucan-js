@@ -12,16 +12,16 @@ class PuppeteerPageFetch extends ToucanPageFetch {
         this.fetchType = 'webpage';
     }
 
-    async do(url, option = {}) {
+    async do(url, options = {}) {
 
         // 有该标记，表示页面载入完成
-        const { pageLoadDoneFlag = '', headless = true, viewPort = { width: 1280, height: 768 } } = option;
+        const { headless = true, viewPort = { width: 1280, height: 768 } } = options;
 
         try {
             // 用户的代理
             let userAgent = userAgents[parseInt(Math.random() * userAgents.length)];
             // 根据选项构建url
-            let visitUrl = util.buildUrl(url, option);
+            let visitUrl = util.buildUrl(url, options);
 
             const browser = await puppeteer.launch(
                 {
@@ -49,10 +49,8 @@ class PuppeteerPageFetch extends ToucanPageFetch {
             // 前往页面地址
             await page.goto(visitUrl);
 
-            // 如果有特殊的页面载入标记时，启动等待页面标记过程
-            if (!_.isEmpty(pageLoadDoneFlag)) {
-                await page.waitForSelector(pageLoadDoneFlag);
-            }
+            // 执行一些特殊的操作，运行子类重载该方法，实现子类的功能
+            await this.specialOp(page, options);
 
             // 获得页面内容
             const pageContent = await page.content();
@@ -80,7 +78,7 @@ class PuppeteerPageFetch extends ToucanPageFetch {
     }
 
     // 自动滚动
-    async autoScroll(page){
+    async autoScroll(page) {
         await page.evaluate(async () => {
             await new Promise((resolve, reject) => {
                 var totalHeight = 0;
@@ -89,14 +87,23 @@ class PuppeteerPageFetch extends ToucanPageFetch {
                     var scrollHeight = document.body.scrollHeight;
                     window.scrollBy(0, distance);
                     totalHeight += distance;
-    
-                    if(totalHeight >= scrollHeight){
+
+                    if (totalHeight >= scrollHeight) {
                         clearInterval(timer);
                         resolve();
                     }
                 }, 100);
             });
         });
+    }
+
+    // 一些特殊的操作
+    async specialOp(page, options = {}) {
+        const { pageLoadDoneFlag = '' } = options;
+        // 如果有特殊的页面载入标记时，启动等待页面标记过程
+        if (!_.isEmpty(pageLoadDoneFlag)) {
+            await page.waitForSelector(pageLoadDoneFlag);
+        }
     }
 }
 
