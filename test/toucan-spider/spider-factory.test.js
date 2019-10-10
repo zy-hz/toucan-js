@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const { spiderFactory } = require('../../libs/toucan-spider');
 const { isClass } = require('../../libs/toucan-utility');
 
-describe('ToucanSpiderFactory 测试', () => {
+describe('ToucanSpiderFactory 测试 temp', () => {
 
     describe('create', () => {
         it('蜘蛛参数测试', () => {
@@ -14,7 +14,7 @@ describe('ToucanSpiderFactory 测试', () => {
             expect(spider.idleSleep).to.be.eq(spiderOption.idleSleep);
         });
 
-        it('spider type 测试 ', () => {
+        it('spiderType 测试 ', () => {
 
             let spider = spiderFactory.createSpider({ spiderType: 'http' });
             spiderComponeExpect(spider, 'http', 'ToucanHttpSpider');
@@ -22,6 +22,11 @@ describe('ToucanSpiderFactory 测试', () => {
             spider = spiderFactory.createSpider({ spiderType: 'browser' });
             spiderComponeExpect(spider, 'browser', 'ToucanBrowserSpider');
 
+        });
+
+        it('targetName 测试',()=>{
+            let spider = spiderFactory.createSpider({ targetName: 'ali-1688-detail' });
+            spiderComponeExpect(spider, 'special', 'Ali1688DetailSpider');
         });
     })
 
@@ -31,6 +36,10 @@ describe('ToucanSpiderFactory 测试', () => {
             expect(spiderFactory.getSpiderId({ spiderType: 'http' })).to.be.eq('toucan.cm.http');
             expect(spiderFactory.getSpiderId({ spiderType: 'browser' })).to.be.eq('toucan.cm.browser');
             expect(spiderFactory.getSpiderId(), '类型为空，默认http蜘蛛').to.be.eq('toucan.cm.http');
+        });
+
+        it('targetName', () => {
+            expect(spiderFactory.getSpiderId({ targetName: 'ali-1688-detail' })).to.be.eq('toucan.sp.ali.1688.detail');
         });
 
         it('targetUrl ', () => {

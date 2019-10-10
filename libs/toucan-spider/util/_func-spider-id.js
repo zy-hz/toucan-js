@@ -13,7 +13,7 @@ function getSpiderIdBySpiderType(spiderType) {
 function getSpiderIdByTargetName(targetName) {
     if (_.isEmpty(targetName)) return '';
 
-    return 'toucan.cm.' + _.lowerCase(targetName);
+    return 'toucan.sp.' + _.lowerCase(targetName).replace(/ /img,'.');
 }
 
 // 根据目标连接蜘蛛编号

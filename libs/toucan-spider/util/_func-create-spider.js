@@ -5,7 +5,7 @@ function createSpiderClassBySpiderType(spiderType) {
 
 // 根据目标创建蜘蛛
 function createSpiderClassByTarget(targetName) {
-    return require('./_base-spider');
+    return require(`../toucan.sp/_${targetName}`);
 }
 
 function createSpiderClassByUrl(url) {

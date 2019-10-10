@@ -2,8 +2,8 @@ const ToucanHttpSpider = require('./toucan.cm/_http-spider');
 const _ = require('lodash');
 const { isClass } = require('../toucan-utility');
 
-const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl} = require('./util/_func-spider-id');
-const {createSpiderClassBySpiderType, createSpiderClassByTarget, createSpiderClassByUrl } = require('./util/_func-create-spider');
+const { getSpiderIdBySpiderType, getSpiderIdByTargetName, getSpiderIdByTargetUrl } = require('./util/_func-spider-id');
+const { createSpiderClassBySpiderType, createSpiderClassByTarget, createSpiderClassByUrl } = require('./util/_func-create-spider');
 
 // 大嘴鸟的蜘蛛工厂
 class ToucanSpiderFactory {
@@ -39,7 +39,7 @@ class ToucanSpiderFactory {
         // 如果都不是，创建默认蜘蛛 (http蜘蛛)
         if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpSpider;
 
-        const opt = Object.assign(spiderOption, { spiderType });
+        const opt = Object.assign(spiderOption, { spiderType: spiderType || 'special' });
         return new spiderClass(opt);
     }
 
