@@ -5,25 +5,6 @@ const _ = require('lodash');
 
 const pageFetchFactory = require('../../libs/toucan-page-fetch/index');
 
-describe('[long] webpage fetch 测试', () => {
-
-    it('do www.weibo.com 使用浏览器抓手测试', async () => {
-        const pageFetch = pageFetchFactory.createFetch({ fetchType: 'webpage' });
-        const url = 'https://www.weibo.com/'
-        const res = await pageFetch.do(url, { pageLoadDoneFlag: '.WB_frame' });
-        expect(res, '页面抓取结果不能为空').to.be.not.empty;
-
-        // 检查是否发生异常
-        expect(res.hasException, res.message).to.be.false;
-
-        // 页面解析
-        const $ = cheerio.load(res.pageContent)
-        expect($('title').text(), '微博标题检查').to.be.eq('微博-随时随地发现新鲜事')
-
-    });
-
-})
-
 describe('[long] request page fetch 测试',()=>{
 
     it('do s.weibo.com 搜索测试', async () => {

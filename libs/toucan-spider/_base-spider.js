@@ -116,7 +116,7 @@ class ToucanBaseSpider {
                     theTask.taskDonePageCount = theTask.taskDonePageCount + 1;
                 }
                 // 计算任务计划要采集的估计数量
-                theTask.taskPlanPageCount = this._targetUrlPool.sumLessThan(layerIndex); 
+                theTask.taskPlanPageCount = this._targetUrlPool.sumLessThan(layerIndex);
 
                 // 触发一个页面完成
                 await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
@@ -144,7 +144,7 @@ class ToucanBaseSpider {
     // 爬行一个页面
     async crawlOnePage(theTask, thePage, layerIndex = 0) {
         // 获得页面的采集结果
-        const response = await this.pageFetch.do(exURL.fillProtocol(thePage.pageUrl));
+        const response = await this.pageFetch.do(exURL.fillProtocol(thePage.pageUrl), theTask);
 
         // 解析页面的结果
         const extractUrlResult = {

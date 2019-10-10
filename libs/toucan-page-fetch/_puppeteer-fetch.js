@@ -15,7 +15,7 @@ class PuppeteerPageFetch extends ToucanPageFetch {
     async do(url, option = {}) {
 
         // 有该标记，表示页面载入完成
-        const { pageLoadDoneFlag = '' } = option;
+        const { pageLoadDoneFlag = '', headless = true, viewPort = { width: 1280, height: 768 } } = option;
 
         try {
             // 用户的代理
@@ -25,7 +25,8 @@ class PuppeteerPageFetch extends ToucanPageFetch {
 
             const browser = await puppeteer.launch(
                 {
-                    headless: true,
+                    // 是否无头
+                    headless,
                     // 优化Chromium启动项 ， 
                     // 参考 https://juejin.im/post/5ce53c786fb9a07f014ecbcd
                     args: [
@@ -42,7 +43,9 @@ class PuppeteerPageFetch extends ToucanPageFetch {
             // 创建浏览器的新页面
             const page = await browser.newPage();
             // 设置用户类型
-            await page.setUserAgent(userAgent)
+            await page.setUserAgent(userAgent);
+            // 设置屏幕分辨率
+            await page.setViewport(viewPort);
             // 前往页面地址
             await page.goto(visitUrl);
 
@@ -74,6 +77,26 @@ class PuppeteerPageFetch extends ToucanPageFetch {
         catch (error) {
             return onException(error, this.fetchType)
         }
+    }
+
+    // 自动滚动
+    async autoScroll(page){
+        await page.evaluate(async () => {
+            await new Promise((resolve, reject) => {
+                var totalHeight = 0;
+                var distance = 500;
+                var timer = setInterval(() => {
+                    var scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+    
+                    if(totalHeight >= scrollHeight){
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
+        });
     }
 }
 
