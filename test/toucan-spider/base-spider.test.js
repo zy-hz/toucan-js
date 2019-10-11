@@ -5,9 +5,9 @@ const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 const { SiteUrlCount } = require('../../libs/toucan-utility');
 const fs = require('fs');
 
-describe('base spider 测试', () => {
+describe('base spider 测试 temp', () => {
 
-    describe('爬行循环测试', () => {
+    describe('爬行循环测试 ', () => {
         // 测试爬行用得蜘蛛
         class CrawlTestSpider extends ToucanBaseSpider {
 

@@ -52,7 +52,7 @@ describe('ToucanGatherCell', () => {
         })
     });
 
-    describe('启动停止', () => {
+    describe('[long]启动停止', () => {
         const skillKeys = ['cm.http'];
 
         it('单个RabbitMQ启动', async () => {
