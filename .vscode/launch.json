@@ -56,6 +56,26 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Long testing",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "test",
+                "--no-timeouts",
+                "--recursive",
+                "--bail", // 发现错误后停止
+                "--grep",
+                "[[long]]"
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "All testing",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
