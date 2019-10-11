@@ -19,7 +19,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
     constructor(configFileName = '') {
         // 读取配置
-        const stationConfig = require('./_gather-station.config')(configFileName);
+        const stationConfig = require('./_gather-station-config')(configFileName);
         // 构造工作单元基类
         super();
 

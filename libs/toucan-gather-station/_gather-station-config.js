@@ -3,13 +3,15 @@
 //
 const fs = require('fs');
 const _ = require('lodash');
+const { constantize } = require('../toucan-utility');
 
 // 默认的配置对象
-const DEFALUT_CONFIG = {
+// 使用constantize冻结这个对象的所有属性
+const DEFALUT_CONFIG = constantize({
     // 站点名称
-    stationName:'',
+    stationName: '',
     // 采集站点的编号，
-    stationNo:'',
+    stationNo: '',
     // 采集站初始化完成后是否自动启动
     autoStart: true,
     // 采集能力的描述
@@ -35,7 +37,7 @@ const DEFALUT_CONFIG = {
             }
         ],
     }
-}
+})
 
 function getConfig(fileName = '') {
     // 运行时指定的文件
