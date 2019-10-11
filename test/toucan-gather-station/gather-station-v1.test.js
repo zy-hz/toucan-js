@@ -9,14 +9,15 @@ const buildGatherCells = lib.__get__('buildGatherCells');
 
 describe('GatherStationV1 综合测试', () => {
 
-    describe('GatherStationV1 测试', () => {
-        const cfgFileName = `${__dirname}/gsconfig.json`;
+    describe('GatherStationV1 测试 ', () => {
+        const cfgFileName = `${__dirname}/sample/gsconfig.json`;
 
         it('读取配置文件', () => {
             const gs = new ToucanGatherStation(cfgFileName);
             expect(_.isNil(gs)).to.be.false;
 
             runExpect4GatherSkill(gs.stationConfig.gatherSkill);
+            runExpect4MessageQueue(gs.stationConfig.messageQueue);
         });
 
         it('初始化-不启动 ', async () => {
@@ -115,12 +116,15 @@ describe('GatherStationV1 综合测试', () => {
 
         _.forEach(gatherCells, runExpect4SkillCell)
     }
-
     // 技能单元测试
     function runExpect4SkillCell(skillCell) {
         expect(skillCell.skillName, '能力名称不能空').is.not.empty;
         expect(_.isArray(skillCell.skillKeys), '能力关键词是个数组').to.be.true;
         expect(skillCell.skillKeys, '能力关键词不能为空').is.not.empty;
+    }
+    // 消息队列单元测试
+    function runExpect4MessageQueue(messageQueue){
+        expect(messageQueue.mqType).to.be.eq('rabbit');
     }
 })
 

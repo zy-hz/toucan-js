@@ -1,5 +1,5 @@
 // 
-// RabbitMQ 的采集任务队列
+// RabbitMQ 的消息队列
 //
 //
 

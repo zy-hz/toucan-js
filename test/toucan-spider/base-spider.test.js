@@ -5,7 +5,7 @@ const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 const { SiteUrlCount } = require('../../libs/toucan-utility');
 const fs = require('fs');
 
-describe('base spider 测试 temp', () => {
+describe('base spider 测试', () => {
 
     describe('爬行循环测试 ', () => {
         // 测试爬行用得蜘蛛
@@ -74,7 +74,7 @@ describe('base spider 测试 temp', () => {
             });
 
             expect(task.taskDonePageCount).to.be.eq(5);
-            expect(task.taskErrorPageCount).to.be.eq(0);
+            expect(task.taskErrorPageCount,'taskErrorPageCount').to.be.eq(0);
             expect(task.taskSpendTime).is.greaterThan(0);
         })
     })

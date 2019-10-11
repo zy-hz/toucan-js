@@ -84,7 +84,7 @@ async function buildStationUnitInfo({ stationName, stationNo }) {
 }
 
 // 构建采集单元池
-function buildGatherCellPool(gatherSkill = {}, stationInfo = {}) {
+function buildGatherCellPool(gatherSkill = {}, stationInfo = {}, options = {}) {
     const { maxGatherCellCount, gatherCells } = gatherSkill;
 
     if (_.isNil(maxGatherCellCount)) throw new NullArgumentError('maxGatherCellCount');
@@ -96,7 +96,7 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}) {
     // 构建工作单元池
     const unitPool = new ToucanWorkUnitPool();
     _.forEach(skillTemplate, (skill, index) => {
-        const gc = buildGatherCells(skill, index, stationInfo);
+        const gc = buildGatherCells(skill, index, stationInfo, options);
         unitPool.add(gc);
     })
     return unitPool
@@ -104,11 +104,13 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}) {
 
 // 从模板构建采集单元集合
 // index - 能力在采集单元的位置
-function buildGatherCells(skill, index, { unitAddress, unitId = '' }) {
+function buildGatherCells(skill, index, { unitAddress, unitId = '' }, {
+    messageQueue = { mqType: 'rabbit', mqOptions: {} }
+} = {}) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
 
     // 创建采集消息队列
-    const gatherMQ = mqFactory.createGatherMQ('rabbit');
+    const gatherMQ = mqFactory.createGatherMQ(messageQueue.mqType, messageQueue.mqOptions);
 
     let gcs = [];
     for (let i = 0; i < skill.skillCapability; i++) {

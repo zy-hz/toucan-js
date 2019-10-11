@@ -36,6 +36,17 @@ const DEFALUT_CONFIG = constantize({
                 skillCapability: 3,
             }
         ],
+    },
+    // 消息队列的定义
+    messageQueue: {
+        // 可选：
+        // rabbit - rabbitmq 消息队列,
+        // file - 本地文件消息队列
+        mqType: 'rabbit',
+        // 消息队列的参数
+        mqOptions: {
+
+        }
     }
 })
 
