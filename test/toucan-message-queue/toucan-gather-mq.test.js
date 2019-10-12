@@ -3,10 +3,10 @@ const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 const _ = require('lodash');
 
-describe('ToucanGtherMQ 测试 ', () => {
+describe('ToucanGtherMQ 测试 temp', () => {
     const fromQueues = ['toucan.cm.http', 'toucan.cm.browse', 'toucan.sp.com.sohu.news', 'toucan.sp.com.sohu'];
 
-    //runTest('rabbit');
+    runTest('rabbit');
     runTest('file');
 
     function runTest(mqType) {
@@ -33,9 +33,8 @@ describe('ToucanGtherMQ 测试 ', () => {
                 expect(queue).to.be.eq('toucan.cm.http');
             });
 
-            describe('subscribeTask temp', () => {
-                const gatherMQ = mqFactory.createGatherMQ(mqType);
-                const taskMQ = mqFactory.createTaskMQ(mqType);
+            describe('subscribeTask', () => {
+                let gatherMQ ,taskMQ;
                 const testQueues = ['test.cm.http', 'test.sp.com.sohu'];
 
                 const task1 = {
@@ -60,18 +59,20 @@ describe('ToucanGtherMQ 测试 ', () => {
                 };
 
                 beforeEach(async () => {
+                    gatherMQ = mqFactory.createGatherMQ(mqType);
+                    taskMQ = mqFactory.createTaskMQ(mqType);
                     await taskMQ.mqVisitor.deleteQueue(testQueues);
                     await taskMQ.publishTask(task1);
                     await taskMQ.publishTask(task2);
                     await taskMQ.publishTask(task3);
                 });
 
-                after(async () => {
+                afterEach(async () => {
                     await taskMQ.disconnect();
                     await gatherMQ.disconnect();
                 })
 
-                it('subscribe ONE queue', async () => {
+                it('subscribe ONE queue ', async () => {
                     const qs = _.at(testQueues, 0);
                     gatherMQ.bindTaskQueue(qs);
 
