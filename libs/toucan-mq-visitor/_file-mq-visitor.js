@@ -55,7 +55,7 @@ class FileMQVisitor extends ToucanMQVisitor {
         // 已经存在队列，就放弃初始化
         if (!_.isNil(this.__dataStorage__[queueName])) return;
 
-        const fileName = `${this.mqCachePath}/${queueName}`;
+        const fileName = this.getQueueCachFile(queueName);
         this.__dataStorage__[queueName] = []
 
         if (!fs.existsSync(fileName)) return;
@@ -78,8 +78,9 @@ class FileMQVisitor extends ToucanMQVisitor {
     // 断开消息服务器
     async disconnect() {
         // 将缓存内容写入文件
-        _.each(this.__dataStorage__, (x) => {
-
+        _.forOwn(this.__dataStorage__, (val, key) => {
+            const fileName = this.getQueueCachFile(key);
+            saveToFile(fileName, val);
         })
     }
 
@@ -137,10 +138,15 @@ class FileMQVisitor extends ToucanMQVisitor {
         this.__dataStorage__[queueName] = _.concat(this.__dataStorage__[queueName], msgArray);
 
         if (toDisk) {
-            const fileName = `${this.mqCachePath}/${queueName}`;
+            const fileName = this.getQueueCachFile(queueName);
             msgArray = _.map(msgArray, (x) => { return JSON.stringify(x) });
             fs.appendFileSync(fileName, _.join(msgArray, '\r\n'));
         }
+    }
+
+    // 缓存队列的文件名
+    getQueueCachFile(queueName) {
+        return `${this.mqCachePath}/${queueName}`;
     }
 }
 
@@ -152,6 +158,13 @@ function loadGatherTaskFromFile(src) {
     return _.map(lines, (x) => { return buildMessageObject(x) })
 }
 
+// 保存到文件
+function saveToFile(src, msg) {
+    msg = _.map(msg,(x)=>{return JSON.stringify(x)});
+    fs.writeFileSync(src,msg.join('\r\n'));
+}
+
+// 构建消息对象
 function buildMessageObject(content, isRead = false) {
     return { content, isRead };
 }
