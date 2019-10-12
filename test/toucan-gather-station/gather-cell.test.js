@@ -129,10 +129,21 @@ describe('ToucanGatherCell', () => {
             await sleep(waitSecond);
             await gc.stop();
 
-            expect(runCount,'运行次数').to.be.eq(Math.floor(waitSecond/1000/(jobSpan/1000+1)) + 1);
+            expect(runCount, '运行次数').to.be.eq(Math.floor(waitSecond / 1000 / (jobSpan / 1000 + 1)) + 1);
         });
     });
 
+    // 由本地文件提供任务的采集
+    describe('fileMQ temp', () => {
+        const skillKeys = ['cm.http'];
+
+        it('', async () => {
+            const gatherMQ = mqFactory.createGatherMQ('file');
+            const gc = new ToucanGatherCell({ gatherMQ, skillKeys });
+
+            await gc.start();
+        })
+    });
 });
 
 

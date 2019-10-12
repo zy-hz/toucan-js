@@ -7,7 +7,11 @@ const lib = require("rewire")('../../libs/toucan-gather-station/_gather-statioin
 const buildGatherCellPool = lib.__get__('buildGatherCellPool');
 const buildGatherCells = lib.__get__('buildGatherCells');
 
-describe('GatherStationV1 综合测试', () => {
+const { sleep } = require('../../libs/toucan-utility');
+
+const fs = require('fs');
+
+describe('GatherStationV1 综合测试 ', () => {
 
     describe('GatherStationV1 测试 ', () => {
         const cfgFileName = `${__dirname}/sample/gsconfig.json`;
@@ -103,6 +107,48 @@ describe('GatherStationV1 综合测试', () => {
         });
     });
 
+    describe('GatherStationV1 file模式测试', () => {
+        const skillKeys = ['cm.http', 'cm.browser'];
+        const q1 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[0]}`;
+        const q2 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[1]}`;
+
+        before(() => {
+            if (fs.existsSync(q1)) fs.unlinkSync(q1);
+            if (fs.existsSync(q2)) fs.unlinkSync(q2);
+        })
+
+        it('', async () => {
+            const gs = new ToucanGatherStation({
+                autoStart: true,
+                gatherSkill: {
+                    // 本采集站拥有的采集单元的数量
+                    maxGatherCellCount: 9,
+                    // 采集单元的集合
+                    gatherCells: [
+                        {
+                            skillName: 'fileMQ测试',
+                            skillDescription: '支持http协议和模拟浏览器采集任务',
+                            skillKeys,
+                            skillCapability: 1,
+                        }
+                    ],
+                },
+                messageQueue: { mqType: 'file' }
+            });
+            await gs.init();
+
+            expect(gs.workInfo.unitStatus.isActived, '状态应为启动').to.be.true;
+            expect(gs.unitInfo.unitName, '期望是机器名称').to.be.eq('DESKTOP-19SS3KS');
+            expect(gs.unitInfo.unitAddress).is.not.empty;
+
+            await sleep(1000);
+            expect(fs.existsSync(q1)).is.true;
+            expect(fs.existsSync(q2)).is.true;
+
+            await gs.stop();
+        })
+    })
+
     function runExpect4GatherSkill(gatherSkill) {
 
         expect(gatherSkill.maxGatherCellCount, 'maxGatherCellCount 需要大于0').to.be.greaterThan(0);
@@ -123,7 +169,7 @@ describe('GatherStationV1 综合测试', () => {
         expect(skillCell.skillKeys, '能力关键词不能为空').is.not.empty;
     }
     // 消息队列单元测试
-    function runExpect4MessageQueue(messageQueue){
+    function runExpect4MessageQueue(messageQueue) {
         expect(messageQueue.mqType).to.be.eq('rabbit');
     }
 })

@@ -17,9 +17,14 @@ const mqFactory = require('../toucan-message-queue');
 
 class ToucanGatherStationV1 extends ToucanWorkUnit {
 
-    constructor(configFileName = '') {
+    constructor(
+        // String - 指定配置文件的文件路径 
+        // Object - 配置文件的对象
+        options
+    ) {
+
         // 读取配置
-        const stationConfig = require('./_gather-station-config')(configFileName);
+        const stationConfig = _.isObject(options) ? options : require('./_gather-station-config')(options);
         // 构造工作单元基类
         super();
 
@@ -33,7 +38,10 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
         this.unitInfo = await buildStationUnitInfo(_.cloneDeep(this.stationConfig));
 
         // 构造采集单元池
-        this.gatherCellPool = buildGatherCellPool(_.cloneDeep(this.stationConfig.gatherSkill), _.cloneDeep(this.unitInfo));
+        this.gatherCellPool = buildGatherCellPool(
+            _.cloneDeep(this.stationConfig.gatherSkill),
+            _.cloneDeep(this.unitInfo),
+            this.stationConfig);
 
         // 自动启动
         if (this.stationConfig.autoStart) await this.start();
