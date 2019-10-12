@@ -1,7 +1,6 @@
 // 支持日志
 const _ = require('lodash');
 const moment = require('moment');
-const { isObject } = require('../toucan-utility');
 
 class ToucanLogger {
 
@@ -27,7 +26,7 @@ class ToucanLogger {
     }
     error(...optionalParams) {
         optionalParams = _.map(optionalParams, (x) => {
-            if (isObject(x, 'Error')) {
+            if (_.isError(x)) {
                 // 格式化错误信息
                 const { code = 9999, errno = 9999, message, stack } = x;
                 return `\n${message}. (code:${code} , errno:${errno})\n${stack}`;
