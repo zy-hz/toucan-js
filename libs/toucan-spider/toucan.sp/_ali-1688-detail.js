@@ -32,7 +32,8 @@ class Ali1688DetailSpider extends ToucanBaseSpider {
         // 提交采集的结果
         submitGatherResult) {
 
-        const { useMobile = false } = task;
+        // 使用移动入口
+        const { useMobile = true } = task;
 
         // 当使用移动端模式时，修改目标地址
         // 访问的链接，例如：https://detail.1688.com/offer/xxxx60064.html

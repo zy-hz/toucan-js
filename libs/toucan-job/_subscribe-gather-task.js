@@ -20,7 +20,7 @@ class SubscribeGatherTaskJob extends TaskJob {
         }
 
         // 获得采集任务
-        let task = JSON.parse(msg.content.toString());
+        let task = typeof msg === 'object' ? msg.content : JSON.parse(msg.content.toString());
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
         // 启动采集蜘蛛
@@ -31,9 +31,9 @@ class SubscribeGatherTaskJob extends TaskJob {
 
     // 采集一个页面结束
     async onPageDone(task, page) {
-        
+
         // 纪录页面日志
-        this.logTaskPageDone(task,page);
+        this.logTaskPageDone(task, page);
 
         // 提交结果到服务器
     }

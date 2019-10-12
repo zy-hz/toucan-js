@@ -47,7 +47,7 @@ class PuppeteerPageFetch extends ToucanPageFetch {
             // 设置屏幕分辨率
             await page.setViewport(viewPort);
             // 前往页面地址
-            await page.goto(visitUrl);
+            const response = await page.goto(visitUrl);
 
             // 执行一些特殊的操作，运行子类重载该方法，实现子类的功能
             await this.specialOp(page, options);
@@ -57,20 +57,26 @@ class PuppeteerPageFetch extends ToucanPageFetch {
             // 关闭浏览器
             await browser.close();
 
-            return {
-                // 抓取过程是否异常
-                hasException: false,
-                // 页面内容
-                pageContent,
-                // 抓手类型
-                fetchType: this.fetchType,
-                // 重试次数
-                retryCount: 0,
-                // 页面的原始字符集
-                //pageCharset: response.charset,
-                // 状态码
-                //statusCode: response.statusCode
-            };
+            return response._status == 404
+                ? onException({
+                    code: 404, errno: 404,
+                    message: '服务器返回404错误',
+                    stack: pageContent,
+                }, this.fetchType)
+                : {
+                    // 抓取过程是否异常
+                    hasException: false,
+                    // 页面内容
+                    pageContent,
+                    // 抓手类型
+                    fetchType: this.fetchType,
+                    // 重试次数
+                    retryCount: 0,
+                    // 页面的原始字符集
+                    //pageCharset: response.charset,
+                    // 状态码
+                    statusCode: response._status
+                };
         }
         catch (error) {
             return onException(error, this.fetchType)

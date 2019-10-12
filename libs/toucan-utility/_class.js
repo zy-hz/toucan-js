@@ -50,4 +50,19 @@ function getObjectClassName(obj) {
     return obj.__proto__.constructor.name;
 }
 
-module.exports = { isClass: isClassExt, getObjectClassName };
+function isObjectEx(obj,
+    // 期望的类名
+    expectClassName = ''
+) {
+    if (_.isNil(obj) || _.isNil(obj.__proto__)) return false;
+    if (_.isEmpty(expectClassName)) return _.isObject(obj);
+
+    const constructor = obj.__proto__.constructor;
+    if (_.isNil(constructor)) return false;
+
+    if (isEqualString(constructor.name, expectClassName, true)) return true;
+
+    return isObjectEx(obj.__proto__, expectClassName);
+}
+
+module.exports = { isClass: isClassExt, isObject: isObjectEx, getObjectClassName };

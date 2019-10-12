@@ -17,7 +17,8 @@ class FileMQVisitor extends ToucanMQVisitor {
         const {
             // 文件缓存的目录
             mqCachePath = DEFAULT_CACHE_PATH,
-            // 采集任务队列
+            // 采集任务队列,例如：
+            // gatherTaskQueue: [{ queueName, srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt`,urlFormat:'https://detail.1688.com/{$0}.html' }]
             gatherTaskQueue = []
         } = optioins;
 
@@ -36,14 +37,14 @@ class FileMQVisitor extends ToucanMQVisitor {
         // 创建数据存储
         this.__dataStorage__ = {};
         // 载入采集任务队列
-        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath }) => {
+        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath, urlFormat = '' }) => {
             // 如果有缓存数据，就先从缓存载入数据
             this.initQueue(queueName);
 
             // 从文件中载入
-            const msgs = loadGatherTaskFromFile(srcFilePath);
+            const msgs = loadGatherTaskFromFile(srcFilePath, urlFormat);
             // 去重追加
-            const newMsgs = _.differenceWith(msgs, this.__dataStorage__[queueName], (x, y) => { return x.content === y.content })
+            const newMsgs = _.differenceWith(msgs, this.__dataStorage__[queueName], (x, y) => { return x.content.targetUrl === y.content.targetUrl })
             // 追加到队列
             this.appendToStorage(queueName, newMsgs)
         });
@@ -151,17 +152,26 @@ class FileMQVisitor extends ToucanMQVisitor {
 }
 
 // 从文件载入任务
-function loadGatherTaskFromFile(src) {
+function loadGatherTaskFromFile(src, urlFormat = '') {
     if (!fs.existsSync(src)) return [];
 
     const lines = fs.readFileSync(src, 'utf-8').split('\r\n');
-    return _.map(lines, (x) => { return buildMessageObject(x) })
+    return _.map(lines, (x) => {
+        return buildMessageObject({ targetUrl: applyFormat(x, urlFormat) })
+    })
+}
+
+// 应用格式
+function applyFormat(content, fmt) {
+    if (_.isEmpty(fmt)) return content;
+
+    return fmt.replace(/\{\$0\}/img, content);
 }
 
 // 保存到文件
 function saveToFile(src, msg) {
-    msg = _.map(msg,(x)=>{return JSON.stringify(x)});
-    fs.writeFileSync(src,msg.join('\r\n'));
+    msg = _.map(msg, (x) => { return JSON.stringify(x) });
+    fs.writeFileSync(src, msg.join('\r\n'));
 }
 
 // 构建消息对象

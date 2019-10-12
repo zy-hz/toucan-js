@@ -6,7 +6,7 @@ const DEFAULT_CACHE_PATH = lib.__get__('DEFAULT_CACHE_PATH');
 
 const fs = require('fs');
 
-describe('FileMQVisitor 测试 ', () => {
+describe('FileMQVisitor 测试', () => {
 
     describe('init', () => {
         it('default path', () => {
@@ -14,7 +14,7 @@ describe('FileMQVisitor 测试 ', () => {
             expect(fs.existsSync(DEFAULT_CACHE_PATH), 'DEFAULT_CACHE_PATH').is.true;
         });
 
-        it('task source temp', async () => {
+        it('task source', async () => {
             // 清除缓存
             const cacheFileName = `${DEFAULT_CACHE_PATH}/sp.ali.1688.detail`;
             if (fs.existsSync(cacheFileName)) fs.unlinkSync(cacheFileName);
@@ -22,13 +22,18 @@ describe('FileMQVisitor 测试 ', () => {
             const queueName = 'sp.ali.1688.detail';
             const mqv = mqvCreate('file', {
                 // 指定采集任务
-                gatherTaskQueue: [{ queueName, srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt` }]
+                gatherTaskQueue: [{ 
+                    queueName, 
+                    srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt`,
+                    urlFormat:'https://detail.1688.com/{$0}.html',
+                 }]
+
             });
             expect(fs.existsSync(DEFAULT_CACHE_PATH), 'DEFAULT_CACHE_PATH').is.true;
             expect(mqv.__dataStorage__[queueName]).have.lengthOf(12, `${queueName} 队列长度`);
 
             let msg = mqv.__dataStorage__[queueName][0];
-            expect(msg.content).to.be.eq('44271923808');
+            expect(msg.content.targetUrl).to.be.eq('https://detail.1688.com/44271923808.html');
             expect(msg.isRead).is.false;
             
             // 模拟获取一个任务
@@ -38,10 +43,10 @@ describe('FileMQVisitor 测试 ', () => {
 
             // 重新初始化
             mqv.init();
-            expect(mqv.__dataStorage__[queueName]).have.lengthOf(12, `${queueName} 队列长度`);
+            expect(mqv.__dataStorage__[queueName]).have.lengthOf(12, `${queueName} 队列长度2`);
 
             msg = mqv.__dataStorage__[queueName][0];
-            expect(msg.content).to.be.eq('44271923808');
+            expect(msg.content.targetUrl).to.be.eq('https://detail.1688.com/44271923808.html');
             expect(msg.isRead,'已经读取').is.true;
         });
     });

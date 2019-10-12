@@ -159,7 +159,6 @@ class ToucanBaseSpider {
         }
         catch (error) {
             extractUrlResult.extractUrlError = error;
-
         }
 
         return { crawlResult: response, extractUrlResult };

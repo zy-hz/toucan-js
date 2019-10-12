@@ -1,3 +1,5 @@
+const { exURL } = require('../../toucan-utility');
+
 // 根据蜘蛛的类型创建蜘蛛
 function createSpiderClassBySpiderType(spiderType) {
     return loadSpiderClass(spiderType, 'prefix');
@@ -8,8 +10,11 @@ function createSpiderClassByTarget(targetName) {
     return require(`../toucan.sp/_${targetName}`);
 }
 
+// 根据链接创建蜘蛛
 function createSpiderClassByUrl(url) {
-    return require('./_base-spider');
+    const hostname = exURL.getHost(url);
+    if(hostname == 'detail.1688.com') return require('../toucan.sp/_ali-1688-detail');
+    return undefined;
 }
 
 // 载入蜘蛛类

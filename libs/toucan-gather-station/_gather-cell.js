@@ -74,6 +74,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
                     if (jobCount === 0) await sleep(jobSpan || 1000 * 5);
 
                 } catch (error) {
+                    this.error('采集单元工作循环发生错误，等待60秒后继续工作', error)
                     // 作业发生错误时，采集单元的状态为挂起
                     // 注意：这些错误应该时系统没有办法处理的异常
                     this.workInfo.unitStatus.updateStatus(StatusCode.suspend);

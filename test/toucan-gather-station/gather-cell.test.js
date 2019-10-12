@@ -134,11 +134,19 @@ describe('ToucanGatherCell', () => {
     });
 
     // 由本地文件提供任务的采集
-    describe('fileMQ', () => {
-        const skillKeys = ['cm.http'];
+    describe('fileMQ temp', () => {
+        const queueName = 'ali.1688.detail';
+        const skillKeys = [`${queueName}`];
+        const fileMQOptions = {
+            gatherTaskQueue: [{
+                queueName,
+                srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt`,
+                urlFormat: 'http://detail.1688.com/offer/{$0}.html'
+            }]
+        };
 
         it('', async () => {
-            const gatherMQ = mqFactory.createGatherMQ('file');
+            const gatherMQ = mqFactory.createGatherMQ('file', fileMQOptions);
             const gc = new ToucanGatherCell({ gatherMQ, skillKeys });
 
             await gc.start();

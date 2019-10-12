@@ -56,6 +56,11 @@ class exURL {
         if (_.endsWith(url, '/')) url = url.substr(0, url.length - 1);
         return url.toLowerCase();
     }
+
+    getHost(url){
+        url = this.fillProtocol(url);
+        return URL.parse(url, true, true).hostname;
+    }
 }
 
 module.exports = { exURL: new exURL() };
