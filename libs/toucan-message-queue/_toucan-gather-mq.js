@@ -45,11 +45,16 @@ class ToucanGatherMQ extends ToucanBaseMQ {
             // 从服务器获得消息
             const msg = await this.mqVisitor.read({ queue })
 
-            if (msg != false ) return msg;
+            if (msg != false) return msg;
             tryNum = tryNum + 1;
         }
 
         return false;
+    }
+
+    // 提交结果
+    async submitResult(result) {
+
     }
 }
 

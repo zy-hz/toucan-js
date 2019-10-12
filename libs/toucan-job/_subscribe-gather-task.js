@@ -36,6 +36,7 @@ class SubscribeGatherTaskJob extends TaskJob {
         this.logTaskPageDone(task, page);
 
         // 提交结果到服务器
+        await this.gatherMQ.submitResult({ task, page });
     }
 }
 

@@ -134,7 +134,7 @@ describe('ToucanGatherCell', () => {
     });
 
     // 由本地文件提供任务的采集
-    describe('fileMQ temp', () => {
+    describe('fileMQ', () => {
         const queueName = 'ali.1688.detail';
         const skillKeys = [`${queueName}`];
         const fileMQOptions = {
@@ -142,6 +142,7 @@ describe('ToucanGatherCell', () => {
                 queueName,
                 srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt`,
                 urlFormat: 'http://detail.1688.com/offer/{$0}.html',
+                // 重新载入，清除原来的采集任务记录
                 reload: true
             }]
         };
