@@ -1,5 +1,7 @@
 const { spiderFactory } = require('../toucan-spider');
 const { TaskJob } = require('./_base-task-job');
+const { NullArgumentError } = require('../toucan-error');
+const _ = require('lodash');
 
 class SubscribeGatherTaskJob extends TaskJob {
     constructor({
@@ -20,7 +22,7 @@ class SubscribeGatherTaskJob extends TaskJob {
         }
 
         // 获得采集任务
-        let task = typeof msg === 'object' ? msg.content : JSON.parse(msg.content.toString());
+        let task = extractMessage(msg);
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task);
         // 启动采集蜘蛛
@@ -38,6 +40,15 @@ class SubscribeGatherTaskJob extends TaskJob {
         // 提交结果到服务器
         await this.gatherMQ.submitResult({ task, page });
     }
+}
+
+// 提取信息
+function extractMessage(msg) {
+    if (_.isNil(msg)) throw new NullArgumentError('msg');
+    if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
+
+    if (_.isBuffer(msg.content)) return JSON.parse(msg.content.toString());
+    return typeof msg.content === 'object' ? msg.content : JSON.parse(msg.content.toString());
 }
 
 module.exports = { SubscribeGatherTaskJob };
