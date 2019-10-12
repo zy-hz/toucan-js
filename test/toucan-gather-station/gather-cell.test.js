@@ -134,7 +134,7 @@ describe('ToucanGatherCell', () => {
     });
 
     // 由本地文件提供任务的采集
-    describe('fileMQ temp', () => {
+    describe('fileMQ', () => {
         const skillKeys = ['cm.http'];
 
         it('', async () => {

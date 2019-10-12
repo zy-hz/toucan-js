@@ -7,7 +7,7 @@ const ToucanMQVisitor = require('./_toucan-mq-visitor');
 const fs = require('fs');
 const _ = require('lodash');
 
-const DEFAULT_CACHE_PATH = process.cwd() + '/cache/filemq';
+const DEFAULT_CACHE_PATH = process.cwd() + '/.cache/filemq';
 
 class FileMQVisitor extends ToucanMQVisitor {
 
@@ -16,12 +16,15 @@ class FileMQVisitor extends ToucanMQVisitor {
 
         const {
             // 文件缓存的目录
-            mqCachePath = DEFAULT_CACHE_PATH
+            mqCachePath = DEFAULT_CACHE_PATH,
+            // 采集任务队列
+            gatherTaskQueue = []
         } = optioins;
 
         this.mqCachePath = mqCachePath;
-        this.init();
+        this.gatherTaskQueue = gatherTaskQueue;
 
+        this.init();
     }
 
     // 初始化消息队列
@@ -32,11 +35,24 @@ class FileMQVisitor extends ToucanMQVisitor {
         }
         // 创建数据存储
         this.__dataStorage__ = {};
+        // 载入采集任务队列
+        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath }) => {
+            // 如果有缓存数据，就先从缓存载入数据
+            this.initQueue(queueName);
+
+            // 从文件中载入
+            const msgs = loadGatherTaskFromFile(srcFilePath);
+            // 去重追加
+            const newMsgs = _.differenceWith(msgs, this.__dataStorage__[queueName], (x, y) => { return x.content === y.content })
+            // 追加到队列
+            this.appendToStorage(queueName, newMsgs)
+        });
     }
 
     // 初始化队列
     initQueue(queueName) {
 
+        // 已经存在队列，就放弃初始化
         if (!_.isNil(this.__dataStorage__[queueName])) return;
 
         const fileName = `${this.mqCachePath}/${queueName}`;
@@ -90,7 +106,7 @@ class FileMQVisitor extends ToucanMQVisitor {
         this.initQueue(queueName)
 
         // 推入队列
-        const msg = { content, isRead: false }
+        const msg = buildMessageObject(content);
         this.appendToStorage(queueName, msg);
         return true;
     }
@@ -113,15 +129,31 @@ class FileMQVisitor extends ToucanMQVisitor {
 
     // 追加到存储系统
     appendToStorage(queueName, msg, toDisk = true) {
+        // 对象转数组
+        let msgArray = _.concat([], msg);
+
         // 加时间戳
-        msg.timeStamp = _.now();
-        this.__dataStorage__[queueName].push(msg);
+        _.each(msgArray, (x) => { x.timeStamp = _.now() });
+        this.__dataStorage__[queueName] = _.concat(this.__dataStorage__[queueName], msgArray);
 
         if (toDisk) {
             const fileName = `${this.mqCachePath}/${queueName}`;
-            fs.appendFileSync(fileName, JSON.stringify(msg) + '\r\n');
+            msgArray = _.map(msgArray, (x) => { return JSON.stringify(x) });
+            fs.appendFileSync(fileName, _.join(msgArray, '\r\n'));
         }
     }
+}
+
+// 从文件载入任务
+function loadGatherTaskFromFile(src) {
+    if (!fs.existsSync(src)) return [];
+
+    const lines = fs.readFileSync(src, 'utf-8').split('\r\n');
+    return _.map(lines, (x) => { return buildMessageObject(x) })
+}
+
+function buildMessageObject(content, isRead = false) {
+    return { content, isRead };
 }
 
 module.exports = FileMQVisitor;
