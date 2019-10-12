@@ -141,7 +141,8 @@ describe('ToucanGatherCell', () => {
             gatherTaskQueue: [{
                 queueName,
                 srcFilePath: `${process.cwd()}/.sample/ali.1688.detail_s.txt`,
-                urlFormat: 'http://detail.1688.com/offer/{$0}.html'
+                urlFormat: 'http://detail.1688.com/offer/{$0}.html',
+                reload: true
             }]
         };
 

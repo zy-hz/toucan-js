@@ -37,7 +37,9 @@ class FileMQVisitor extends ToucanMQVisitor {
         // 创建数据存储
         this.__dataStorage__ = {};
         // 载入采集任务队列
-        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath, urlFormat = '' }) => {
+        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath, urlFormat = '', reload = false }) => {
+            // 如果重载，就先删除队列
+            if(reload) this.deleteQueue(queueName);
             // 如果有缓存数据，就先从缓存载入数据
             this.initQueue(queueName);
 
