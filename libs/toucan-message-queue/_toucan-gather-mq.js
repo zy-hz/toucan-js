@@ -53,8 +53,9 @@ class ToucanGatherMQ extends ToucanBaseMQ {
     }
 
     // 提交结果
-    async submitResult(result) {
-
+    async submitResult({ task, page }) {
+        console.log(task);
+        console.log(page);
     }
 }
 
