@@ -19,8 +19,8 @@ class ToucanTaskMQ extends ToucanBaseMQ {
             // 检查空对象
             if (_.isNil(tasks)) throw new NullArgumentError('发布任务');
 
-            // 构建任务数组
-            const ary = _.concat([], tasks);
+            // 转换为任务数组
+            const ary = _.castArray(tasks);
 
             // 发布任务
             for (const t of ary) {

@@ -2,6 +2,7 @@
 const mqFactory = require('../../libs/toucan-message-queue');
 const { SubscribeGatherTaskJob } = require('../../libs/toucan-job');
 const expect = require('chai').expect;
+const { sleep } = require('../../libs/toucan-utility');
 
 describe('SubscribeGatherTaskJob 测试 ', () => {
 
@@ -24,6 +25,8 @@ describe('SubscribeGatherTaskJob 测试 ', () => {
     });
 
     after(async () => {
+        // 如果不等待直接关闭消息队列，会导致结果提交异常（第一次创建提交结果通道，需要花费一些时间）
+        await sleep(1000);
         await gatherMQ.disconnect();
         await taskMQ.disconnect();
     });

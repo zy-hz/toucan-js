@@ -2,6 +2,7 @@
 // 采集消息队列
 
 const ToucanBaseMQ = require('./_toucan-base-mq');
+const { NullArgumentError } = require('../toucan-error');
 const _ = require('lodash');
 
 class ToucanGatherMQ extends ToucanBaseMQ {
@@ -53,9 +54,25 @@ class ToucanGatherMQ extends ToucanBaseMQ {
     }
 
     // 提交结果
-    async submitResult({ task, page }) {
-        console.log(task);
-        console.log(page);
+    async submitResult(result, options) {
+
+        try {
+            // 检查空对象
+            if (_.isNil(result)) throw new NullArgumentError('采集结果对象不能空');
+
+            // 提交到消息队列
+            await this.mqVisitor.send(result, options)
+
+            return {
+                hasException: false,
+            }
+        }
+        catch (error) {
+            return {
+                hasException: true,
+                error,
+            }
+        }
     }
 }
 

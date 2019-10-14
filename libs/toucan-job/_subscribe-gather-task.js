@@ -34,11 +34,18 @@ class SubscribeGatherTaskJob extends TaskJob {
     // 采集一个页面结束
     async onPageDone(task, page) {
 
-        // 纪录页面日志
+        // 记录页面日志
         this.logTaskPageDone(task, page);
 
-        // 提交结果到服务器
-        await this.gatherMQ.submitResult({ task, page });
+        // 提交页面采集结果到服务器
+        const submitBeginTime = _.now();
+        const result = await this.gatherMQ.submitResult({ task, page }, { queue: 'toucan.gather.result.all' });
+        const submitEndTime = _.now();
+
+        this.logResultSubmitDone(task, page, Object.assign(
+            result,
+            { submitBeginTime, submitEndTime, submitSpendTime: submitEndTime - submitBeginTime })
+        );
     }
 }
 

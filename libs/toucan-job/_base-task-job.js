@@ -8,10 +8,21 @@ class TaskJob extends ToucanJob {
     logTaskPageDone(task, page) {
         if (page.hasException) {
             const msg = buildTaskPageDoneError(task, page);
-            this.warn(msg);
+            this.error(msg);
         }
         else {
             const msg = buildTaskPageDoneSuccess(task, page);
+            this.log(msg);
+        }
+    }
+
+    // 记录提交结果到服务器成功
+    logResultSubmitDone(task, page, result) {
+        if (result.hasException) {
+            const msg = buildResultSubmitProcess(task, page, result, '提交采集结果失败');
+            this.error(msg, result.error);
+        } else {
+            const msg = buildResultSubmitProcess(task, page, result, '提交采集结果成功');
             this.log(msg);
         }
     }
@@ -41,6 +52,10 @@ function buildErrorInfo({ code, errno, message, stack }) {
 
 function buildUrlCountInfo({ innerUrl = 0, outerUrl = 0, scriptUrl = 0 } = {}) {
     return `内链：${innerUrl}个，外链：${outerUrl}个，动链：${scriptUrl}个`;
+}
+
+function buildResultSubmitProcess(task, page, result, msg) {
+    return `任务${task.targetUrl}第${task.taskDonePageCount + task.taskErrorPageCount}页/共${task.taskPlanPageCount}页${msg}，用时${result.submitSpendTime}ms。`
 }
 
 module.exports = { TaskJob }
