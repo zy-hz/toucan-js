@@ -39,7 +39,7 @@ class FileMQVisitor extends ToucanMQVisitor {
         // 载入采集任务队列
         _.each(this.gatherTaskQueue, ({ queueName, srcFilePath, urlFormat = '', reload = false }) => {
             // 如果重载，就先删除队列
-            if(reload) this.deleteQueue(queueName);
+            if (reload) this.deleteQueue(queueName);
             // 如果有缓存数据，就先从缓存载入数据
             this.initQueue(queueName);
 
@@ -53,26 +53,41 @@ class FileMQVisitor extends ToucanMQVisitor {
     }
 
     // 初始化队列
-    initQueue(queueName) {
+    initQueue(queueName, { aloneFile = false } = {}) {
 
         // 已经存在队列，就放弃初始化
         if (!_.isNil(this.__dataStorage__[queueName])) return;
 
         const fileName = this.getQueueCachFile(queueName);
         this.__dataStorage__[queueName] = []
-
         if (!fs.existsSync(fileName)) return;
 
         // 读取
+        if (aloneFile) {
+            // 从目录读取
+            this.initQueueFromDir(queueName, fileName);
+        } else {
+            // 从文件中读取缓存的信息
+            this.initQueueFromFile(queueName, fileName)
+        }
+    }
+
+    initQueueFromDir(queueName, dirName) {
+
+    }
+
+    initQueueFromFile(queueName, fileName) {
         const lines = _.split(fs.readFileSync(fileName, 'utf-8'), '\r\n');
         _.forEach(lines, (x) => {
             try {
                 const msg = JSON.parse(x)
-                this.appendToStorage(queueName, msg, false)
+                this.appendToStorage(queueName, msg, { toDisk: false })
             }
             catch (error) { }
         });
     }
+
+
 
     // 连接到消息服务器
     async connect() {
@@ -104,14 +119,19 @@ class FileMQVisitor extends ToucanMQVisitor {
         // queue = 关联指定的文件
         queue, options = {}
     }) {
+        // 获取发送的参数
+        const {
+            queueOptions = {},
+            sendOptions = {}
+        } = options;
 
         // 初始化数组
         const queueName = queue || '_toucan_default_queue';
-        this.initQueue(queueName)
+        this.initQueue(queueName, queueOptions)
 
         // 推入队列
-        const msg = buildMessageObject(content);
-        this.appendToStorage(queueName, msg);
+        const msg = buildMessageObject(content, sendOptions);
+        this.appendToStorage(queueName, msg, queueOptions);
         return true;
     }
 
@@ -132,9 +152,9 @@ class FileMQVisitor extends ToucanMQVisitor {
     }
 
     // 追加到存储系统
-    appendToStorage(queueName, msg, toDisk = true) {
+    appendToStorage(queueName, msg, { toDisk = true, aloneFile = false } = {}) {
         // 对象转数组
-        let msgArray = _.concat([], msg);
+        let msgArray = _.castArray(msg);
 
         // 加时间戳
         _.each(msgArray, (x) => { x.timeStamp = _.now() });
@@ -142,15 +162,27 @@ class FileMQVisitor extends ToucanMQVisitor {
 
         if (toDisk) {
             const fileName = this.getQueueCachFile(queueName);
-            msgArray = _.map(msgArray, (x) => { return JSON.stringify(x) });
-            fs.appendFileSync(fileName, _.join(msgArray, '\r\n'));
+            const saveFunc = aloneFile ? this.saveToDir : this.saveToFile;
+            saveFunc(fileName, msgArray);
         }
+    }
+    saveToDir(dirName, msgArray) {
+        if (!fs.existsSync(dirName)) fs.mkdirSync(dirName, { recursive: true });
+
+        const fileName = buildTimeStampFileName(dirName);
+        saveToFile(fileName, msgArray);
+    }
+    saveToFile(fileName, msgArray) {
+        msgArray = _.map(msgArray, (x) => { return JSON.stringify(x) });
+        fs.appendFileSync(fileName, _.join(msgArray, '\r\n'));
     }
 
     // 缓存队列的文件名
     getQueueCachFile(queueName) {
         return `${this.mqCachePath}/${queueName}`;
     }
+
+
 }
 
 // 从文件载入任务
@@ -179,6 +211,17 @@ function saveToFile(src, msg) {
 // 构建消息对象
 function buildMessageObject(content, isRead = false) {
     return { content, isRead };
+}
+
+// 根据时间获得文件名
+function buildTimeStampFileName(dirName) {
+    let tick = _.now();
+    let fileName = ''
+    do {
+        fileName = `${dirName}/${tick}.dat`;
+        tick = tick + 1;
+    } while (fs.existsSync(fileName));
+    return fileName;
 }
 
 module.exports = FileMQVisitor;

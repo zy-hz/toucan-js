@@ -44,6 +44,10 @@ class SubscribeGatherTaskJob extends TaskJob {
             {
                 queue: 'toucan.gather.result.all',
                 options: {
+                    queueOptions: {
+                        // 每个结果存储一个单独文件，该选项针对fileMQ生效
+                        aloneFile: true,
+                    },
                     sendOptions: {
                         // 如果需要压缩传输，在这里指定压缩的格式
                         //contentEncoding: 'gizp' 
