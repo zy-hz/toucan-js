@@ -39,7 +39,18 @@ class SubscribeGatherTaskJob extends TaskJob {
 
         // 提交页面采集结果到服务器
         const submitBeginTime = _.now();
-        const result = await this.gatherMQ.submitResult({ task, page }, { queue: 'toucan.gather.result.all' });
+        const result = await this.gatherMQ.submitResult(
+            { task, page },
+            {
+                queue: 'toucan.gather.result.all',
+                options: {
+                    sendOptions: {
+                        // 如果需要压缩传输，在这里指定压缩的格式
+                        //contentEncoding: 'gizp' 
+                    },
+                }
+            }
+        );
         const submitEndTime = _.now();
 
         this.logResultSubmitDone(task, page, Object.assign(

@@ -61,7 +61,7 @@ class ToucanGatherMQ extends ToucanBaseMQ {
             if (_.isNil(result)) throw new NullArgumentError('采集结果对象不能空');
 
             // 提交到消息队列
-            await this.mqVisitor.send(result, options)
+            await this.mqVisitor.send(result, options);
 
             return {
                 hasException: false,
