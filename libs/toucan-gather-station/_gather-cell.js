@@ -63,6 +63,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             const scheduleRule = '* * * * * *'
             this.schedule = schedule.scheduleJob(scheduleRule, async () => {
                 this.schedule.cancel();
+                this.log('启动采集作业...');
 
                 this.workInfo.unitStatus.updateStatus(StatusCode.actived);
                 try {
@@ -71,7 +72,13 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
                     const { jobCount, jobSpan } = result;
                     // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
-                    if (jobCount === 0) await sleep(jobSpan || 1000 * 5);
+                    if (jobCount === 0) {
+                        this.log('没有需要执行的作业，等待5秒后重试。');
+                        await sleep(jobSpan || 1000 * 5);
+                    } else {
+                        this.log(`执行${jobCount}次采集作业，用时${jobSpan}毫秒`);
+                    }
+
 
                 } catch (error) {
                     this.error('采集单元工作循环发生错误，等待60秒后继续工作', error)

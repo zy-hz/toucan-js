@@ -24,6 +24,10 @@ describe('GatherStationV1 综合测试 ', () => {
             runExpect4MessageQueue(gs.stationConfig.messageQueue);
         });
 
+        it('读取demo的配置',()=>{
+
+        })
+
         it('初始化-不启动 ', async () => {
             const gs = new ToucanGatherStation(cfgFileName);
             gs.stationConfig.autoStart = false;
@@ -107,7 +111,7 @@ describe('GatherStationV1 综合测试 ', () => {
         });
     });
 
-    describe('GatherStationV1 file模式测试', () => {
+    describe('GatherStationV1 file模式测试 temp', () => {
         const skillKeys = ['cm.http', 'cm.browser'];
         const q1 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[0]}`;
         const q2 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[1]}`;
@@ -142,8 +146,9 @@ describe('GatherStationV1 综合测试 ', () => {
             expect(gs.unitInfo.unitAddress).is.not.empty;
 
             await sleep(1000);
-            expect(fs.existsSync(q1)).is.true;
-            expect(fs.existsSync(q2)).is.true;
+            // 当没有设置任务的时候，不应该有这样的期待
+            //expect(fs.existsSync(q1)).is.true;
+            //expect(fs.existsSync(q2)).is.true;
 
             await gs.stop();
         })

@@ -1,0 +1,31 @@
+{
+    "stationName": "你的站点名称",
+    "stationNo": "采集站点的编号",
+    "gatherSkill": {
+        "maxGatherCellCount": 2,
+        "gatherCells": [
+            {
+                "skillName": "http协议采集",
+                "skillDescript": "",
+                "skillKeys": [
+                    "cm.http"
+                ],
+                "skillCapability": 2
+            },
+            {
+                "skillName": "模拟浏览器采集",
+                "skillDescript": "",
+                "skillKeys": [
+                    "cm.browser"
+                ],
+                "skillCapability": 1
+            }
+        ]
+    },
+    "messageQueue": {
+        "mqType": "file",
+        "mqOptions": {
+
+        }
+    }
+}
