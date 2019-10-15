@@ -23,6 +23,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
         theTime = _.now(),
         // 采集消息队列访问器
         gatherMQ,
+        // 蜘蛛的选项
+        spiderOptions = {},
         // 拥有的技能
         skillKeys = [],
     } = {}
@@ -37,6 +39,9 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
         // 设置采集消息队列
         this.gatherMQ = gatherMQ;
+
+        // 设置蜘蛛的选项
+        this.spiderOptions = spiderOptions;
 
         // 设置拥有的采集技能
         this.skillKeys = skillKeys;
@@ -57,7 +62,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             this.gatherMQ.bindTaskQueue(this.skillKeys);
 
             // 创建订阅的作业，继承的基类可以重载该方法，实现自己的计划作业
-            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ });
+            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ,spiderOptions:this.spiderOptions });
 
             // 启动定时作业
             const scheduleRule = '* * * * * *'
@@ -81,7 +86,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
                     // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
                     if (jobCount === 0) {
                         const sleepTime = jobSpan || 1000 * 5
-                        this.processLog(`没有需要执行的作业，等待${sleepTime}秒后重试。`);
+                        this.processLog(`没有需要执行的作业，等待${Math.ceil(sleepTime / 1000)}秒后重试。`);
                         await sleep(sleepTime);
                     } else {
                         const { taskSpendTime } = task;

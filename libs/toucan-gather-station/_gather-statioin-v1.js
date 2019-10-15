@@ -76,11 +76,11 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
         // 变更为空闲状态
         this.workInfo.unitStatus.updateStatus(StatusCode.idle);
-        this.processLog('已停止');   
- 
+        this.processLog('已停止');
+
     }
 
-    processLog(msg){
+    processLog(msg) {
         return this.log(`${buildGatherStationId(this.unitInfo)} ${msg}`);
     }
 }
@@ -147,7 +147,7 @@ function buildGatherCells(skill, index, { unitAddress, unitNo = '' }, {
             unitAddress
         }
 
-        gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ, skillKeys: skill.skillKeys }))
+        gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ, skillKeys: skill.skillKeys, spiderOptions: skill.skillOptions }))
     }
     return gcs;
 }

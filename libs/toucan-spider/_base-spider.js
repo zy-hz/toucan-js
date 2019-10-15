@@ -12,11 +12,10 @@
 
 const _ = require('lodash');
 
-const { sleep, exURL, SiteUrlCount } = require('../toucan-utility');
+const { sleep, exURL, exHTML, SiteUrlCount } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 const cheerio = require("cheerio");
-
 
 class ToucanBaseSpider {
 
@@ -28,6 +27,8 @@ class ToucanBaseSpider {
         spiderType,
         // 空闲的时候，暂停的时间
         idleSleep,
+        // 只保存页面的文本
+        onlyKeepPageText = false
     } = {}) {
         this._self = this;
 
@@ -37,6 +38,11 @@ class ToucanBaseSpider {
         this.spiderName = spiderName || 'unknown';
         this.spiderType = spiderType;
         this.idleSleep = idleSleep || 1000;
+
+        //
+        // 蜘蛛的选项
+        //
+        this.onlyKeepPageText = onlyKeepPageText;
 
         // 任务完成的处理程序
         this.onTaskDone = onTaskDone;
@@ -148,6 +154,18 @@ class ToucanBaseSpider {
         // 获得页面的采集结果
         const response = await this.pageFetch.do(exURL.fillProtocol(thePage.pageUrl), theTask);
 
+        const extractUrlResult = this.extractUrl(thePage, response, layerIndex);
+
+        // 是否需要提取文本的内容
+        if (this.onlyKeepPageText && !_.isNil(response)) {
+            response.pageContent = exHTML.extractContent(response.pageContent, true);
+        }
+
+        return { crawlResult: response, extractUrlResult };
+    }
+
+    // 解析页面中的url
+    extractUrl(thePage, response, layerIndex) {
         // 解析页面的结果
         const extractUrlResult = {
             urlCountInPage: {},
@@ -156,35 +174,35 @@ class ToucanBaseSpider {
 
         try {
             // 解析页面中的下级链接
-            extractUrlResult.urlCountInPage = this.extractUrl(thePage.pageUrl, response.pageContent, layerIndex);
+            extractUrlResult.urlCountInPage = analyzeSiteUrlCount(thePage.pageUrl, response.pageContent, layerIndex);
             extractUrlResult.extractUrlSuccess = true;
         }
         catch (error) {
             extractUrlResult.extractUrlError = error;
         }
 
-        return { crawlResult: response, extractUrlResult };
+        return extractUrlResult;
     }
 
-    // 从页面中提取链接
-    extractUrl(pageUrl, content, layerIndex) {
-        let urlCount = SiteUrlCount();
-        const $ = cheerio.load(content);
-        _.forEach($('a'), (x) => {
-            const url = x.attribs.href
-            // 提前链接的属于当前层的下一层，所以layerIndex需要+1
-            if (exURL.isSameHost(pageUrl, url)) {
-                urlCount.innerUrl = urlCount.innerUrl + this._targetUrlPool.push(url, layerIndex + 1);
-            } else if (exURL.isScript(url)) {
-                urlCount.scriptUrl = urlCount.scriptUrl + 1;
-            }
-            else {
-                urlCount.outerUrl = urlCount.outerUrl + 1;
-            }
-        });
-        return urlCount;
-    }
+}
 
+// 分析站点链接的数量
+function analyzeSiteUrlCount(pageUrl, content, layerIndex) {
+    let urlCount = SiteUrlCount();
+    const $ = cheerio.load(content);
+    _.forEach($('a'), (x) => {
+        const url = x.attribs.href
+        // 提前链接的属于当前层的下一层，所以layerIndex需要+1
+        if (exURL.isSameHost(pageUrl, url)) {
+            urlCount.innerUrl = urlCount.innerUrl + this._targetUrlPool.push(url, layerIndex + 1);
+        } else if (exURL.isScript(url)) {
+            urlCount.scriptUrl = urlCount.scriptUrl + 1;
+        }
+        else {
+            urlCount.outerUrl = urlCount.outerUrl + 1;
+        }
+    });
+    return urlCount;
 }
 
 // 触发页面完成的事件

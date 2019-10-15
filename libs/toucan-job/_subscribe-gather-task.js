@@ -5,10 +5,12 @@ const _ = require('lodash');
 
 class SubscribeGatherTaskJob extends TaskJob {
     constructor({
-        gatherMQ
+        gatherMQ,
+        spiderOptions,
     }) {
         super();
         this.gatherMQ = gatherMQ;
+        this.spiderOptions = spiderOptions;
     }
 
     // 注意：不是自己的异常，必须抛出，例如：gatherMQ的异常
@@ -24,7 +26,7 @@ class SubscribeGatherTaskJob extends TaskJob {
         // 获得采集任务
         let task = extractMessage(msg);
         // 根据任务的类型等参数创建对应的采集蜘蛛
-        const spider = spiderFactory.createSpider(task);
+        const spider = spiderFactory.createSpider(task, this.spiderOptions);
         // 启动采集蜘蛛
         task = await spider.run(task, async ({ task, page }) => { this.onPageDone(task, page) });
 

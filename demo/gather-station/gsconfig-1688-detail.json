@@ -5,20 +5,15 @@
         "maxGatherCellCount": 3,
         "gatherCells": [
             {
-                "skillName": "http协议采集",
-                "skillDescript": "",
-                "skillKeys": [
-                    "cm.http"
-                ],
-                "skillCapability": 0
-            },
-            {
                 "skillName": "1688产品详情采集",
                 "skillDescript": "",
                 "skillKeys": [
                     "ali.1688.detail"
                 ],
-                "skillCapability": 1
+                "skillCapability": 1,
+                "skillOptions":{
+                    "onlyKeepPageText":true
+                }
             }
         ]
     },
@@ -28,7 +23,7 @@
             "gatherTaskQueue": [
                 {
                     "queueName": "ali.1688.detail",
-                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/ali.1688.detail_s.txt",
+                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/ali.1688.detail.txt",
                     "urlFormat": "http://detail.1688.com/offer/{$0}.html",
                     "reload": false
                 }

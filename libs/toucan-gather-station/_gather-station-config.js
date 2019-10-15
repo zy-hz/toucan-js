@@ -34,6 +34,12 @@ const DEFALUT_CONFIG = constantize({
                 // <0的整数 - 数量自动调整
                 // 小数     - 表示采集最大数量的百分比，取整
                 skillCapability: 3,
+                // 能力的其他选项，可以定制采集引擎
+                skillOptions: {
+                    // 当为true的时候，采集引擎采集到页面后，只会保留页面中的文本内容(包括alt,title属性值)。其他脚本，样式，标签等会被忽略
+                    // 如果对存储有要求的时候，才建议开启
+                    onlyKeepPageText: false
+                }
             }
         ],
     },

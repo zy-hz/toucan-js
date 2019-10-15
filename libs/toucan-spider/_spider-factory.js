@@ -21,7 +21,7 @@ class ToucanSpiderFactory {
 
         } = {},
         // 蜘蛛的参数
-        spiderOption = {}
+        spiderOptions = {}
     ) {
         // 蜘蛛基类的名称
         const baseSpiderClassName = 'ToucanBaseSpider';
@@ -39,7 +39,7 @@ class ToucanSpiderFactory {
         // 如果都不是，创建默认蜘蛛 (http蜘蛛)
         if (!isClass(spiderClass, baseSpiderClassName)) spiderClass = ToucanHttpSpider;
 
-        const opt = Object.assign(spiderOption, { spiderType: spiderType || 'special' });
+        const opt = Object.assign(spiderOptions, { spiderType: spiderType || 'special' });
         return new spiderClass(opt);
     }
 
