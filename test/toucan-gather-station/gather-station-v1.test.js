@@ -24,8 +24,12 @@ describe('GatherStationV1 综合测试 ', () => {
             runExpect4MessageQueue(gs.stationConfig.messageQueue);
         });
 
-        it('读取demo的配置',()=>{
+        it('读取demo的配置',async ()=>{
+            const gs = new ToucanGatherStation(`${process.cwd()}/demo/gather-station/gsconfig.json`);
+            gs.stationConfig.autoStart = false;
+            await gs.init();
 
+            expect(gs.gatherCellPool.length).to.be.eq(gs.stationConfig.gatherSkill.maxGatherCellCount);
         })
 
         it('初始化-不启动 ', async () => {
@@ -111,7 +115,7 @@ describe('GatherStationV1 综合测试 ', () => {
         });
     });
 
-    describe('GatherStationV1 file模式测试 temp', () => {
+    describe('GatherStationV1 file模式测试', () => {
         const skillKeys = ['cm.http', 'cm.browser'];
         const q1 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[0]}`;
         const q2 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[1]}`;

@@ -2,7 +2,7 @@
     "stationName": "你的站点名称",
     "stationNo": "采集站点的编号",
     "gatherSkill": {
-        "maxGatherCellCount": 2,
+        "maxGatherCellCount": 3,
         "gatherCells": [
             {
                 "skillName": "http协议采集",

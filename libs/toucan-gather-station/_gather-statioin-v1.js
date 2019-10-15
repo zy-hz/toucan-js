@@ -105,7 +105,7 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}, options = {}) {
     const unitPool = new ToucanWorkUnitPool();
     _.forEach(skillTemplate, (skill, index) => {
         const gc = buildGatherCells(skill, index, stationInfo, options);
-        unitPool.add(gc);
+        if (!_.isNil(gc)) unitPool.add(gc);
     })
     return unitPool
 }
