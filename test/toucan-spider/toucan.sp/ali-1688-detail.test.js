@@ -3,7 +3,7 @@ const Ali1688DetailSpider = require('../../../libs/toucan-spider/toucan.sp/_ali-
 const expect = require('chai').expect;
 const { exHTML } = require('../../../libs/toucan-utility');
 
-describe('[long]ali-1688-detail 蜘蛛测试 ', () => {
+describe('[long]ali-1688-detail 蜘蛛测试', () => {
     const url1 = 'https://detail.1688.com/offer/602752160064.html?spm=a260j.12536015.jr601u7p.2.145d700eMEM6by';
 
     it('m', async () => {

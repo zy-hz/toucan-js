@@ -53,7 +53,9 @@ class ToucanBaseSpider {
             targetUrl,
             // 0    - 爬当前层
             // -1   - 爬所有层（不超过系统指定的上限）
-            depth = 0
+            depth = 0,
+            // 任务中的页面暂停
+            turnPageSleep
         } = task;
         // 设置最大的爬行层
         const maxLayerIndex = depth < 0 ? 20 : depth;
@@ -78,7 +80,7 @@ class ToucanBaseSpider {
         while (layerIndex <= maxLayerIndex) {
 
             // 防止爬行过快
-            await sleep(this.idleSleep);
+            await sleep(turnPageSleep || this.idleSleep);
 
             // 从连接池中获取当前爬行层的一个连接
             const url = this._targetUrlPool.pop(layerIndex);
