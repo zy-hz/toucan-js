@@ -1,6 +1,6 @@
 {
-    "stationName": "你的站点名称",
-    "stationNo": "采集站点的编号",
+    "stationName": "本地测试",
+    "stationNo": "LT01",
     "gatherSkill": {
         "maxGatherCellCount": 3,
         "gatherCells": [
