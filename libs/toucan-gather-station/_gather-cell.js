@@ -134,7 +134,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
 // 构建采集单元的标记
 function buildGatherCellId(unitInfo) {
-    return `采集单元 [${unitInfo.unitName}] 编号[${unitInfo.unitId} ${unitInfo.unitNo}]`
+    return `编号[${unitInfo.unitId}]采集单元 [${unitInfo.unitName}] 第${unitInfo.unitNo}线程`
 }
 
 
