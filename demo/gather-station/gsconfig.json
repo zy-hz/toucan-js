@@ -1,6 +1,6 @@
 {
     "stationName": "本地测试",
-    "stationNo": "LT01",
+    "stationNo": "zy",
     "gatherSkill": {
         "maxGatherCellCount": 3,
         "gatherCells": [

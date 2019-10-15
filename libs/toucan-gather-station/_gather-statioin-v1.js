@@ -112,7 +112,7 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}, options = {}) {
 
 // 从模板构建采集单元集合
 // index - 能力在采集单元的位置
-function buildGatherCells(skill, index, { unitAddress, unitId = '' }, {
+function buildGatherCells(skill, index, { unitAddress, unitNo = '' }, {
     messageQueue = { mqType: 'rabbit', mqOptions: {} }
 } = {}) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
@@ -127,7 +127,7 @@ function buildGatherCells(skill, index, { unitAddress, unitId = '' }, {
             // 单元名称
             unitName: skill.skillName,
             // 单元的id格式 = 容器id-能力编号(index)
-            unitId: `${unitId}-${_.padStart(index + 1, 2, '0')}`,
+            unitId: `${unitNo}-${_.padStart(index + 1, 2, '0')}`,
             // 单元编号
             unitNo: _.padStart(i + 1, 2, '0'),
             // 单元地址

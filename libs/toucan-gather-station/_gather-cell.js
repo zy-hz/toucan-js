@@ -44,7 +44,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
     // 启动采集单元
     async start() {
-        this.log(`${buildGatherCellId(this.unitInfo)} 启动...`);
+        this.processLog('启动...');
         this.__stopFlag = false;
 
         try {
@@ -63,7 +63,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             const scheduleRule = '* * * * * *'
             this.schedule = schedule.scheduleJob(scheduleRule, async () => {
                 this.schedule.cancel();
-                this.log('启动采集作业...');
+                this.processLog('启动采集作业...');
 
                 this.workInfo.unitStatus.updateStatus(StatusCode.actived);
                 try {
@@ -73,10 +73,10 @@ class ToucanGatherCell extends ToucanWorkUnit {
                     const { jobCount, jobSpan } = result;
                     // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
                     if (jobCount === 0) {
-                        this.log('没有需要执行的作业，等待5秒后重试。');
+                        this.processLog('没有需要执行的作业，等待5秒后重试。');
                         await sleep(jobSpan || 1000 * 5);
                     } else {
-                        this.log(`执行${jobCount}次采集作业，用时${jobSpan}毫秒`);
+                        this.processLog(`执行${jobCount}次采集作业，用时${jobSpan}毫秒`);
                     }
 
 
@@ -112,18 +112,23 @@ class ToucanGatherCell extends ToucanWorkUnit {
     }
 
     async stop() {
-        this.log(`${buildGatherCellId(this.unitInfo)} 停止中...`);
+        this.processLog(`停止中...`);
         // 设置关闭标记，开始关闭流程
         this.__stopFlag = true;
 
         while (!this.workInfo.unitStatus.isClosed) {
             await sleep(1000);
         }
-        this.log(`${buildGatherCellId(this.unitInfo)} 已停止`);
+        this.processLog(`已停止`);
     }
 
     createScheduleJob(options) {
         return new SubscribeGatherTaskJob(options);
+    }
+
+    // 记录采集单元的日志
+    processLog(msg){
+        this.log(`${buildGatherCellId(this.unitInfo)} ${msg}`);
     }
 }
 
