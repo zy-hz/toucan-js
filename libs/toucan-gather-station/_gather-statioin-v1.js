@@ -50,6 +50,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
     // 站点启动
     async start() {
 
+        this.processLog('启动...');
         // 为每个采集单元开启消息监听模式
         for (const gc of this.gatherCellPool.findAll()) {
             await gc.start();
@@ -61,6 +62,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
     // 站点停止
     async stop() {
+        this.processLog('停止中...');
         // 停止每个采集单元的消息监听模式
         for (const gc of this.gatherCellPool.findAll()) {
             await gc.stop();
@@ -74,7 +76,18 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
 
         // 变更为空闲状态
         this.workInfo.unitStatus.updateStatus(StatusCode.idle);
+        this.processLog('已停止');   
+ 
     }
+
+    processLog(msg){
+        return this.log(`${buildGatherStationId(this.unitInfo)} ${msg}`);
+    }
+}
+
+// 构建采集单元的标记
+function buildGatherStationId(unitInfo) {
+    return `编号[${unitInfo.unitNo}]采集站[${unitInfo.unitName}]`;
 }
 
 // 构建站点的单元资讯

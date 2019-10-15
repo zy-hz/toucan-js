@@ -70,13 +70,22 @@ class ToucanGatherCell extends ToucanWorkUnit {
                     const result = await sgtJob.do() || {};
                     this.workInfo.unitStatus.updateStatus(StatusCode.idle);
 
-                    const { jobCount, jobSpan } = result;
+                    const {
+                        // 作业的数量
+                        jobCount,
+                        // 两次作业的间隔
+                        jobSpan,
+                        // 执行的作业任务
+                        task = {},
+                    } = result;
                     // 作业的数量为0，表示没有可以执行的作业。这时让采集单元休息5秒
                     if (jobCount === 0) {
-                        this.processLog('没有需要执行的作业，等待5秒后重试。');
-                        await sleep(jobSpan || 1000 * 5);
+                        const sleepTime = jobSpan || 1000 * 5
+                        this.processLog(`没有需要执行的作业，等待${sleepTime}秒后重试。`);
+                        await sleep(sleepTime);
                     } else {
-                        this.processLog(`执行${jobCount}次采集作业，用时${jobSpan}毫秒`);
+                        const { taskSpendTime } = task;
+                        this.processLog(`执行${jobCount}次采集作业，用时${Math.ceil((taskSpendTime || 0) / 1000)}秒`);
                     }
 
 
@@ -127,14 +136,14 @@ class ToucanGatherCell extends ToucanWorkUnit {
     }
 
     // 记录采集单元的日志
-    processLog(msg){
+    processLog(msg) {
         this.log(`${buildGatherCellId(this.unitInfo)} ${msg}`);
     }
 }
 
 // 构建采集单元的标记
 function buildGatherCellId(unitInfo) {
-    return `编号[${unitInfo.unitId}]采集单元 [${unitInfo.unitName}] 第${unitInfo.unitNo}线程`
+    return `编号[${unitInfo.unitId}]采集单元 [${unitInfo.unitName}] 第${unitInfo.unitNo}线程`;
 }
 
 

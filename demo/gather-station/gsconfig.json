@@ -10,13 +10,13 @@
                 "skillKeys": [
                     "cm.http"
                 ],
-                "skillCapability": 2
+                "skillCapability": 0
             },
             {
-                "skillName": "模拟浏览器采集",
+                "skillName": "1688产品详情采集",
                 "skillDescript": "",
                 "skillKeys": [
-                    "cm.browser"
+                    "ali.1688.detail"
                 ],
                 "skillCapability": 1
             }
@@ -25,7 +25,14 @@
     "messageQueue": {
         "mqType": "file",
         "mqOptions": {
-
+            "gatherTaskQueue": [
+                {
+                    "queueName": "ali.1688.detail",
+                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/ali.1688.detail_s.txt",
+                    "urlFormat": "http://detail.1688.com/offer/{$0}.html",
+                    "reload": false
+                }
+            ]
         }
     }
 }
