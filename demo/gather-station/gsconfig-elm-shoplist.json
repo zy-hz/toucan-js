@@ -1,0 +1,34 @@
+{
+    "stationName": "本地测试",
+    "stationNo": "zy",
+    "gatherSkill": {
+        "maxGatherCellCount": 3,
+        "gatherCells": [
+            {
+                "skillName": "饿了么店铺列表采集",
+                "skillDescript": "",
+                "skillKeys": [
+                    "elm.shop.list"
+                ],
+                "skillCapability": 1,
+                "skillOptions": {
+                    "cookie": "ubt_ssid=16ipgad3q9nrbzduofbzdbmo6sfyqnti_2019-10-13; perf_ssid=a45yky87xe17179qcmbao8mcbc5fs8k8_2019-10-13; ut_ubt_ssid=vizvfzfzzve48rp4et7u4147uavd7i95_2019-10-13; cna=agsjFqG8IQcCAXPAvvfwRjPp; _bl_uid=4Okpw11bo1aqwIxnvyta9tkxtvtj; _utrace=905997f34d4ed522c6143b644c0ab004_2019-10-13; track_id=1571412555|c10e7951c1343ce4381087ebfb489164060b3fdeb2566782c1|89f21ac75103c5f4bc43d150bce28545; USERID=16130211; UTUSER=16130211; SID=PaZ9fW0lf8My0j5GuXC79S36DFTQ0ZGQXyUg; ZDS=1.0|1571412555|iwUj9uQFUdXH48NMMJqb8Tm9DrdwOCPH8bq3noCrvyd95JP+ZVgiMVZ/GOvUab4a; tzyy=25a4d90605425eb4514f0457b6d0199c; isg=BAgI4QiWwYFQWi0NlnOjJYHw2XbaGW3fG0EAq8K5-AN2nagHasMRSi_cFTVIrSST; l=dBgHrxCRq-A5tzvGBOfaCuI8LobTPIRb4sPzw4OGqICPOKC95u8CBZIZwK8pCnGVh6r2R3oTJ-juBeYBq_HGt-kNhm8WY9Mmn; pizza73686f7070696e67=1MkK5-oAczE99P7yXnEoaKfOzIrb0BcNUF6H0ufP46TkizpHefhT8f3QB57g-LBg"
+                }
+            }
+        ]
+    },
+    "messageQueue": {
+        "mqType": "file",
+        "mqOptions": {
+            "gatherTaskQueue": [
+                {
+                    "queueName": "elm.shop.list",
+                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/elm/小区_经纬度.txt",
+                    "targetName": "elm-shop-list",
+                    "depth": 99,
+                    "reload": false
+                }
+            ]
+        }
+    }
+}

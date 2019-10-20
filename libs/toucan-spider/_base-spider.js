@@ -12,7 +12,7 @@
 
 const _ = require('lodash');
 
-const { sleep, exURL, exHTML, SiteUrlCount } = require('../toucan-utility');
+const { sleep, exURL, exHTML, exCookie, SiteUrlCount } = require('../toucan-utility');
 const { NullArgumentError } = require('../toucan-error');
 const TargetUrlPool = require('./_layer-url-task-pool');
 const cheerio = require("cheerio");
@@ -28,7 +28,9 @@ class ToucanBaseSpider {
         // 空闲的时候，暂停的时间
         idleSleep,
         // 只保存页面的文本
-        onlyKeepPageText = false
+        onlyKeepPageText = false,
+        // cookies
+        cookie = '',
     } = {}) {
         this._self = this;
 
@@ -43,6 +45,8 @@ class ToucanBaseSpider {
         // 蜘蛛的选项
         //
         this.onlyKeepPageText = onlyKeepPageText;
+        // 初始化的cookies
+        this.cookie = new exCookie(cookie);
 
         // 任务完成的处理程序
         this.onTaskDone = onTaskDone;
@@ -61,7 +65,9 @@ class ToucanBaseSpider {
             // -1   - 爬所有层（不超过系统指定的上限）
             depth = 0,
             // 任务中的页面暂停
-            turnPageSleep
+            turnPageSleep,
+            // 开始的页面位置
+            startPageIndex = 0,
         } = task;
         // 设置最大的爬行层
         const maxLayerIndex = depth < 0 ? 20 : depth;
@@ -70,7 +76,7 @@ class ToucanBaseSpider {
         if (_.isEmpty(targetUrl)) throw new NullArgumentError('targetUrl');
 
         // 构建连接池，管理爬行的连接
-        this._targetUrlPool = new TargetUrlPool(targetUrl, 0);
+        this._targetUrlPool = new TargetUrlPool(targetUrl, startPageIndex);
 
         // 任务开始时间
         const theTask = Object.assign(task, {
@@ -82,7 +88,7 @@ class ToucanBaseSpider {
             depth: maxLayerIndex,
         });
         // 爬行的循环
-        let layerIndex = 0;
+        let layerIndex = startPageIndex;
         while (layerIndex <= maxLayerIndex) {
 
             // 防止爬行过快
@@ -151,9 +157,17 @@ class ToucanBaseSpider {
 
     // 爬行一个页面
     async crawlOnePage(theTask, thePage, layerIndex = 0) {
+        // 加入cookie管理
+        if (!_.isNil(this.cookie)) theTask = Object.assign(theTask, { requestCookie: this.cookie.toString() });
+
         // 获得页面的采集结果
         const response = await this.pageFetch.do(exURL.fillProtocol(thePage.pageUrl), theTask);
 
+        // 提取cookie
+        const { responseCookie } = response;
+        if (!_.isNil(this.cookie) && !_.isNil(responseCookie)) this.cookie.setCookie(responseCookie);
+
+        // 解析列表的链接
         const extractUrlResult = this.extractUrl(thePage, response, layerIndex);
 
         // 是否需要提取文本的内容
@@ -174,7 +188,7 @@ class ToucanBaseSpider {
 
         try {
             // 解析页面中的下级链接
-            extractUrlResult.urlCountInPage = analyzeSiteUrlCount(thePage.pageUrl, response.pageContent, layerIndex);
+            extractUrlResult.urlCountInPage = this.analyzeSiteUrlCount(thePage.pageUrl, response.pageContent, layerIndex);
             extractUrlResult.extractUrlSuccess = true;
         }
         catch (error) {
@@ -184,25 +198,25 @@ class ToucanBaseSpider {
         return extractUrlResult;
     }
 
-}
+    // 分析站点链接的数量
+    analyzeSiteUrlCount(pageUrl, content, layerIndex) {
+        let urlCount = SiteUrlCount();
+        const $ = cheerio.load(content);
+        _.forEach($('a'), (x) => {
+            const url = x.attribs.href
+            // 提前链接的属于当前层的下一层，所以layerIndex需要+1
+            if (exURL.isSameHost(pageUrl, url)) {
+                urlCount.innerUrl = urlCount.innerUrl + this._targetUrlPool.push(url, layerIndex + 1);
+            } else if (exURL.isScript(url)) {
+                urlCount.scriptUrl = urlCount.scriptUrl + 1;
+            }
+            else {
+                urlCount.outerUrl = urlCount.outerUrl + 1;
+            }
+        });
+        return urlCount;
+    }
 
-// 分析站点链接的数量
-function analyzeSiteUrlCount(pageUrl, content, layerIndex) {
-    let urlCount = SiteUrlCount();
-    const $ = cheerio.load(content);
-    _.forEach($('a'), (x) => {
-        const url = x.attribs.href
-        // 提前链接的属于当前层的下一层，所以layerIndex需要+1
-        if (exURL.isSameHost(pageUrl, url)) {
-            urlCount.innerUrl = urlCount.innerUrl + this._targetUrlPool.push(url, layerIndex + 1);
-        } else if (exURL.isScript(url)) {
-            urlCount.scriptUrl = urlCount.scriptUrl + 1;
-        }
-        else {
-            urlCount.outerUrl = urlCount.outerUrl + 1;
-        }
-    });
-    return urlCount;
 }
 
 // 触发页面完成的事件

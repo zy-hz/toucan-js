@@ -4,7 +4,9 @@ const _ = require('lodash');
 // 载入工具
 function batchLoadModule(
     // 模块目录
-    moduleDir
+    moduleDir,
+    // 递归子目录
+    recursive = false,
 ) {
 
     const dirs = fs.readdirSync(moduleDir);
@@ -23,6 +25,19 @@ function batchLoadModule(
         }
 
     });
+
+    // 发现子目录中的工具
+    if (recursive) {
+        const supDirs = _.filter(dirs, (x) => {
+            const stat = fs.statSync(`${moduleDir}/${x}`);
+            return stat && stat.isDirectory();
+        });
+
+        _.forEach(supDirs,(x)=>{
+            funcs = Object.assign(funcs,batchLoadModule(`${moduleDir}/${x}`,true));
+        })
+
+    }
 
     return funcs;
 }

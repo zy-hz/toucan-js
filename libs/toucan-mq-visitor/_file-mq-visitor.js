@@ -37,14 +37,16 @@ class FileMQVisitor extends ToucanMQVisitor {
         // 创建数据存储
         this.__dataStorage__ = {};
         // 载入采集任务队列
-        _.each(this.gatherTaskQueue, ({ queueName, srcFilePath, urlFormat = '', reload = false }) => {
+        _.each(this.gatherTaskQueue, (opt) => {
+            const { queueName, srcFilePath, reload = false } = opt;
+
             // 如果重载，就先删除队列
             if (reload) this.deleteQueue(queueName);
             // 如果有缓存数据，就先从缓存载入数据
             this.initQueue(queueName);
 
             // 从文件中载入
-            const msgs = loadGatherTaskFromFile(srcFilePath, urlFormat);
+            const msgs = loadGatherTaskFromFile(srcFilePath, opt);
             // 去重追加
             const newMsgs = _.differenceWith(msgs, this.__dataStorage__[queueName], (x, y) => { return x.content.targetUrl === y.content.targetUrl })
             // 追加到队列
@@ -182,16 +184,15 @@ class FileMQVisitor extends ToucanMQVisitor {
         return `${this.mqCachePath}/${queueName}`;
     }
 
-
 }
 
 // 从文件载入任务
-function loadGatherTaskFromFile(src, urlFormat = '') {
+function loadGatherTaskFromFile(src, { urlFormat = '', targetName = '', depth = 0 }) {
     if (!fs.existsSync(src)) return [];
 
     const lines = fs.readFileSync(src, 'utf-8').split('\r\n');
     return _.map(lines, (x) => {
-        return buildMessageObject({ targetUrl: applyFormat(x, urlFormat) })
+        return buildMessageObject({ targetUrl: applyFormat(x, urlFormat), targetName, depth })
     })
 }
 

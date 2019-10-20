@@ -1,6 +1,7 @@
 // url 功能得扩展
 
 const URL = require('url');
+const querystring = require('querystring');
 const _ = require('lodash');
 
 class exURL {
@@ -39,7 +40,7 @@ class exURL {
     isScript(a) {
         if (_.isEmpty(a)) return false;
         const uA = URL.parse(a);
-        if(_.isEmpty(uA.protocol)) return false;
+        if (_.isEmpty(uA.protocol)) return false;
 
         return uA.protocol.indexOf('script') >= 0;
     }
@@ -57,9 +58,25 @@ class exURL {
         return url.toLowerCase();
     }
 
-    getHost(url){
+    // 获得主机
+    getHost(url) {
         url = this.fillProtocol(url);
         return URL.parse(url, true, true).hostname;
+    }
+
+    // 获得查询对象
+    getQuery(url) {
+        const uri = URL.parse(url);
+        return querystring.parse(uri.query);
+    }
+
+    getQueryString(obj) {
+        return querystring.stringify(obj, null, null, {
+            // 忽略[]
+            encodeURIComponent: (x) => {
+                return /\[|\]/img.test(x) ? x : querystring.escape(x);
+            }
+        });
     }
 }
 

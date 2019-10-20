@@ -4,6 +4,7 @@ const util = require('./_common-utility');
 const userAgents = require('./_user-agent');
 const ToucanPageFetch = require('./_base-fetch');
 const { onException } = require('./_fetch-exception');
+const { exCookie } = require('../toucan-utility');
 
 class PuppeteerPageFetch extends ToucanPageFetch {
 
@@ -15,7 +16,7 @@ class PuppeteerPageFetch extends ToucanPageFetch {
     async do(url, options = {}) {
 
         // 有该标记，表示页面载入完成
-        const { headless = true, viewPort = { width: 1280, height: 768 } } = options;
+        const { headless = true, viewPort = { width: 1280, height: 768 }, requestCookie = '' } = options;
 
         try {
             // 用户的代理
@@ -46,6 +47,7 @@ class PuppeteerPageFetch extends ToucanPageFetch {
             await page.setUserAgent(userAgent);
             // 设置屏幕分辨率
             await page.setViewport(viewPort);
+            //await page.setCookie({'domain': 'h5.ele.me', 'name': 'pizza73686f7070696e67', 'value': '1MkK5-oAczE99P7yXnEoaCso6c6p8UIx9EZhmbNeuvQMF2ge2IW-wg'});
             // 前往页面地址
             const response = await page.goto(visitUrl);
 

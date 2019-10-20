@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const request = require('superagent');
+require('superagent-proxy')(request);
 const encoding = require('encoding');
 const charDecter = require('jschardet');
 const util = require('./_common-utility');
@@ -9,23 +10,26 @@ const { onException } = require('./_fetch-exception');
 
 class SuperAgentPageFetch extends ToucanPageFetch {
 
-    constructor(){
+    constructor() {
         super();
         this.fetchType = 'request';
     }
 
-    async do(url, option = {}) {
+    async do(url, options = {}) {
 
         try {
             // 用户的代理
             let userAgent = userAgents[parseInt(Math.random() * userAgents.length)];
             // 根据选项构建url
-            let visitUrl = util.buildUrl(url, option);
+            let visitUrl = util.buildUrl(url, options);
+            // 获取任务的cookies
+            const { requestCookie = '' } = options;
             // 使用二进制读取页面
             const response = await request
                 .get(visitUrl)
                 .responseType('binary')
-                .set({ 'User-Agent': userAgent });
+                .set({ 'User-Agent': userAgent })
+                .set({ 'Cookie': requestCookie });
 
             // 获取页面的字符集
             const pageCharset = getCharsetFromResponse(response);
@@ -39,13 +43,15 @@ class SuperAgentPageFetch extends ToucanPageFetch {
                 // 页面内容
                 pageContent,
                 // 抓手类型
-                fetchType : this.fetchType,
+                fetchType: this.fetchType,
                 // 重试次数
                 retryCount: 0,
                 // 页面的原始字符集
                 pageCharset,
                 // 状态码
-                statusCode: response.statusCode
+                statusCode: response.statusCode,
+                // 响应的cookie
+                responseCookie: response.header['set-cookie']
             };
         }
         catch (error) {
