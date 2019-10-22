@@ -5,7 +5,7 @@ const TargetUrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 const { SiteUrlCount } = require('../../libs/toucan-utility');
 const fs = require('fs');
 
-describe('base spider 测试', () => {
+describe('base spider 测试 ', () => {
 
     describe('爬行循环测试 ', () => {
         // 测试爬行用得蜘蛛
@@ -49,12 +49,12 @@ describe('base spider 测试', () => {
         it('0 层正常测试 ', async () => {
             const spider = new CrawlTestSpider({ spiderName: 'mocha蜘蛛', spiderType: 'CrawlTestSpider' });
             const task = await spider.run({ targetUrl: 'www.19lou.com', depth: 0 }, async ({ task, page }) => {
-                expect(page.pageSpendTime,'pageSpendTime').is.greaterThan(0);
+                expect(page.pageSpendTime, 'pageSpendTime').is.greaterThan(0);
             });
 
-            expect(task.taskDonePageCount,'taskDonePageCount').to.be.eq(1);
-            expect(task.taskErrorPageCount,'taskErrorPageCount').to.be.eq(0);
-            expect(task.taskSpendTime,'taskSpendTime').is.greaterThan(0);
+            expect(task.taskDonePageCount, 'taskDonePageCount').to.be.eq(1);
+            expect(task.taskErrorPageCount, 'taskErrorPageCount').to.be.eq(0);
+            expect(task.taskSpendTime, 'taskSpendTime').is.greaterThan(0);
         });
 
         it('0 层异常测试', async () => {
@@ -74,7 +74,7 @@ describe('base spider 测试', () => {
             });
 
             expect(task.taskDonePageCount).to.be.eq(5);
-            expect(task.taskErrorPageCount,'taskErrorPageCount').to.be.eq(0);
+            expect(task.taskErrorPageCount, 'taskErrorPageCount').to.be.eq(0);
             expect(task.taskSpendTime).is.greaterThan(0);
         })
     })
@@ -86,7 +86,7 @@ describe('base spider 测试', () => {
 
         it('19lou', () => {
             const html = fs.readFileSync(__dirname + '/sample/page-19lou-com.html', 'utf-8');
-            const cnt = up.extractUrl(entryUri, html, 0);
+            const cnt = up.extractUrl({ pageUrl: entryUri }, { pageContent: html }, 0).urlCountInPage;
             expect(cnt.innerUrl).to.be.eq(156);
             expect(cnt.outerUrl).to.be.eq(125);
             expect(cnt.scriptUrl).to.be.eq(17);

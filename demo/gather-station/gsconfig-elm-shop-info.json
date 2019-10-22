@@ -1,0 +1,35 @@
+{
+    "stationName": "饿了么店铺信息采集站",
+    "stationNo": "ELM01",
+    "gatherSkill": {
+        "maxGatherCellCount": 3,
+        "gatherCells": [
+            {
+                "skillName": "饿了么店铺信息采集",
+                "skillDescript": "",
+                "skillKeys": [
+                    "elm.shop.info"
+                ],
+                "skillCapability": 1,
+                "skillOptions": {
+                    "devtools": false,
+                    "userDevice": "iPhone 8"
+                }
+            }
+        ]
+    },
+    "messageQueue": {
+        "mqType": "file",
+        "mqOptions": {
+            "gatherTaskQueue": [
+                {
+                    "queueName": "elm.shop.info",
+                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/elm/小区_经纬度_small.txt",
+                    "targetName": "elm-shop-info",
+                    "depth": 99,
+                    "reload": true
+                }
+            ]
+        }
+    }
+}

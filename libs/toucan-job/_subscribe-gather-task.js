@@ -30,6 +30,9 @@ class SubscribeGatherTaskJob extends TaskJob {
         // 启动采集蜘蛛
         task = await spider.run(task, async ({ task, page }) => { this.onPageDone(task, page) });
 
+        // 采集一个任务完成
+        await this.onTaskDone(task);
+
         return { jobCount: 1, task };
     }
 
@@ -63,6 +66,14 @@ class SubscribeGatherTaskJob extends TaskJob {
             result,
             { submitBeginTime, submitEndTime, submitSpendTime: submitEndTime - submitBeginTime })
         );
+    }
+
+    // 采集任务完成
+    async onTaskDone(task){
+        // 记录页面日志
+        this.logGatherTaskDone(task);
+
+        // TODO::提交到服务器
     }
 }
 

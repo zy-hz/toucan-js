@@ -16,6 +16,22 @@ class TaskJob extends ToucanJob {
         }
     }
 
+    // 记录任务完成得日志
+    logGatherTaskDone(task) {
+        if (task.hasException) {
+            const msg = buildGatherTaskMessage(task, '采集失败');
+            this.error(msg, task);
+        }
+        else {
+            const msg = buildGatherTaskMessage(task, '采集成功');
+            this.log(msg);
+        }
+
+        function buildGatherTaskMessage(task, msg) {
+            return `任务${task.targetUrl}${msg}，用时${Math.ceil(task.taskSpendTime / 1000)}秒。`
+        }
+    }
+
     // 记录提交结果到服务器成功
     logResultSubmitDone(task, page, result) {
         if (result.hasException) {

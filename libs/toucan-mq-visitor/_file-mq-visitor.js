@@ -188,7 +188,10 @@ class FileMQVisitor extends ToucanMQVisitor {
 
 // 从文件载入任务
 function loadGatherTaskFromFile(src, { urlFormat = '', targetName = '', depth = 0 }) {
-    if (!fs.existsSync(src)) return [];
+    if (!fs.existsSync(src)) {
+        console.error('[警告]不能载入采集任务，因为文件不存在。', src);
+        return [];
+    }
 
     const lines = fs.readFileSync(src, 'utf-8').split('\r\n');
     return _.map(lines, (x) => {

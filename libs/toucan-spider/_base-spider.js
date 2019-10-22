@@ -49,7 +49,7 @@ class ToucanBaseSpider {
         this.cookie = new exCookie(cookie);
 
         // 任务完成的处理程序
-        this.onTaskDone = onTaskDone;
+        //this.onTaskDone = onTaskDone;
     }
 
     // 执行一个抓取任务
@@ -133,12 +133,12 @@ class ToucanBaseSpider {
                 theTask.taskPlanPageCount = this._targetUrlPool.sumLessThan(layerIndex);
 
                 // 触发一个页面完成
-                await onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
+                await this.onPageDone(false, theTask, thePage, crawlResult, submitGatherResult);
             }
             catch (error) {
                 // 触发一个页面异常
                 theTask.taskErrorPageCount = theTask.taskErrorPageCount + 1;
-                await onPageDone(true, theTask, thePage, error, submitGatherResult);
+                await this.onPageDone(true, theTask, thePage, error, submitGatherResult);
             }
 
             // 是否有同层的连接？
@@ -151,7 +151,7 @@ class ToucanBaseSpider {
         }
 
         // 设置任务完成得信息
-        return onTaskDone(theTask);
+        return this.onTaskDone(theTask);
 
     }
 
@@ -217,36 +217,37 @@ class ToucanBaseSpider {
         return urlCount;
     }
 
-}
+    // 触发页面完成的事件
+    async  onPageDone(hasException, theTask, thePage, result, eventCallback) {
 
-// 触发页面完成的事件
-async function onPageDone(hasException, theTask, thePage, result, eventCallback) {
+        const pageEndTime = _.now();
+        const pageSpendTime = pageEndTime - thePage.pageBeginTime;
+        const taskSpendTime = pageEndTime - theTask.taskBeginTime;
 
-    const pageEndTime = _.now();
-    const pageSpendTime = pageEndTime - thePage.pageBeginTime;
-    const taskSpendTime = pageEndTime - theTask.taskBeginTime;
+        thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime }, result)
+        theTask = Object.assign(theTask, { taskSpendTime });
 
-    thePage = Object.assign(thePage, { hasException, pageEndTime, pageSpendTime }, result)
-    theTask = Object.assign(theTask, { taskSpendTime });
+        if (typeof eventCallback === 'function') {
+            // 事件回调
+            await eventCallback({ task: theTask, page: thePage })
+        }
+        else {
+            let msg = `${thePage.spiderName}[${thePage.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
+            msg = `***** 没有发现可用的 eventCallback ***** \r\n ${msg}`;
+            console.log(msg, result);
+        }
 
-    if (typeof eventCallback === 'function') {
-        // 事件回调
-        await eventCallback({ task: theTask, page: thePage })
     }
-    else {
-        let msg = `${thePage.spiderName}[${thePage.spiderType}]: ${hasException ? '任务异常' : '任务完成'}。`
-        msg = `***** 没有发现可用的 eventCallback ***** \r\n ${msg}`;
-        console.log(msg, result);
+
+    // 触发任务完成的事件
+    onTaskDone(task) {
+        const taskEndTime = _.now();
+        const taskSpendTime = taskEndTime - task.taskBeginTime;
+
+        return Object.assign(task, { taskEndTime, taskSpendTime })
     }
-
 }
 
-// 触发任务完成的事件
-function onTaskDone(task) {
-    const taskEndTime = _.now();
-    const taskSpendTime = taskEndTime - task.taskBeginTime;
 
-    return Object.assign(task, { taskEndTime, taskSpendTime })
-}
 
 module.exports = { ToucanBaseSpider };

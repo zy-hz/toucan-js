@@ -1,6 +1,7 @@
 // 页面抓手的基类
+const { ToucanLogger } = require('../toucan-work-unit');
 
-class ToucanPageFetch{
+class ToucanPageFetch extends ToucanLogger {
 
 }
 
