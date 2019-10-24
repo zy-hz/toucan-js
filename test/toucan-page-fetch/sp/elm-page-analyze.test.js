@@ -45,7 +45,7 @@ describe('elm 页面分析测试 ', () => {
         })
     })
 
-    describe('analyzeShopHomePage temp', () => {
+    describe('analyzeShopHomePage', () => {
         it('0', () => {
             const pageContent = fs.readFileSync(`${__dirname}/sample/elm-shop-home.html`, 'utf-8');
             const result = analyzeShopHomePage(pageContent);

@@ -5,7 +5,7 @@ const RabbitMQExpect = require('../../libs/toucan-utility/_expect-rabbit-mq');
 const { sleep } = require('../../libs/toucan-utility');
 const uuid = require('uuid').v4;
 
-describe('RabbitMQVisitor 综合测试', () => {
+describe('[测试入口] - RabbitMQVisitor', () => {
 
     describe('基础', () => {
 

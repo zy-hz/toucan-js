@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 const _ = require('lodash');
 
-describe('[测试入口] - ToucanGtherMQ temp', () => {
+describe('[测试入口] - ToucanGatherMQ', () => {
     const fromQueues = ['toucan.cm.http', 'toucan.cm.browse', 'toucan.sp.com.sohu.news', 'toucan.sp.com.sohu'];
 
     runTest('rabbit');

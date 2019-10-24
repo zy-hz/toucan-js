@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const ElmPageFetch = require('../../../libs/toucan-page-fetch/sp/_elm');
 
-describe('饿了么浏览器抓手测试', () => {
+describe('[demo]饿了么浏览器抓手测试', () => {
 
     describe('准备', () => {
 

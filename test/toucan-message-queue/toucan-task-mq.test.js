@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 
 
-describe('ToucanTaskMQ 测试', () => {
+describe('[测试入口] - ToucanTaskMQ', () => {
 
     it('构造', () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');

@@ -6,7 +6,7 @@ const DEFAULT_CACHE_PATH = lib.__get__('DEFAULT_CACHE_PATH');
 
 const fs = require('fs');
 
-describe('FileMQVisitor 测试', () => {
+describe('[测试入口] - FileMQVisitor', () => {
 
     describe('init', () => {
         it('default path', () => {
