@@ -125,7 +125,8 @@ class ElmShopInfoSpider extends ToucanBaseSpider {
         const result = await this.pageFetch.doShopHome(id, task);
 
         // 分析页面获得产品和其他可以点击的按钮
-        return Object.assign({ pageContent: result.pageContent }, analyzeShopHomePage(result.pageContent));
+        // { pageContent: result.pageContent }
+        return Object.assign({}, analyzeShopHomePage(result.pageContent));
     }
 
     // 解析任务

@@ -24,10 +24,10 @@
             "gatherTaskQueue": [
                 {
                     "queueName": "elm.shop.info",
-                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/elm/小区_经纬度_small.txt",
+                    "srcFilePath": "d:/Works/大嘴鸟/toucan-js/.sample/elm/小区_经纬度_02.txt",
                     "targetName": "elm-shop-info",
                     "depth": 99,
-                    "reload": true
+                    "reload": false
                 }
             ]
         }

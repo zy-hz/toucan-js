@@ -19,5 +19,6 @@
 ##DEMO
 
 1. 在目录<mydir>中解开压缩包
-2. 在<mydir>目录中打开命令窗口，运行 npm install
-3. 在<mydir>的命令窗口中运行demo.bat
+2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
+3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
+4. 在<mydir>的命令窗口中运行demo.bat
