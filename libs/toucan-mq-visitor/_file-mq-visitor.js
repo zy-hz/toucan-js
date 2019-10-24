@@ -82,10 +82,14 @@ class FileMQVisitor extends ToucanMQVisitor {
         const lines = _.split(fs.readFileSync(fileName, 'utf-8'), '\r\n');
         _.forEach(lines, (x) => {
             try {
-                const msg = JSON.parse(x)
-                this.appendToStorage(queueName, msg, { toDisk: false })
+                if (!_.isEmpty(x)) {
+                    const msg = JSON.parse(x)
+                    this.appendToStorage(queueName, msg, { toDisk: false })
+                }
             }
-            catch (error) { }
+            catch (error) {
+                console.error('initQueueFromFile 异常', error);
+            }
         });
     }
 
@@ -176,7 +180,7 @@ class FileMQVisitor extends ToucanMQVisitor {
     }
     saveToFile(fileName, msgArray) {
         msgArray = _.map(msgArray, (x) => { return JSON.stringify(x) });
-        fs.appendFileSync(fileName, _.join(msgArray, '\r\n'));
+        fs.appendFileSync(fileName, _.join(msgArray, '\r\n') + '\r\n');
     }
 
     // 缓存队列的文件名
@@ -213,7 +217,7 @@ function saveToFile(src, msg) {
 }
 
 // 构建消息对象
-function buildMessageObject(content, isRead = false) {
+function buildMessageObject(content, { isRead = false } = {}) {
     return { content, isRead };
 }
 

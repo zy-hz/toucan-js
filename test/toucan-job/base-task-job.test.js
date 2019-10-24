@@ -2,7 +2,7 @@
 const fs = require('fs');
 const { TaskJob } = require('../../libs/toucan-job');
 
-describe('TaskJob 测试', () => {
+describe('[demo] - TaskJob', () => {
     describe('logTaskPageDone', () => {
         it('success', () => {
             const { task, page } = JSON.parse(fs.readFileSync(__dirname + '/sample/gather-result-page-19lou.json', 'utf-8'));

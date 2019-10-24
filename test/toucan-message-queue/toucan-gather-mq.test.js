@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 const _ = require('lodash');
 
-describe('ToucanGtherMQ 测试', () => {
+describe('[测试入口] - ToucanGtherMQ temp', () => {
     const fromQueues = ['toucan.cm.http', 'toucan.cm.browse', 'toucan.sp.com.sohu.news', 'toucan.sp.com.sohu'];
 
     runTest('rabbit');
@@ -72,15 +72,15 @@ describe('ToucanGtherMQ 测试', () => {
                     await gatherMQ.disconnect();
                 })
 
-                it('subscribe ONE queue ', async () => {
+                it('subscribe ONE queue', async () => {
                     const qs = _.at(testQueues, 0);
                     gatherMQ.bindTaskQueue(qs);
 
                     let msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString()).to.be.eq(task1.taskBody);
+                    expect(msg.content.toString(),'task1.taskBody').to.be.eq(task1.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString()).to.be.eq(task2.taskBody);
+                    expect(msg.content.toString(),'task2.taskBody').to.be.eq(task2.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
                     expect(msg, '队列没有应该任务了').is.false;
