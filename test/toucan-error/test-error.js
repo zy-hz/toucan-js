@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 const _ = require('lodash');
 
-describe('NullArgumentError 测试', () => {
+describe('[测试入口] - NullArgumentError', () => {
 
     it('', () => {
         const { NullArgumentError } = require('../../libs/toucan-error');

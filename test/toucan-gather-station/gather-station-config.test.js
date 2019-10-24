@@ -5,7 +5,7 @@ const readConfigFromFile = lib.__get__('readConfigFromFile');
 
 const expect = require('chai').expect;
 
-describe('gather station config 测试', () => {
+describe('[测试入口] - gather station config 测试', () => {
 
     describe('getConfig', () => {
 

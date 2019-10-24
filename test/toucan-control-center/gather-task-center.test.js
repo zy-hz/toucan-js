@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const GatherTaskCenter = require('../../libs/toucan-control-center/_gather-task-center');
 const { sleep } = require('../../libs/toucan-utility');
 
-describe('GatherTaskCenter 综合测试', () => {
+describe('[测试入口] - GatherTaskCenter ', () => {
 
     describe('基础', () => {
         const cfgFileName = __dirname + '/gather-task-config.json';

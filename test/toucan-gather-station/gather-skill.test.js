@@ -5,7 +5,7 @@
 const expect = require('chai').expect;
 const { createGatherSkillTemplate } = require('../../libs/toucan-gather-station/_gather-skill');
 
-describe('GatherSkill 测试', () => {
+describe('[测试入口] - GatherSkill 测试', () => {
 
     it('createGatherSkillTemplate 数量测试', () => {
         const gatherCells = [
