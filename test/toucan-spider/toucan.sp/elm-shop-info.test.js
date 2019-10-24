@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 const fs = require('fs');
 
-describe('elm shop info 测试 temp', () => {
+describe('[demo] elm shop info 测试', () => {
 
     describe('运行测试', () => {
         const spider = new ElmShopInfoSpider();

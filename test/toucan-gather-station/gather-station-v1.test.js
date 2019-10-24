@@ -11,7 +11,7 @@ const { sleep } = require('../../libs/toucan-utility');
 
 const fs = require('fs');
 
-describe('GatherStationV1 综合测试 ', () => {
+describe('[long]GatherStationV1 综合测试 ', () => {
 
     describe('GatherStationV1 测试 ', () => {
         const cfgFileName = `${__dirname}/sample/gsconfig.json`;

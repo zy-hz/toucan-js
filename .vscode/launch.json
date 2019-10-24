@@ -34,7 +34,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Fast testing",
+            "name": "Fast 测试",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [
@@ -43,7 +43,7 @@
                 "--recursive",
                 "--bail", // 发现错误后停止
                 "--grep",
-                "[[long]]",
+                "[[long]]|[[demo]]",
                 "--invert", // 排除以上标记
                 "true"
             ],
@@ -56,14 +56,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Long testing",
+            "name": "Long 测试",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [
                 "test",
                 "--no-timeouts",
                 "--recursive",
-                "--bail", // 发现错误后停止
+                // "--bail", // 发现错误后不停止
                 "--grep",
                 "[[long]]"
             ],
@@ -83,7 +83,7 @@
                 "test",
                 "--no-timeouts",
                 "--recursive",
-                "--bail" // 发现错误后停止
+                //"--bail" // 发现错误后不停止
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
