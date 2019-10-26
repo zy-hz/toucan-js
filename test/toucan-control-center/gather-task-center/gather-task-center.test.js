@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
-const GatherTaskCenter = require('../../libs/toucan-control-center/_gather-task-center');
-const { sleep } = require('../../libs/toucan-utility');
+const { GatherTaskCenter } = require('../../../libs/toucan-control-center');
+const { sleep } = require('../../../libs/toucan-utility');
+const path = require('path');
 
-describe('[测试入口] - GatherTaskCenter ', () => {
+describe('[测试入口] - GatherTaskCenter', () => {
 
     describe('基础', () => {
-        const cfgFileName = __dirname + '/gather-task-config.json';
+        const cfgFileName = path.resolve(__dirname, 'gather-task-config.json');
 
         it('构造', () => {
             const gtc = new GatherTaskCenter();

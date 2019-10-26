@@ -4,11 +4,11 @@
 const schedule = require('node-schedule');
 const _ = require('lodash');
 
-const { ToucanWorkUnit } = require('../toucan-work-unit')
-const { StatusCode } = require('../toucan-utility');
-const mqFactory = require('../toucan-message-queue');
-const tvFactory = require('../toucan-task-visitor');
-const { PublishGatherTaskJob } = require('../toucan-job');
+const { ToucanWorkUnit } = require('../../toucan-work-unit')
+const { StatusCode } = require('../../toucan-utility');
+const mqFactory = require('../../toucan-message-queue');
+const tvFactory = require('../../toucan-task-visitor');
+const { PublishGatherTaskJob } = require('../../toucan-job');
 
 class GatherTaskCenter extends ToucanWorkUnit {
 
