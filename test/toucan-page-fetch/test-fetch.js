@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 const pageFetchFactory = require('../../libs/toucan-page-fetch/index');
 
-describe('[long] request page fetch 测试',()=>{
+describe('[demo] request page fetch 测试',()=>{
 
     it('do s.weibo.com 搜索测试', async () => {
         const pageFetch = pageFetchFactory.createFetch({ fetchType: 'request' });

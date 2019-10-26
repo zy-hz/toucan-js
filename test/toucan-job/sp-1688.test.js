@@ -12,7 +12,7 @@ class MyTestJob extends SubscribeGatherTaskJob {
     }
 }
 
-describe('[long]1688 网站测试', () => {
+describe('[demo]1688 网站测试', () => {
 
     const gatherMQ = mqFactory.createGatherMQ('rabbit');
     const taskMQ = mqFactory.createTaskMQ('rabbit');

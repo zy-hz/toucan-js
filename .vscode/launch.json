@@ -65,7 +65,10 @@
                 "--recursive",
                 // "--bail", // 发现错误后不停止
                 "--grep",
-                "[[long]]"
+                "[[long]]",
+                "--grep",
+                "[[demo]]",
+                "--invert"
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
