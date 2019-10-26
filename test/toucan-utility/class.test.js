@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 const { isClass } = require('../../libs/toucan-utility/_class');
 
-describe('isClass 测试', () => {
+describe('[测试入口] - isClass', () => {
 
     it('obj 测试', () => {
         expect(isClass(undefined), 'undefined 不是类').to.be.false;

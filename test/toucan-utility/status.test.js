@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 
 
-describe('StatusGroup 测试', () => {
+describe('[测试入口] - StatusGroup', () => {
 
     it('', async () => {
         const theTime = _.now();

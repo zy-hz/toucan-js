@@ -2,7 +2,7 @@
 const { exURL } = require('../../libs/toucan-utility');
 const expect = require('chai').expect;
 
-describe('url 测试', () => {
+describe('[测试入口] - exURL', () => {
     describe('fillProtocol', () => {
         it('', () => {
             expect(exURL.fillProtocol('www.19lou.com')).to.be.eq('http://www.19lou.com');

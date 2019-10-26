@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const { spiderFactory } = require('../../libs/toucan-spider');
 const { isClass } = require('../../libs/toucan-utility');
 
-describe('ToucanSpiderFactory 测试', () => {
+describe('[测试入口] - ToucanSpiderFactory', () => {
 
     describe('create', () => {
         it('蜘蛛参数测试', () => {

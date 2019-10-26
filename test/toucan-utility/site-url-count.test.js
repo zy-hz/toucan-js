@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 const { SiteUrlCount } = require('../../libs/toucan-utility');
 
-describe('site url count 测试', () => {
+describe('[测试入口] - site url count', () => {
     it('基础', () => {
         const cnt = SiteUrlCount();
         cnt.innerUrl = 1;

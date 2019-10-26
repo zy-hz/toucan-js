@@ -5,7 +5,7 @@ const mqvCreate = require('../../libs/toucan-mq-visitor');
 const ToucanMQVisitor = require('../../libs/toucan-mq-visitor/_toucan-mq-visitor');
 const RabbitMQVisitor = require('../../libs/toucan-mq-visitor/_rabbit-mq-visitor');
 
-describe('ToucanMQVisitor 测试', () => {
+describe('[测试入口] - ToucanMQVisitor', () => {
 
     it('默认构造', () => {
         const mqVisitor = mqvCreate();

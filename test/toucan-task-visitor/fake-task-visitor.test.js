@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 const tvFactory = require('../../libs/toucan-task-visitor');
 
-describe('FakeFileTaskVisitor 测试', () => {
+describe('[测试入口] - FakeFileTaskVisitor', () => {
 
     describe('create', () => {
 

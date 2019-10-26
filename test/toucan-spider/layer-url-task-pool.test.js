@@ -2,7 +2,7 @@
 const expect = require('chai').expect;
 const UrlPool = require('../../libs/toucan-spider/_layer-url-task-pool');
 
-describe('layer url task pool 测试', () => {
+describe('[测试入口] - layer url task pool', () => {
 
     describe('isExist 测试', () => {
         it('不全格式比较', () => {
