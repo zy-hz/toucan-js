@@ -38,7 +38,9 @@ class PuppeteerPageFetch extends ToucanPageFetch {
                         '–no-sandbox',
                         '–no-zygote',
                         '–single-process'
-                    ]
+                    ],
+                    // 有navigator.webdriver属性，防止被被前端js检测出来
+                    ignoreDefaultArgs: ["--enable-automation"]
                 });
 
             // 创建浏览器的新页面
