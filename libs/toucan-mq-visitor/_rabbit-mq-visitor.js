@@ -13,7 +13,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         // 支持 amqp 和 amqps
         protocol = 'amqp',
         // 默认为本地服务器
-        host = '127.0.0.1',
+        hostname = '127.0.0.1',
         // protocol === 'amqp' ? 5672 : 5671
         port = 5672,
         // 虚拟机
@@ -27,7 +27,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
     }) {
         super(arguments[0]);
 
-        this.url = { protocol, host, port, vhost, username, password };
+        this.url = { protocol, hostname, port, vhost, username, password };
         this.socketOptions = { clientProperties: { connection_name } };
     }
 

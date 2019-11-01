@@ -6,7 +6,7 @@ describe('[测试入口] - TaskVisitorFactory', () => {
 
     it('create fakeTV', () => {
 
-        const taskVsitor = tvFactory.create('');
+        const taskVsitor = tvFactory.create({dbType:'fake'});
         expect(taskVsitor).is.not.null;
     });
 })

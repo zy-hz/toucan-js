@@ -92,7 +92,7 @@ describe('[测试入口] - RabbitMQVisitor', () => {
 
             await sleep(500);
             const mqExpect = new RabbitMQExpect();
-            const qCount = await mqExpect.getQueueCount(mqv.conn,queue);
+            const qCount = await mqExpect.getQueueCount(mqv.conn, queue);
             expect(qCount).to.be.equal(0);
         });
 
@@ -117,7 +117,7 @@ describe('[测试入口] - RabbitMQVisitor', () => {
 
             await sleep(500);
             const mqExpect = new RabbitMQExpect();
-            const qCount = await mqExpect.getQueueCount(mqv.conn,queue);
+            const qCount = await mqExpect.getQueueCount(mqv.conn, queue);
             expect(qCount).to.be.equal(1);
         });
 
@@ -179,7 +179,41 @@ describe('[测试入口] - RabbitMQVisitor', () => {
 
     });
 
+
 });
+
+describe('[demo] 外部服务器临时测试', () => {
+    const mqv = mqvCreate('rabbit', { hostname: '211.149.224.49', vhost: 'gs-bj', username: 'gs01', password: '123456' });
+    const queue = 'test-send2q';
+
+    before(async () => {
+        await mqv.connect();
+        await mqv.deleteQueue(queue);
+    });
+
+    after(async () => {
+        await mqv.disconnect();
+    })
+
+    it('', async () => {
+        const msg = '我是测试 ' + uuid();
+        let result = await mqv.send(msg, { queue });
+
+        expect(result).to.be.true;
+        await sleep(500);
+
+        let count = 0;
+        await mqv.receive(async (x) => {
+            const resultMsg = x.content.toString()
+            expect(resultMsg, '接收消息内对比').to.be.eq(msg);
+            count = 1;
+
+            await sleep(100);
+            return true;
+        }, { queue })
+        expect(count).to.be.eq(1);
+    });
+})
 
 
 

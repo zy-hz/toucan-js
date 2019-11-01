@@ -8,7 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/demo/gather-station/start.js"
+            "program": "${workspaceFolder}/start.js",
+            "args":[
+                "gtc"
+            ]
         },
         {
             "type": "node",

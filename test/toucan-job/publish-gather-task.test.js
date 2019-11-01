@@ -8,7 +8,7 @@ describe('[测试入口] - PublishGatherTaskJob', () => {
 
     describe('do', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
-        const taskV = tvFactory.create();
+        const taskV = tvFactory.create({ dbType: 'fake' });
         const job = new PublishGatherTaskJob({ taskMQ, taskV, exchange: 'test.toucan.gather.task' });
 
         after(async () => {

@@ -3,12 +3,12 @@
 //
 // 每个子目录为一种服务
 //
-const ToucanService = require('./_toucan-service');
-const GatherTaskCenter = require('./gather-task-center/_gather-task-center');
+const ToucanService = require('../toucan-service');
 const GatherStationService = require('./gather-station-center/service');
+const GatherTaskService = require('./gather-task-center/service');
 
 module.exports = {
     ToucanService,
-    GatherTaskCenter,
+    GatherTaskCenter: new GatherTaskService(),
     GatherStationCenter: new GatherStationService()
 };

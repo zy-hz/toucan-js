@@ -1,15 +1,15 @@
-// 
-// 采集站点管理服务
+//
+// 采集任务服务
 //
 
 const { ToucanService } = require('../../toucan-service');
 
-class GatherStationService extends ToucanService {
+class GatherTaskService extends ToucanService {
 
     constructor(options = {}) {
         super(Object.assign(
             {
-                serviceName: 'GatherStationService',
+                serviceName: 'GatherTaskService',
             },
             options)
         );
@@ -20,4 +20,4 @@ class GatherStationService extends ToucanService {
 
 }
 
-module.exports = GatherStationService
+module.exports = GatherTaskService

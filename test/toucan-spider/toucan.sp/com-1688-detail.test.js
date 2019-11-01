@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-const Ali1688DetailSpider = require('../../../libs/toucan-spider/toucan.sp/_ali-1688-detail');
-const lib = require('rewire')('../../../libs/toucan-spider/toucan.sp/_ali-1688-detail');
+const Ali1688DetailSpider = require('../../../libs/toucan-spider/toucan.sp/_com-1688-detail');
+const lib = require('rewire')('../../../libs/toucan-spider/toucan.sp/_com-1688-detail');
 const verifyContentPage = lib.__get__('verifyContentPage');
 
 const expect = require('chai').expect;

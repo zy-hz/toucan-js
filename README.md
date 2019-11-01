@@ -2,6 +2,24 @@
 
 准备一些常用的轮子，拼装起来完成一些大型的工作
 
+## 安装
+
+1. 在目录<mydir>中解开压缩包
+2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
+3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
+
+## 设置
+
+1. 在<mydri>的上级目录中创建config目录，在config目录中，新建
+   - gather-station-center.config.json，采集站点控制中心的配置文件。
+   - gather-task-center.config.json ,采集任务控制中心的配置文件。
+   - gather-result-center.config.json, 采集结果控制中心的配置文件。
+2. 在<mydir>目录运行 node init gsc|gtc|grc , 分别初始化采集站控制中心，采集任务控制中心和采集任务控制中心
+
+## 启动
+
+在目录<mydir>目录运行 node start gsc|gtc|grc , 可以分别启动采集站控制中心，采集任务控制中心和采集任务控制中心
+
 ## 目录结构说明
 
 | 目录名称 | 目录说明                     |
@@ -15,7 +33,7 @@
 
 - 102 - 新增elm相关功能，饿了么店铺列表蜘蛛 （关闭：不能使用api访问）
 - 103 - 新增浏览器模式获得饿了么店铺信息
-- 104 - 新增采集站管理中心（开发中...）
+- 104 - 新增采集站管理中心
 
 ## 测试方案
 
@@ -41,9 +59,3 @@
 
    该方案时快速测试+长时间测试的方案总和。测试过程中会发现错误后，记录错误后跳过，最后给出一个综合报告
 
-##DEMO
-
-1. 在目录<mydir>中解开压缩包
-2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
-3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
-4. 在<mydir>的命令窗口中运行demo.bat
