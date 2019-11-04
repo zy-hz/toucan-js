@@ -4,14 +4,15 @@
 // 
 const _ = require('lodash');
 const moment = require('moment');
-
 const fs = require('fs');
+const path = require('path');
+const {md5} = require('../../libs/toucan-utility');
 
 class FileTaskVisitor {
 
     constructor(options = {}) {
-        const { dbVisitor, urlFormat } = this.getOptions(options);
-        this.__taskPool = buildTaskPool(dbVisitor, urlFormat);
+        const { dbVisitor, urlFormat, enableCache = true } = this.getOptions(options);
+        this.__taskPool = buildTaskPool(dbVisitor, urlFormat, enableCache);
     }
 
     getOptions(args) {
@@ -42,8 +43,8 @@ class FileTaskVisitor {
 }
 
 // 构建任务池
-function buildTaskPool(fileName, urlFormat = '') {
-    const lines = _.split(fs.readFileSync(fileName), '\r\n');
+function buildTaskPool(fileName, urlFormat = '', enableCache = true) {
+    const lines = readTaskLines(fileName, enableCache);
     return _.map(lines, (ln) => {
         const pms = ln.split(/\t| +/im);
         let task = {};
@@ -53,6 +54,25 @@ function buildTaskPool(fileName, urlFormat = '') {
 
         return task;
     });
+}
+
+// 读取任务行
+function readTaskLines(fileName, enableCache) {
+    const lines = _.split(fs.readFileSync(fileName), '\r\n');
+    if (!enableCache) return lines;
+
+    const cacheFileName = getTaskCacheFileName(fileName);
+    // 读取缓存
+    const existLines = fs.existsSync(cacheFileName) ? _.split(fs.readFileSync(cacheFileName), '\r\n') : [];
+    return _.difference(lines, existLines);
+}
+
+// 获得指定任务的缓存文件名
+function getTaskCacheFileName(fileName) {
+    // 唯一标记
+    const flag = md5(fileName);
+    const extName = path.extname(fileName);
+    return path.join(`${process.cwd()}/.cache/`,`${path.basename(fileName,extName)}_${flag}${extName}`);
 }
 
 function getTaskParam(ary, idx, val) {

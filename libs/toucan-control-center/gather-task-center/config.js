@@ -44,6 +44,8 @@ module.exports = {
             dbVisitor: {},
             // 格式化，类似 http://detail.1688.com/offer/${0}.html ${0} 是从文件中读取的第一个参数
             urlFormat:'',
+            // 读取数据源的缓存，保证数据源的数据只读取一次，如果设置false，每次从头读取的数据源
+            enableCache:true,
         }
     ],
     // 批量发布的数量

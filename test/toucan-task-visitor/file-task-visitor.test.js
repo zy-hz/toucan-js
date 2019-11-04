@@ -2,11 +2,15 @@
 const expect = require('chai').expect;
 const tvFactory = require('../../libs/toucan-task-visitor');
 const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
 const { sleep } = require('../../libs/toucan-utility');
 const lib = require('rewire')('../../libs/toucan-task-visitor/_file-task-visitor.js');
 const applyFormat = lib.__get__('applyFormat');
+const readTaskLines = lib.__get__('readTaskLines');
+const getTaskCacheFileName = lib.__get__('getTaskCacheFileName');
 
-describe(' [测试入口] - FileTaskVisitor', () => {
+describe('[测试入口] - FileTaskVisitor', () => {
     const fileName = __dirname + '/./file-task-visitor.data.txt';
 
     it('create', () => {
@@ -54,6 +58,26 @@ describe(' [测试入口] - FileTaskVisitor', () => {
             const tv = tvFactory.create({ dbType: 'file', dbVisitor: fileName, urlFormat: 'http://${0}' });
             const task = await tv.readTaskSync();
             expect(task[0].taskBody.targetUrl).to.be.eq('http://mednova.com.cn');
+        })
+
+    })
+
+    describe('temp cache 测试',()=>{
+        const cacheFileName = getTaskCacheFileName(fileName);
+
+        before('创建测试缓存',()=>{
+            if(fs.existsSync(cacheFileName)) fs.unlinkSync(cacheFileName);
+            fs.appendFileSync(cacheFileName,'mednova.com.cn  http    -1' + '\r\n');
+        })
+
+        it('readTaskLines',()=>{
+            const line1 = readTaskLines(fileName,false);
+            expect(line1).have.lengthOf(5);
+            expect(line1[0]).to.be.eq('mednova.com.cn  http    -1')
+
+            const line2 = readTaskLines(fileName,true);
+            expect(line2).have.lengthOf(4);
+            expect(line2[0]).to.be.eq('aek56.com  http    -1')
         })
 
     })
