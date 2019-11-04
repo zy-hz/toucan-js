@@ -43,8 +43,32 @@ class ToucanTaskMQ extends ToucanBaseMQ {
 
     // 订阅结果
     async subscribeResult(queue, options = {}) {
+        // 获得消费队列的选项
+        const { consumeOptions = {} } = options;
 
+        // 尝试从每个队列中获得任务，如果发现任务，下次就从下一个开始
+        const msg = await this.mqVisitor.read({ queue, consumeOptions })
+
+        return extractMessage(msg);
     }
+}
+
+// 提取信息
+function extractMessage(msg) {
+    if (_.isBoolean(msg)) return msg;
+    if (_.isNil(msg)) throw new NullArgumentError('msg');
+    if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
+
+    const content = _.isBuffer(msg.content) ? msg.content.toString() : msg.content;
+    if (_.isString(content)) {
+        try {
+            return JSON.parse(content);
+        }
+        catch (error) {
+            return content;
+        }
+    }
+    return content
 }
 
 module.exports = ToucanTaskMQ;

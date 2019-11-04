@@ -17,5 +17,24 @@ describe('[测试入口] - ToucanTaskMQ', () => {
         await taskMQ.disconnect();
     });
 
+    it('subscribeResult', async () => {
+        const taskMQ = mqFactory.createTaskMQ('rabbit');
+        const queue = 'test.subscribeResult';
+        const content = '我是测试##单单iii ';
+        const task1 = {
+            taskBody: content,
+            taskOptions: {
+                queue
+            }
+        };
+
+        await taskMQ.mqVisitor.deleteQueue(queue);
+        await taskMQ.publishTask(task1);
+
+        const msg = await taskMQ.subscribeResult(queue);
+        expect(msg).to.be.eq(content);
+
+        await taskMQ.disconnect()
+    })
 
 });

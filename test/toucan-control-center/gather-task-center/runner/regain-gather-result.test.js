@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const runner = require('../../../../libs/toucan-control-center/gather-task-center/runners/regain-gather-result');
 
-describe('temp[测试入口] - regain gather result runner', () => {
+describe('[测试入口] - regain gather result runner', () => {
 
     after('', async () => {
         //await runner.stop();
