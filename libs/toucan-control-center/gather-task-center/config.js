@@ -37,7 +37,9 @@ module.exports = {
         resultQueue: [
             {
                 queue: 'toucan.gather.result.all',
-                outDir:'../output/result.all',
+                outDir: '../output/result.all',
+                // 测试时可以设置 noAck = false
+                options: { noAck: true }
             }
         ]
     },
@@ -57,6 +59,8 @@ module.exports = {
     ],
     // 批量发布的数量
     batchPublishCount: 1,
+    // 批量接收的数量
+    batchRegainCount:1,
     // 工作计划 - Cron风格定时器
     // 6个占位符从左到右分别代表：秒、分、时、日、月、周几
     jobSchedule: {

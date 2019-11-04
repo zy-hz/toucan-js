@@ -20,7 +20,7 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
 
     async init(options = {}) {
         // 获得参数
-        const { taskMQ, jobSchedule = { regainGatherResult: '0 * * * * *' } } = options;
+        const { taskMQ, jobSchedule = { regainGatherResult: '0 * * * * *' }, batchRegainCount = 25 } = options;
 
         // 创建消息队列
         this.taskMQ = mqFactory.createTaskMQ(taskMQ.mqType, taskMQ.options);
@@ -29,6 +29,7 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
 
         // 工作计划
         this.jobSchedule = jobSchedule.regainGatherResult;
+        this.batchRegainCount = batchRegainCount;
     }
 
     // 启动
@@ -49,7 +50,7 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
             this.schedule = schedule.scheduleJob(this.jobSchedule, async () => {
                 this.schedule.cancel();
                 try {
-                    await job.do();
+                    await job.do({ batchRegainCount: this.batchRegainCount });
                 }
                 catch (error) {
                     this.error('RegainGatherResultRunner工作异常', error);

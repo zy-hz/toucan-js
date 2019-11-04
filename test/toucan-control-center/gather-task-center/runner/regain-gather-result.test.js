@@ -32,11 +32,13 @@ describe('[测试入口] - regain gather result runner', () => {
                 {
                     queue: 'toucan.gather.result.all',
                     outDir: '../output/result.all',
+                    // 设置为false ,保证不从服务器删除数据
+                    options: { noAck: false }
                 }
             ]
         }
         const jobSchedule = { regainGatherResult: '*/2 * * * * *' }
-        await runner.start({ taskMQ, jobSchedule });
+        await runner.start({ taskMQ, jobSchedule, batchRegainCount: 2 });
     })
 
 
