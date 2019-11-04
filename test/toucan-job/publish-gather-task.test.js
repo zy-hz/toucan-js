@@ -4,6 +4,7 @@ const { PublishGatherTaskJob } = require('../../libs/toucan-job');
 const mqFactory = require('../../libs/toucan-message-queue');
 const tvFactory = require('../../libs/toucan-task-visitor');
 
+
 describe('[测试入口] - PublishGatherTaskJob', () => {
 
     describe('do', async () => {
@@ -31,6 +32,7 @@ describe('[测试入口] - PublishGatherTaskJob', () => {
             resultExpect(result, false, 0);
         });
     });
+
 });
 
 // 结果检查

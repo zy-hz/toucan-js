@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const runner = require('../../../../libs/toucan-control-center/gather-task-center/runners/regain-gather-result');
 
+
 describe('[测试入口] - regain gather result runner', () => {
 
     after('', async () => {
@@ -16,22 +17,27 @@ describe('[测试入口] - regain gather result runner', () => {
             // 任务队列的其他选项
             options: {
                 // 默认为本地服务器
-                hostname: '127.0.0.1',
+                hostname: '211.149.224.49',
                 // 默认服务端口
                 port: 5672,
                 // 虚拟机
-                vhost: '/',
+                vhost: 'gs-bj',
                 // 连接主机的用户名
-                username: 'guest',
+                username: 'gs01',
                 // 连接主机的密码
-                password: 'guest',
+                password: '123456',
             },
             // 结果队列
             resultQueue: [
-                'toucan.gather.result.all'
+                {
+                    queue: 'toucan.gather.result.all',
+                    outDir: '../output/result.all',
+                }
             ]
         }
-        const jobSchedule = { regainGatherResult: '*/7 * * * * *' }
+        const jobSchedule = { regainGatherResult: '*/2 * * * * *' }
         await runner.start({ taskMQ, jobSchedule });
     })
+
+
 })

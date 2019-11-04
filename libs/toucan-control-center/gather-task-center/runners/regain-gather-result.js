@@ -47,7 +47,16 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
 
             // 启动定时作业 - 每分钟的第0秒启动
             this.schedule = schedule.scheduleJob(this.jobSchedule, async () => {
-                await job.do();
+                this.schedule.cancel();
+                try {
+                    await job.do();
+                }
+                catch (error) {
+                    this.error('RegainGatherResultRunner工作异常', error);
+                }
+
+                // 重新启动定时计划
+                this.schedule.reschedule(this.jobSchedule);
             })
 
             // 设置状态

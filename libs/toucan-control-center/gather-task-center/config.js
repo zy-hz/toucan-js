@@ -34,8 +34,11 @@ module.exports = {
             password: 'guest',
         },
         // 结果队列
-        resultQueue:[
-
+        resultQueue: [
+            {
+                queue: 'toucan.gather.result.all',
+                outDir:'../output/result.all',
+            }
         ]
     },
     // 任务来源
@@ -47,20 +50,20 @@ module.exports = {
             // 数据访问器，可以是对象，或者字符串
             dbVisitor: {},
             // 格式化，类似 http://detail.1688.com/offer/${0}.html ${0} 是从文件中读取的第一个参数
-            urlFormat:'',
+            urlFormat: '',
             // 读取数据源的缓存，保证数据源的数据只读取一次，如果设置false，每次从头读取的数据源
-            enableCache:true,
+            enableCache: true,
         }
     ],
     // 批量发布的数量
-    batchPublishCount:1,
+    batchPublishCount: 1,
     // 工作计划 - Cron风格定时器
     // 6个占位符从左到右分别代表：秒、分、时、日、月、周几
-    jobSchedule:{
+    jobSchedule: {
         // 8点到21点，每10分，每5秒，
-        publishGatherTask:'*/5 */10 8-21 * * *',
+        publishGatherTask: '*/5 */10 8-21 * * *',
         // 每分钟的0秒
-        regainGatherResult:'0 * * * * *',
+        regainGatherResult: '0 * * * * *',
     }
 
 }
