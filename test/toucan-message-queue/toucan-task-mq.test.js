@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
-
+const _ = require('lodash');
 
 describe('[测试入口] - ToucanTaskMQ', () => {
 
@@ -32,7 +32,7 @@ describe('[测试入口] - ToucanTaskMQ', () => {
         await taskMQ.publishTask(task1);
 
         const msg = await taskMQ.subscribeResult(queue);
-        expect(msg).to.be.eq(content);
+        expect(msg).to.be.eqls(_.castArray(content));
 
         await taskMQ.disconnect()
     })

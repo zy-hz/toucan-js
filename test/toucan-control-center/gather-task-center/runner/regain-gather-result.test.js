@@ -5,7 +5,7 @@ const runner = require('../../../../libs/toucan-control-center/gather-task-cente
 describe('[测试入口] - regain gather result runner', () => {
 
     after('', async () => {
-        //await runner.stop();
+        await runner.stop();
     })
 
     it('start', async () => {
@@ -17,15 +17,15 @@ describe('[测试入口] - regain gather result runner', () => {
             // 任务队列的其他选项
             options: {
                 // 默认为本地服务器
-                hostname: '211.149.224.49',
+                hostname: '127.0.0.1',
                 // 默认服务端口
                 port: 5672,
                 // 虚拟机
-                vhost: 'gs-bj',
+                vhost: '/',
                 // 连接主机的用户名
-                username: 'gs01',
+                username: 'guest',
                 // 连接主机的密码
-                password: '123456',
+                password: 'guest',
             },
             // 结果队列
             resultQueue: [

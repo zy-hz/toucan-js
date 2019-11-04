@@ -63,6 +63,7 @@ module.exports = {
     batchRegainCount:1,
     // 工作计划 - Cron风格定时器
     // 6个占位符从左到右分别代表：秒、分、时、日、月、周几
+    // 参考：https://m.1688.com/offer/1164069979.html?sence=offerdetail_A_banner&spm-cnt=a26g8.7664810.download/vempty
     jobSchedule: {
         // 8点到21点，每10分，每5秒，
         publishGatherTask: '*/5 */10 8-21 * * *',

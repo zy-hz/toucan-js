@@ -17,7 +17,7 @@ describe(' [测试入口] - regain gather result', () => {
         expect(fs.existsSync(fileName)).is.true;
     })
 
-    it('temp 1688 save result', () => {
+    it('1688 save result', () => {
         const sampleFileName = path.join(`${__dirname}`, 'sample', 'gather-result-page-1688-detail.json');
         const msg = JSON.parse(fs.readFileSync(sampleFileName,'utf8'));
         const fileName = saveResult(msg, dir);
