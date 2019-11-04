@@ -40,6 +40,11 @@ class ToucanTaskMQ extends ToucanBaseMQ {
         }
 
     }
+
+    // 订阅结果
+    async subscribeResult(queue, options = {}) {
+
+    }
 }
 
 module.exports = ToucanTaskMQ;

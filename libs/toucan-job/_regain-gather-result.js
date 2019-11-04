@@ -21,6 +21,14 @@ class RegainGatherResultJob extends TaskJob {
     // 执行作业（回收采集结果）
     async do() {
 
+        // 从消息队列订阅结果，这个阶段出现的异常，需要抛出
+        const msg = await this.taskMQ.subscribeResult({ consumeOptions: { noAck: false } });
+        if (msg === false) {
+            // 消息队列没有任务
+            return { jobCount: 0 };
+        }
+
+        console.log(msg);
     }
 
 }
