@@ -10,7 +10,7 @@ const applyFormat = lib.__get__('applyFormat');
 const readTaskLines = lib.__get__('readTaskLines');
 const getTaskCacheFileName = lib.__get__('getTaskCacheFileName');
 
-describe('temp [测试入口] - FileTaskVisitor', () => {
+describe('[测试入口] - FileTaskVisitor', () => {
     const fileName = __dirname + '/./file-task-visitor.data.txt';
 
     it('create', () => {

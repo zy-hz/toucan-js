@@ -7,6 +7,7 @@ const mqvCreate = require('../toucan-mq-visitor');
 
 const ToucanGatherMQ = require('./_toucan-gather-mq');
 const ToucanTaskMQ = require('./_toucan-task-mq');
+const ToucanResultMQ = require('./_toucan-result-mq');
 
 class ToucanMessageQueueFactory {
 
@@ -23,6 +24,14 @@ class ToucanMessageQueueFactory {
         const mqv = mqvCreate(mqType, option);
         return new ToucanTaskMQ(mqv, option);
     }
+
+    // 创建采集结果消息队列
+    createResultMQ(mqType = 'toucan', option = {}) {
+
+        const mqv = mqvCreate(mqType, option);
+        return new ToucanResultMQ(mqv, option);
+    }
+
 }
 
 module.exports = new ToucanMessageQueueFactory();
