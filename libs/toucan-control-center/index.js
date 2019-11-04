@@ -6,9 +6,11 @@
 const ToucanService = require('../toucan-service');
 const GatherStationService = require('./gather-station-center/service');
 const GatherTaskService = require('./gather-task-center/service');
+const GatherResultService = require('./gather-result-center/service');
 
 module.exports = {
     ToucanService,
     GatherTaskCenter: new GatherTaskService(),
-    GatherStationCenter: new GatherStationService()
+    GatherStationCenter: new GatherStationService(),
+    GatherResultCenter: new GatherResultService()
 };

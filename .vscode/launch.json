@@ -10,7 +10,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/start.js",
             "args":[
-                "g-not run",
+                "grc",
                 "--conf",
                 "1688-detail"
             ]
