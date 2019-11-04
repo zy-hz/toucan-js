@@ -10,7 +10,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/start.js",
             "args":[
-                "grc",
+                "gtc1",
                 "--conf",
                 "1688-detail"
             ]

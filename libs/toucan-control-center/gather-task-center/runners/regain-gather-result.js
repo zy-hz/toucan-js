@@ -20,12 +20,15 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
 
     async init(options = {}) {
         // 获得参数
-        const { taskMQ } = options;
+        const { taskMQ, jobSchedule = { regainGatherResult: '0 * * * * *' } } = options;
 
         // 创建消息队列
         this.taskMQ = mqFactory.createTaskMQ(taskMQ.mqType, taskMQ.options);
         // 指定接受队列
         this.resultQueue = taskMQ.resultQueue;
+
+        // 工作计划
+        this.jobSchedule = jobSchedule.regainGatherResult;
     }
 
     // 启动
@@ -42,8 +45,8 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
             // 构建定时作业
             const job = new RegainGatherResultJob({ taskMQ: this.taskMQ, resultQueue: this.resultQueue })
 
-            // 启动定时作业
-            this.schedule = schedule.scheduleJob('* 1 * * * *', async () => {
+            // 启动定时作业 - 每分钟的第0秒启动
+            this.schedule = schedule.scheduleJob(this.jobSchedule, async () => {
                 await job.do();
             })
 

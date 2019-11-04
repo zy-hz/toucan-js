@@ -6,15 +6,23 @@ const { TaskJob } = require('./_base-task-job');
 const { NullArgumentError } = require('../toucan-error');
 const _ = require('lodash');
 
-class RegainGatherResultJob extends TaskJob{
+class RegainGatherResultJob extends TaskJob {
     constructor({
-        gatherMQ
+        // 任务消息队列
+        taskMQ,
+        // 结果队列
+        resultQueue,
     }) {
         super();
-        this.gatherMQ = gatherMQ;
+        this.taskMQ = taskMQ;
+        this.resultQueue = resultQueue;
     }
 
-    
+    // 执行作业（回收采集结果）
+    async do() {
+
+    }
+
 }
 
 module.exports = { RegainGatherResultJob };

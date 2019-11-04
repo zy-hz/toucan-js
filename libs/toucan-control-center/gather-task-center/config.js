@@ -53,6 +53,14 @@ module.exports = {
         }
     ],
     // 批量发布的数量
-    batchPublishCount:1
+    batchPublishCount:1,
+    // 工作计划 - Cron风格定时器
+    // 6个占位符从左到右分别代表：秒、分、时、日、月、周几
+    jobSchedule:{
+        // 8点到21点，每10分，每5秒，
+        publishGatherTask:'*/5 */10 8-21 * * *',
+        // 每分钟的0秒
+        regainGatherResult:'0 * * * * *',
+    }
 
 }

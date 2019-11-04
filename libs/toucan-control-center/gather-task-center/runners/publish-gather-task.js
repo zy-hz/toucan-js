@@ -21,7 +21,7 @@ class PublishGatherTaskRunner extends ToucanWorkUnit {
 
     async init(options = {}) {
         // 获得参数
-        const { taskMQ, taskSource } = options;
+        const { taskMQ, taskSource, jobSchedule = { publishGatherTask: '*/5 * * * * *' } } = options;
 
         // 创建消息队列
         this.taskMQ = mqFactory.createTaskMQ(taskMQ.mqType, taskMQ.options);
@@ -31,6 +31,9 @@ class PublishGatherTaskRunner extends ToucanWorkUnit {
         // 创建任务读取接口
         // 目前支持一个任务读取器，后面可以支持多个
         this.taskV = tvFactory.create(taskSource[0]);
+
+        // 工作计划
+        this.jobSchedule = jobSchedule.publishGatherTask;
     }
 
     // 启动
@@ -49,7 +52,7 @@ class PublishGatherTaskRunner extends ToucanWorkUnit {
             const pgtJob = new PublishGatherTaskJob({ taskMQ: this.taskMQ, taskV: this.taskV, exchange: this.exchange })
 
             // 启动定时作业
-            this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
+            this.schedule = schedule.scheduleJob(this.jobSchedule, async () => {
                 await pgtJob.do({ maxCount: batchPublishCount });
             })
 
