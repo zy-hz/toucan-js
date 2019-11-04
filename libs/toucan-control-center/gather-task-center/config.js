@@ -32,7 +32,11 @@ module.exports = {
             username: 'guest',
             // 连接主机的密码
             password: 'guest',
-        }
+        },
+        // 结果队列
+        resultQueue:[
+
+        ]
     },
     // 任务来源
     taskSource: [

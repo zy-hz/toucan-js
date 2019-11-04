@@ -20,12 +20,12 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
 
     async init(options = {}) {
         // 获得参数
-        const { resultMQ } = options;
+        const { taskMQ } = options;
 
         // 创建消息队列
-        this.resultMQ = mqFactory.createResultMQ(resultMQ.mqType, resultMQ.options);
+        this.taskMQ = mqFactory.createTaskMQ(taskMQ.mqType, taskMQ.options);
         // 指定接受队列
-        this.fromQueue = resultMQ.fromQueue;
+        this.resultQueue = taskMQ.resultQueue;
     }
 
     // 启动
@@ -37,13 +37,13 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
             await this.init(options);
 
             // 启动消息队列的连接
-            await this.resultMQ.connect();
+            await this.taskMQ.connect();
 
             // 构建定时作业
-            const job = new RegainGatherResultJob({ resultMQ: this.resultMQ, fromQueue: this.fromQueue })
+            const job = new RegainGatherResultJob({ taskMQ: this.taskMQ, resultQueue: this.resultQueue })
 
             // 启动定时作业
-            this.schedule = schedule.scheduleJob('*/5 * * * * *', async () => {
+            this.schedule = schedule.scheduleJob('* 1 * * * *', async () => {
                 await job.do();
             })
 
@@ -63,7 +63,7 @@ class RegainGatherResultRunner extends ToucanWorkUnit {
         // 关闭定时器
         if (!_.isNil(this.schedule)) this.schedule.cancel();
         // 关闭消息队列
-        await this.resultMQ.disconnect();
+        await this.taskMQ.disconnect();
         // 更新工作状态
         this.workInfo.unitStatus.updateStatus(StatusCode.closed);
     }
