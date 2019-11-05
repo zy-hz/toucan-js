@@ -11,8 +11,10 @@
             "program": "${workspaceFolder}/start.js",
             "args":[
                 "gs",
-                "--conf",
-                "1688-detail"
+                "--remote",
+                "127.0.0.1:57701",
+                "--port",
+                "57721"
             ]
         },
         {
