@@ -13,24 +13,17 @@
 // 启动采集站点
 // node start gs --conf <配置文件，例如：1688-detail>
 
+
 const args = require('minimist')(process.argv.slice(2));
 const _ = require('lodash');
-const path = require('path');
-const fs = require('fs');
+
 
 if (_.includes(args._, 'gs')) {
     // 作为采集站点启动
-    const ToucanGatherStation = require('./libs/toucan-gather-station');
-    const configFileName = path.join(process.cwd(), '../config', `${args.conf}.json`);
-    if (!fs.existsSync(configFileName)) {
-        console.error(`配置文件不存在，采集站点使用默认配置启动。${configFileName}`);
-    }
-    const gs = new ToucanGatherStation(configFileName);
-
-    // 初始化后，采集站自动启动
-    gs.init();
+    const startup = require('./libs/toucan-gather-station/startup');
+    startup(args);
 } else {
-    // 作为服务启动
+    // 作为服务应用启动
     const app = require('./libs/toucan-app');
     app.start(args);
 }

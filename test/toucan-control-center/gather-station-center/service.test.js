@@ -3,7 +3,7 @@ const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 const expect = require('chai').expect;
 const { getResponse } = require('../../toucan-service');
 
-describe('[测试入口] - gather station service', () => {
+describe('temp [测试入口] - gather station service', () => {
     const startOptions = {
         // 监听端口
         //port: 1123,
@@ -33,14 +33,14 @@ describe('[测试入口] - gather station service', () => {
         })
 
         it('regist-station 测试', async () => {
-            const query = { hostName: 'zyHost', stationId: 'gst01' };
+            const query = { hostName: 'zyHost' };
             // 检测在指定的端口，是否能获得内容
             const { body, statusCode } = await getResponse('/regist-station', query);
             expect(statusCode).to.be.eq(200);
 
             const { success, result } = body;
             expect(success).is.true;
-            expect(result).to.be.eql(query);
+            expect(result.hostName).to.be.eql(query.hostName);
         })
     })
 })

@@ -121,6 +121,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
         catch (error) {
             // 设置状态
             this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
+            this.processError('工作循环发生异常，工作中止。',error);
         }
 
     }
@@ -143,6 +144,10 @@ class ToucanGatherCell extends ToucanWorkUnit {
     // 记录采集单元的日志
     processLog(msg) {
         this.log(`${buildGatherCellId(this.unitInfo)} ${msg}`);
+    }
+
+    processError(msg,error){
+        this.error(`${buildGatherCellId(this.unitInfo)} ${msg}`,error);
     }
 }
 

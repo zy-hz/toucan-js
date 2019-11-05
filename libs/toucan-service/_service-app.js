@@ -168,8 +168,9 @@ class ServiceApp extends ToucanWorkUnit {
         // 枚举每个方法
         _.forEach(controllers, (val, key) => {
 
-            // 转为router
-            router.get(`/${key}`, val)
+            // 转为router - 支持 get 和 post
+            router.get(`/${key}`, val);
+            router.post(`/${key}`, val);
         })
 
         return router;

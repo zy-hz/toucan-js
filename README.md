@@ -13,12 +13,11 @@
 1. 在<mydri>的上级目录中创建config目录，在config目录中，新建
    - gather-station-center.config.json，采集站点控制中心的配置文件。
    - gather-task-center.config.json ,采集任务控制中心的配置文件。
-   - gather-result-center.config.json, 采集结果控制中心的配置文件。
-2. 在<mydir>目录运行 node init gsc|gtc|grc , 分别初始化采集站控制中心，采集任务控制中心和采集任务控制中心
+2. 在<mydir>目录运行 node init gsc|gtc , 分别初始化采集站点控制中心，采集任务控制中心
 
 ## 启动
 
-在目录<mydir>目录运行 node start gsc|gtc|grc , 可以分别启动采集站控制中心，采集任务控制中心和采集任务控制中心
+在目录<mydir>目录运行 node start gsc|gtc , 可以分别启动采集站控制中心，采集任务控制中心
 
 ## 目录结构说明
 
