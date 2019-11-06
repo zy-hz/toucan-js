@@ -11,7 +11,6 @@ const ToucanGatherStation = require('../../index');
 
 class MaintainStationRunner extends ToucanRunner {
 
-
     async scheduleWork(options = {}) {
 
         // 如果没有启动，有日志提示
