@@ -26,6 +26,6 @@ describe('temp [测试入口] registMe', () => {
     })
 
     it('', async () => {
-        await tcSDK.registMe();
+        await tcSDK.registMe('127.0.0.1:1123', {});
     })
 })
