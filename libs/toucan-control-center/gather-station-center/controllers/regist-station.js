@@ -13,4 +13,5 @@ module.exports = async (ctx, next) => {
 
 
     // 返回结果 - ctx.result
+    ctx.result = {srv:'我是中文'};
 }

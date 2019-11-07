@@ -5,4 +5,6 @@ const request = require('superagent');
 
 module.exports = async (url, options = {}, method = 'get') => {
 
+    const response = await request.get(url).query(options);
+    return response.body;
 }
