@@ -19,6 +19,6 @@ module.exports = async (serverUrl, options = {}) => {
     }
 
     // 从服务器获得响应
-    return await getResponse(url, Object.assign(options, meInfo));
+    return await getResponse(url, Object.assign(options, meInfo),'POST');
 }
 
