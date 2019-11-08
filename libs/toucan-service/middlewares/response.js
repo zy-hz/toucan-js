@@ -11,7 +11,7 @@ module.exports = async function (ctx, next) {
         // 处理响应结果
         if (!_.isNil(ctx.result)) {
             ctx.body = Object.assign(ctx.body || {}, {
-                success: true,
+                code: 0,
                 result: ctx.result,
             })
         }

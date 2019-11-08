@@ -7,12 +7,15 @@ const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
 
 // 作为一个新机器注册
-async function registAsNew(machineInfo) {
+async function registAsNew({ machineInfo, machineMD5, listenPort, listenIp }) {
 
+    // 检查这台主机是否注册过
+    // 如果注册过,抛出异常
+    throw new Error('主机已经注册');
 }
 
 // 更新注册信息
-async function updateRegistInfo(machineInfo, machineKey) {
+async function updateRegistInfo({ machineInfo, machineMD5, listenPort, listenIp }, machineKey) {
 
 }
 
