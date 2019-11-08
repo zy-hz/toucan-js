@@ -33,6 +33,13 @@ describe('[测试入口] - toucan service app', () => {
         expect(app.serviceName).to.be.eq(serviceName);
     })
 
+    it('config 测试', async () => {
+        const { body } = await getResponse('/config-test', {}, startOptions.port);
+        const { code, result } = body;
+        expect(code).to.be.eq(0);
+        expect(result, '和启动参数一致').to.be.eql(startOptions)
+    })
+
     it('info 接口测试', async () => {
         const { body } = await getResponse('/info', {}, startOptions.port);
 

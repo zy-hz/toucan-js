@@ -14,6 +14,9 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 
+// 服务的配置
+const serviceConfig = require('./config');
+
 class ServiceApp extends ToucanWorkUnit {
 
     constructor(options = {}) {
@@ -50,6 +53,9 @@ class ServiceApp extends ToucanWorkUnit {
         if (!_.isNil(this._server)) return;
 
         try {
+            // 把启动的配置附加到服务的配置上（提供全局使用）
+            _.assignIn(serviceConfig,options);
+
             // 启动自动运行者
             this.startRunner(options);
 

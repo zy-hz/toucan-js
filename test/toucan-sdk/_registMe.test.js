@@ -1,9 +1,10 @@
 /* eslint-disable no-undef */
 const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
+const dbc = require('../../libs/toucan-control-center/db-center')().station;
 const expect = require('chai').expect;
 
-describe('temp [测试入口] registMe', () => {
+describe('[测试入口] registMe', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
@@ -17,8 +18,16 @@ describe('temp [测试入口] registMe', () => {
         }
     }
 
-    before('', () => {
+    // 我注册的信息
+    const meInfo = {
+        stationId: 'test-00', stationHostname: 'DESKTOP-19SS3KS'
+    }
+
+    before('', async () => {
         GatherStationCenter.start(startOptions);
+
+        // 在数据库中添加本机
+        await dbc.insert({ stationId: meInfo.stationId, stationHostname: meInfo.stationHostname });
     })
 
     after('', () => {
@@ -26,13 +35,20 @@ describe('temp [测试入口] registMe', () => {
     })
 
     it('gather station regist', async () => {
-        const { code, result, error } = await tcSDK.registMe('127.0.0.1:1123', { listenPort: 57720 });
+        const { code, result } = await tcSDK.registMe('127.0.0.1:1123', { listenPort: 57720 });
         expect(code).to.be.eq(0);
+
+        expect(result.stationId).to.be.eq(meInfo.stationId);
+        expect(result.stationHostname).to.be.eq(meInfo.stationHostname);
     })
 
     it('gather station update', async () => {
-        const { code, result, error } = await tcSDK.registMe('127.0.0.1:1123', { machineKey: 'abc' });
+        const { code, result } = await tcSDK.registMe('127.0.0.1:1123', { machineKey: 'abc' });
         expect(code).to.be.eq(0);
+
+        const { machineKey } = result;
+        expect(machineKey).is.not.empty;
+        expect(machineKey).not.eq('abc');
     })
 
 })

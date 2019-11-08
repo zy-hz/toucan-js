@@ -21,8 +21,8 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
     // 生成machineKey
     const machineKey = tools.generateKey(machineInfo);
 
-    // 注册站点
-    await dbc.insert(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }));
+    // 更新站点
+    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }),`${HOSTNAME}`, hostname);
 
     // 查询该站点信息
     const stationInfo = await dbc.select(`${HOSTNAME}`, hostname);

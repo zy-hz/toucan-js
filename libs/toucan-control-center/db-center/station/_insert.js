@@ -1,8 +1,8 @@
 //
-// 注册站点
+// 插入站点
 // 
 
-module.exports = async (registInfo) => {
+module.exports = async (station) => {
 
-    console.log('station.regist',registInfo);
+    console.log('station.regist', station);
 }
