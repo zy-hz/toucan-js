@@ -5,7 +5,8 @@
 
 const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
-const dbc = require('../../db-center').station;
+const dbc = require('../../db-center')().station;
+const { HOSTNAME } = dbc.const;
 
 // 作为一个新机器注册
 async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp }) {
@@ -14,13 +15,19 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
 
     // 根据主机名，检查这台主机是否注册过
     // 如果注册过,抛出异常
-    if(await dbc.isRegisted(hostname)) throw new Error(`主机[${hostname}]已经被注册`);
+    if (await dbc.isRegisted(hostname)) throw new Error(`主机[${hostname}]已经被注册`);
 
+    // 注册站点
+    const stationInfo = await dbc.regist(Object.assign(machineInfo, { machineMD5, listenPort, listenIp }));
+    return stationInfo;
 }
 
 // 更新注册信息
-async function updateRegistInfo({ machineInfo, machineMD5, listenPort, listenIp }, machineKey) {
+async function updateRegistInfo({ machineInfo = {}, machineMD5, listenPort, listenIp }, machineKey) {
 
+    const { hostname } = machineInfo;
+
+    const existStation = await dbc.select(`${HOSTNAME}`, hostname);
 }
 
 module.exports = async (ctx, next) => {

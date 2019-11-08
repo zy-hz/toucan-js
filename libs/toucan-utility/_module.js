@@ -81,7 +81,7 @@ function mapDirToModule_v2(d) {
     files.forEach(file => {
         if (_.startsWith(file, '_') && path.extname(file) === '.js') {
             const obj = require(path.join(d, file));
-            if (_.isFunction(obj)) {
+            if (_.isFunction(obj) || _.isObject(obj)) {
                 // 这是一个函数，使用文件名（去掉前导的下划线）
                 tree[_.trimStart(path.basename(file, '.js'), '_')] = obj;
             }

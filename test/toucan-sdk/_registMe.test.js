@@ -27,8 +27,12 @@ describe('temp [测试入口] registMe', () => {
 
     it('gather station regist', async () => {
         const { code, result, error } = await tcSDK.registMe('127.0.0.1:1123', { listenPort: 57720 });
-
         expect(code).to.be.eq(0);
-        console.log(result)
     })
+
+    it('gather station update', async () => {
+        const { code, result, error } = await tcSDK.registMe('127.0.0.1:1123', { machineKey: 'abc' });
+        expect(code).to.be.eq(0);
+    })
+
 })
