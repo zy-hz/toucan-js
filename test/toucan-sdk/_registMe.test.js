@@ -4,7 +4,7 @@ const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const dbc = require('../../libs/toucan-control-center/db-center')().station;
 const expect = require('chai').expect;
 
-describe('[测试入口] registMe', () => {
+describe('temp [测试入口] registMe', () => {
     const startOptions = {
         // 监听端口
         port: 1123,

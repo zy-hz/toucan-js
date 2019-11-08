@@ -1,11 +1,20 @@
 //
 // 数据中心
 //
-const { mapDirToModule_v2 } = require('../../toucan-utility');
+
+const StationTable = require('./_table-station');
+
+// 数据中心的类
+class DbCenter {
+    constructor(options){
+        this.station = new StationTable(options)
+    }
+
+}
 
 // 更加选项创建数据中心
-function createDbCenter() {
-    return mapDirToModule_v2(__dirname);
+function createDbCenter(options) {
+    return new DbCenter(options)
 }
 
 module.exports = createDbCenter;
