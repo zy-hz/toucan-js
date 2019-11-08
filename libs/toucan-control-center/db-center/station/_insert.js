@@ -4,5 +4,5 @@
 
 module.exports = async (registInfo) => {
 
-    console.log(registInfo);
+    console.log('station.regist',registInfo);
 }

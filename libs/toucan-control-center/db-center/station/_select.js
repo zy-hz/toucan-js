@@ -4,5 +4,5 @@
 
 module.exports = async (...args) => {
 
-    console.log(args);
+    console.log('select',args);
 }
