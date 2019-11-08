@@ -5,13 +5,17 @@
 
 const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
+const dbc = require('../../db-center').station;
 
 // 作为一个新机器注册
-async function registAsNew({ machineInfo, machineMD5, listenPort, listenIp }) {
+async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp }) {
 
-    // 检查这台主机是否注册过
+    const { hostname } = machineInfo;
+
+    // 根据主机名，检查这台主机是否注册过
     // 如果注册过,抛出异常
-    throw new Error('主机已经注册');
+    if(await dbc.isRegisted(hostname)) throw new Error(`主机[${hostname}]已经被注册`);
+
 }
 
 // 更新注册信息
