@@ -1,6 +1,7 @@
 //
-// 站点表对象
+// 站点表
 // 
+
 module.exports = class {
 
     constructor() {
@@ -17,13 +18,5 @@ module.exports = class {
 
     select() {
 
-    }
-
-    get const() {
-        return {
-            HOSTNAME: 'stationHostname',
-            STATIONMD5: 'stationMD5',
-            STATIONKEY: 'statioinKey',
-        }
     }
 }

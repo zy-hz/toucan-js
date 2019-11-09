@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
-const dbc = require('../../libs/toucan-control-center/db-center')().station;
 const expect = require('chai').expect;
 
 describe('temp [测试入口] registMe', () => {
@@ -17,6 +16,7 @@ describe('temp [测试入口] registMe', () => {
             database: 'tc_gather_cc',
         }
     }
+    const dbc = require('../../libs/toucan-control-center/db-center')(startOptions.dbConnection).station;
 
     // 我注册的信息
     const meInfo = {

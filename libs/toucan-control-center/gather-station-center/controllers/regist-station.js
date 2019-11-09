@@ -5,7 +5,8 @@
 
 const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
-const dbc = require('../../db-center')().station;
+const dbConfig = require('../config').dbConnection;
+const dbc = require('../../db-center')(dbConfig).station;
 const { HOSTNAME } = dbc.const;
 const tools = require('../tools');
 
@@ -22,7 +23,7 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
     const machineKey = tools.generateKey(machineInfo);
 
     // 更新站点
-    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }),`${HOSTNAME}`, hostname);
+    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }), `${HOSTNAME}`, hostname);
 
     // 查询该站点信息
     const stationInfo = await dbc.select(`${HOSTNAME}`, hostname);

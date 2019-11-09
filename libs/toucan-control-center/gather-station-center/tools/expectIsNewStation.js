@@ -2,7 +2,7 @@
 // 是否注册
 //
 const _ = require('lodash');
-const { HOSTNAME, STATIONMD5, STATIONKEY } = require('../../db-center')().station.const;
+const { HOSTNAME, STATIONMD5, STATIONKEY } = require('../../db-center/const').station;
 
 module.exports = (existStation,hostname)=>{
 
