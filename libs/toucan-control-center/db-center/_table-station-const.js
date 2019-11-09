@@ -6,5 +6,7 @@ module.exports = {
     HOSTNAME: 'stationHostname',
     STATIONID: 'stationId',
     STATIONMD5: 'stationMD5',
-    STATIONKEY: 'statioinKey',
+    STATIONKEY: 'stationKey',
+    STATIONIP: 'stationIp',
+    STATIONLISTENPORT: 'stationListenPort'
 }

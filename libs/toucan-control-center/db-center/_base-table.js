@@ -9,9 +9,10 @@ module.exports = class {
         // 设置数据表的常量
         _.assign(this, tbConst);
         // 设置数据访问接口
-        this.dbv = dbv(`${this.TABLENAME}`);
+        this.tbVisitor = dbv(`${this.TABLENAME}`);
         // 保存表常数
         this.tableConst = tbConst;
+        this.dbv = dbv;
     }
 
     // 将对象影射为字段
@@ -20,11 +21,14 @@ module.exports = class {
     }
 
     async insert(obj) {
-        await this.dbv.insert(this.objMap2Field(obj));
+        await this.tbVisitor.insert(this.objMap2Field(obj));
     }
 
     async update(obj, ...where) {
-        const exec = joinWhere(this.dbv, where).update(this.objMap2Field(obj));
+        where = _.flatten(where);
+        obj = this.objMap2Field(obj);
+
+        const exec = joinWhere(this.tbVisitor, where).update(obj);
         await exec;
     }
 
@@ -33,13 +37,14 @@ module.exports = class {
 
     // 按照条件删除
     async delete(...where) {
-        const exec = joinWhere(this.dbv, where).del();
+        where = _.flatten(where);
+        const exec = joinWhere(this.tbVisitor, where).del();
         await exec;
     }
 
     async select(...where) {
         where = _.flatten(where);
-        const exec = joinWhere(this.dbv, where);
+        const exec = joinWhere(this.tbVisitor, where);
         exec._method = 'select';
         return await exec;
     }
@@ -50,5 +55,8 @@ module.exports = class {
         return _.isEmpty(result) ? undefined : result[0];
     }
 
+    async destroy() {
+        await this.dbv.destroy()
+    }
 }
 

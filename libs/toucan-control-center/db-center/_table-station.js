@@ -37,6 +37,9 @@ module.exports = class extends BaseTable {
         if (obj.machineMD5) fields[`${this.STATIONMD5}`] = obj.machineMD5;
         if (obj.machineKey) fields[`${this.STATIONKEY}`] = obj.machineKey;
 
+        if (obj.listenIp) fields[`${this.STATIONIP}`] = obj.listenIp;
+        if (obj.listenPort) fields[`${this.STATIONLISTENPORT}`] = obj.listenPort;
+     
         return fields;
     }
 } 

@@ -32,25 +32,24 @@ describe('temp [测试入口] registMe', () => {
         await dbc.insert({ stationId: meInfo.stationId, stationHostname: meInfo.stationHostname });
     })
 
-    after('', () => {
-        //GatherStationCenter.stop();
+    after('', async () => {
+        GatherStationCenter.stop();
+        await dbc.destroy()
     })
 
-    it('gather station regist', async () => {
+    it('regist', async () => {
         const { code, result } = await tcSDK.registMe('127.0.0.1:1123', { listenPort: 57720 });
         expect(code).to.be.eq(0);
 
         expect(result.stationId).to.be.eq(meInfo.stationId);
         expect(result.stationHostname).to.be.eq(meInfo.stationHostname);
+
+        // 获得注册key
+        const { stationKey } = result;
+        const res = await tcSDK.registMe('127.0.0.1:1123', { machineKey: stationKey });
+
+        // 注册key发生变化
+        expect(res.result.stationKey).not.be.eq(stationKey);
+
     })
-
-    it('gather station update', async () => {
-        const { code, result } = await tcSDK.registMe('127.0.0.1:1123', { machineKey: 'abc' });
-        expect(code).to.be.eq(0);
-
-        const { machineKey } = result;
-        expect(machineKey).is.not.empty;
-        expect(machineKey).not.eq('abc');
-    })
-
 })

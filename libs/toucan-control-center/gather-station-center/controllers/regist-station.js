@@ -7,7 +7,7 @@ const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
 const dbConfig = require('../config').dbConnection;
 const dbc = require('../../db-center')(dbConfig).station;
-const { HOSTNAME } = dbc;
+const { HOSTNAME, STATIONKEY } = dbc;
 const tools = require('../tools');
 
 // 作为一个新机器注册
@@ -45,7 +45,10 @@ async function updateRegistInfo({ machineInfo = {}, machineMD5, listenPort, list
     // 更新站点
     await dbc.update({ listenPort, listenIp, machineKey }, HOSTNAME, hostname);
 
-    return { machineKey };
+    const result = {};
+    result[`${STATIONKEY}`] = machineKey;
+
+    return result;
 }
 
 module.exports = async (ctx, next) => {
