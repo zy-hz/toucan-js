@@ -29,9 +29,16 @@ module.exports = class {
     }
 
     async select(...where) {
+        where = _.flatten(where);
         const exec = joinWhere(this.dbv, where);
         exec._method = 'select';
         return await exec;
+    }
+
+    async selectOne(...where) {
+        where = _.flatten(where);
+        const result = await this.select(where);
+        return _.isEmpty(result) ? undefined : result[0];
     }
 
 }

@@ -14,7 +14,7 @@ const tools = require('../tools');
 async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp }) {
 
     const { hostname } = machineInfo;
-    const existStation = await dbc.select(HOSTNAME, hostname);
+    const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
     // 根据主机名，检查这台主机是否注册过,如果注册过,抛出异常
     tools.expectIsNewStation(existStation, hostname);
@@ -26,7 +26,7 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
     await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }), `${HOSTNAME}`, hostname);
 
     // 查询该站点信息
-    const stationInfo = await dbc.select(HOSTNAME, hostname);
+    const stationInfo = await dbc.selectOne(HOSTNAME, hostname);
     return stationInfo;
 }
 
@@ -34,7 +34,7 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
 async function updateRegistInfo({ machineInfo = {}, machineMD5, listenPort, listenIp }, machineKey) {
 
     const { hostname } = machineInfo;
-    const existStation = await dbc.select(HOSTNAME, hostname);
+    const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
     // 验证主机，没有通过，抛出异常
     tools.expectIsExistStation(existStation, hostname, machineMD5, machineKey);
