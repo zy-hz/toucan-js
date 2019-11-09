@@ -2,21 +2,12 @@
 // 站点表
 // 
 
-module.exports = class {
+const BaseTable = require('./_base-table');
 
-    constructor() {
+module.exports = class extends BaseTable {
 
+    constructor(dbv, tbConst) {
+        super(dbv,tbConst);
     }
 
-    insert() {
-
-    }
-
-    update() {
-
-    }
-
-    select() {
-
-    }
-}
+} 

@@ -2,8 +2,8 @@
 // 数据中心
 //
 
+const dbConst = require('./const');
 const StationTable = require('./_table-station');
-const stationTableConst = require('./_table-station-const');
 
 // 数据中心的类
 class DbCenter {
@@ -14,9 +14,8 @@ class DbCenter {
             client: options.client || 'mysql',
             connection: options
         });
-        
-        this.station = new StationTable(knex)
-        this.station.const = stationTableConst;
+
+        this.station = new StationTable(knex, dbConst.station);
     }
 
 }
