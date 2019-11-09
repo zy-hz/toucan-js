@@ -6,17 +6,26 @@ const { joinWhere } = require('./_base-where');
 
 module.exports = class {
     constructor(dbv, tbConst) {
+        // 设置数据表的常量
         _.assign(this, tbConst);
         // 设置数据访问接口
         this.dbv = dbv(`${this.TABLENAME}`);
+        // 保存表常数
+        this.tableConst = tbConst;
     }
 
-    async insert(fields) {
-        await this.dbv.insert(fields);
+    // 将对象影射为字段
+    objMap2Field(obj) {
+        return obj;
     }
 
-    async update(fields, ...where) {
+    async insert(obj) {
+        await this.dbv.insert(this.objMap2Field(obj));
+    }
 
+    async update(obj, ...where) {
+        const exec = joinWhere(this.dbv, where).update(this.objMap2Field(obj));
+        await exec;
     }
 
     // 以下方法，不需要翻译器
