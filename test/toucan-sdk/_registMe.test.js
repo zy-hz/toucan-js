@@ -3,7 +3,7 @@ const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const expect = require('chai').expect;
 
-describe('temp [测试入口] registMe', () => {
+describe('[测试入口] registMe', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
@@ -24,7 +24,7 @@ describe('temp [测试入口] registMe', () => {
     }
 
     before('', async () => {
-        GatherStationCenter.start(startOptions);
+        await GatherStationCenter.start(startOptions);
 
         // 删除指定对象
         await dbc.delete({ stationId: meInfo.stationId });
@@ -33,7 +33,7 @@ describe('temp [测试入口] registMe', () => {
     })
 
     after('', () => {
-        GatherStationCenter.stop();
+        //GatherStationCenter.stop();
     })
 
     it('gather station regist', async () => {

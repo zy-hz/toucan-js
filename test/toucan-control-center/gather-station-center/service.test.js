@@ -6,7 +6,7 @@ const { getResponse } = require('../../toucan-service');
 describe('[测试入口] - gather station service', () => {
     const startOptions = {
         // 监听端口
-        //port: 1123,
+        port: 1123,
         // 服务器的连接信息
         dbConnection: {
             host: '127.0.0.1',
@@ -16,6 +16,7 @@ describe('[测试入口] - gather station service', () => {
             database: 'tc_gather_cc',
         }
     }
+
     describe('start', () => {
 
         before('', () => {
@@ -30,6 +31,13 @@ describe('[测试入口] - gather station service', () => {
             const { unitName } = GatherStationCenter.unitInfo;
             expect(unitName).to.be.eq('GatherStationService');
             expect(GatherStationCenter.serviceName).to.be.eq('GatherStationService');
+        })
+
+        it('[demo] config 测试', async () => {
+            const { body } = await getResponse('/test-config',{},startOptions.port);
+            const { port, dbConnection } = body.result;
+            expect(port).to.be.eq(startOptions.port);
+            expect(dbConnection).to.be.eql(startOptions.dbConnection);
         })
 
         it('regist-station 测试', async () => {

@@ -2,7 +2,7 @@
 // table类的基类
 //
 const _ = require('lodash');
-const {joinWhere} = require('./_base-where');
+const { joinWhere } = require('./_base-where');
 
 module.exports = class {
     constructor(dbv, tbConst) {
@@ -24,12 +24,14 @@ module.exports = class {
 
     // 按照条件删除
     async delete(...where) {
-        const exec = joinWhere(this.dbv, where);
-        await exec.del()
+        const exec = joinWhere(this.dbv, where).del();
+        await exec;
     }
 
     async select(...where) {
-
+        const exec = joinWhere(this.dbv, where);
+        exec._method = 'select';
+        return await exec;
     }
 
 }

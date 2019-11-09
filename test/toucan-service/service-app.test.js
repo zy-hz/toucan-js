@@ -37,7 +37,13 @@ describe('[测试入口] - toucan service app', () => {
         const { body } = await getResponse('/config-test', {}, startOptions.port);
         const { code, result } = body;
         expect(code).to.be.eq(0);
-        expect(result, '和启动参数一致').to.be.eql(startOptions)
+        expect(result.initA).to.be.eq('a');
+
+        const expectObj = {
+            port: result.port,
+            dbConnection: result.dbConnection
+        }
+        expect(expectObj, '和启动参数一致').to.be.eql(startOptions)
     })
 
     it('info 接口测试', async () => {
