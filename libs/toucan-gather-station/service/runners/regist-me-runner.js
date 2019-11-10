@@ -18,9 +18,15 @@ class RegistMeRunner extends ToucanRunner {
             this.log(`已经在服务 ${cache.remoteServer} 上登记`);
         } else {
             // 准备在服务器上注册
-            cache.remoteServer = await tcSDK.registMe(remote, { listenPort: port });
+            const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port });
+            if (code === 0) {
+                const { stationId, stationKey } = result;
+                this.log(`在管理中心 ${remote} 上注册成功，分配站点编号[${stationId}]`);
 
-            this.log(`已经在服务 ${cache.remoteServer} 上登记`);
+            } else if (code === -1) {
+                this.error(`在管理中心 ${remote} 上注册失败。${error}`);
+            }
+
         }
     }
 

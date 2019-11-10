@@ -156,7 +156,7 @@ class ServiceApp extends ToucanWorkUnit {
         appPath.controllerPath = path.resolve(d, 'controllers');
         appPath.runnerPath = path.resolve(d, 'runners');
         appPath.initScriptPath = path.resolve(d, 'scripts/init');
-        appPath.configFile = path.resolve(d, 'config');
+        appPath.configFile = path.resolve(d, 'config.js');
 
         return appPath;
     }
