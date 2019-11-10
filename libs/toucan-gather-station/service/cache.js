@@ -1,8 +1,7 @@
 //
 // 服务的全局变量
 //
-const g_CACHE = {
+const ToucanCache = require('../../toucan-app/cache');
+const cache = new ToucanCache();
 
-}
-
-module.exports = g_CACHE;
+module.exports = cache;
