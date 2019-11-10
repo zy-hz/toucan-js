@@ -53,7 +53,8 @@ class ServiceApp extends ToucanWorkUnit {
         try {
             // 把启动的配置附加到服务的配置上（提供全局使用）
             // 服务的配置
-            const serviceConfig = require(path.resolve(this.appPath.servicePath,'config'));
+
+            const serviceConfig = fs.existsSync(this.appPath.configFile) ? require(this.appPath.configFile) : {};
             _.assignIn(serviceConfig, options);
 
             // 启动自动运行者
@@ -155,6 +156,7 @@ class ServiceApp extends ToucanWorkUnit {
         appPath.controllerPath = path.resolve(d, 'controllers');
         appPath.runnerPath = path.resolve(d, 'runners');
         appPath.initScriptPath = path.resolve(d, 'scripts/init');
+        appPath.configFile = path.resolve(d, 'config');
 
         return appPath;
     }

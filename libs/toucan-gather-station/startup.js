@@ -39,8 +39,8 @@ async function startFromConfig(cfg) {
 
 // 从远程站点启动
 // 在该模式下，采集站点类似一个服务，运行远程服务器控制自己的行为
-async function startFromRemote(remote) {
+async function startFromRemote(args) {
     const StationListener = require('./service');
     const service = new StationListener();
-    await service.start(remote);
+    await service.start(args);
 }
