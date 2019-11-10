@@ -35,7 +35,7 @@ class BaseRunner extends ToucanWorkUnit {
                 // 设置状态
                 this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
                 // 
-                this.error('RegistStationRunner工作异常', error);
+                this.error('scheduleWork工作异常', error);
                 await sleep(1000 * 60);
             }
             finally {
@@ -66,6 +66,10 @@ class BaseRunner extends ToucanWorkUnit {
     // 添加类的标记
     log(...args) {
         super.log(`[${this.className}]`, args);
+    }
+
+    error(...args){
+        super.error(`[${this.className}]`, args);
     }
 }
 

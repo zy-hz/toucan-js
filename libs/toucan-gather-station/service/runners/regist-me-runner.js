@@ -5,11 +5,11 @@
 //
 const { ToucanRunner } = require('../../../toucan-service');
 const cache = require('../cache');
-const { tcRegistOnRemote } = require('../../../web-api');
+const tcSDK = require('../../../toucan-sdk');
 
-class RegistStationRunner extends ToucanRunner {
+class RegistMeRunner extends ToucanRunner {
 
-    async scheduleWork(options = {}){
+    async scheduleWork(options = {}) {
         const { remote, port } = options;
 
         if (cache.remoteServer === remote) {
@@ -18,7 +18,7 @@ class RegistStationRunner extends ToucanRunner {
             this.log(`已经在服务 ${cache.remoteServer} 上登记`);
         } else {
             // 准备在服务器上注册
-            cache.remoteServer = await tcRegistOnRemote(remote);
+            cache.remoteServer = await tcSDK.registMe(remote, { listenPort: port });
 
             this.log(`已经在服务 ${cache.remoteServer} 上登记`);
         }
@@ -26,4 +26,4 @@ class RegistStationRunner extends ToucanRunner {
 
 }
 
-module.exports = new RegistStationRunner();
+module.exports = new RegistMeRunner();

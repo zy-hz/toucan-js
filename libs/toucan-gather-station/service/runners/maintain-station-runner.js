@@ -2,7 +2,6 @@
 //
 // 检查站点配置，发现变更后，重启采集站点
 //
-const schedule = require('node-schedule');
 const _ = require('lodash');
 const { ToucanRunner } = require('../../../toucan-service');
 
@@ -11,7 +10,7 @@ const ToucanGatherStation = require('../../index');
 
 class MaintainStationRunner extends ToucanRunner {
 
-    async scheduleWork(options = {}) {
+    async scheduleWork() {
 
         // 如果没有启动，有日志提示
         if (_.isNil(this._gs)) this.log('本站点还未启动，等待管理中心激活...');

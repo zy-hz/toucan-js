@@ -25,7 +25,7 @@ class ToucanLogger {
         this.__output__(console.warn, 'warn', _.flatten(optionalParams));
     }
     error(...optionalParams) {
-        optionalParams = _.map(optionalParams, (x) => {
+        optionalParams = _.map(_.flatten(optionalParams), (x) => {
             if (_.isError(x)) {
                 // 格式化错误信息
                 const { code = 9999, errno = 9999, message, stack } = x;

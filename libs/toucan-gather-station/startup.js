@@ -21,7 +21,7 @@ module.exports = async (args) => {
     else {
         console.error(`没有指定启动方式。请使用以下几种启动参数：
         --conf <配置文件，不带.json> 
-        --remote <远程控制服务器> --listen 57721`);
+        --remote <远程控制服务器> --port <采集站的对外监听端口>`);
     }
 }
 
