@@ -5,13 +5,12 @@
 
 const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
+const { HOSTNAME, STATIONKEY } = require('../../db-center/const').station;
 const dbConfig = require('../config').dbConnection;
-const dbc = require('../../db-center')(dbConfig).station;
-const { HOSTNAME, STATIONKEY } = dbc;
 const tools = require('../tools');
 
 // 作为一个新机器注册
-async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp }) {
+async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
 
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
@@ -31,7 +30,7 @@ async function registAsNew({ machineInfo = {}, machineMD5, listenPort, listenIp 
 }
 
 // 更新注册信息
-async function updateRegistInfo({ machineInfo = {}, machineMD5, listenPort, listenIp }, machineKey) {
+async function updateRegistInfo(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }, machineKey) {
 
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
@@ -61,7 +60,15 @@ module.exports = async (ctx, next) => {
     // 构建注册的参数
     const pms = { machineInfo, machineMD5: getObjectMD5(machineInfo), listenPort, listenIp: ctx.clientIp };
 
-    // 返回结果
-    ctx.result = _.isEmpty(machineKey) ? await registAsNew(pms) : await updateRegistInfo(pms, machineKey);
+    // 创建数据中心
+    const dbc = require('../../db-center')(dbConfig).station;
+    try {
+        // 返回结果
+        ctx.result = _.isEmpty(machineKey) ? await registAsNew(dbc, pms) : await updateRegistInfo(dbc, pms, machineKey);
+    }
+    finally {
+        await dbc.destroy();
+    }
+
 }
 
