@@ -8,12 +8,14 @@ module.exports = class {
     constructor(dbv, tbConst) {
         // 设置数据表的常量
         _.assign(this, tbConst);
-        // 设置数据访问接口
-        this.tbVisitor = dbv(`${this.TABLENAME}`);
         // 保存表常数
         this.tableConst = tbConst;
         this.dbv = dbv;
     }
+
+    // 表访问对象
+    // 如果不写，导致"Update called multiple times with objects"
+    get tbVisitor() { return this.dbv(`${this.TABLENAME}`) }
 
     // 将对象影射为字段
     objMap2Field(obj) {
