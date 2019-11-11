@@ -5,8 +5,8 @@ const { getObjectClassName } = require('./_class');
 
 class exURL {
 
-    // 比较两个url是否一致
-    isSameUrl(a, b) {
+    // 比较两个url是否一致,默认是完全比较
+    isSameUrl(a, b, { ignoreProtocol = false, ignorePath = false, ignoreSearch = false } = {}) {
         if (_.isEmpty(a) || _.isEmpty(b)) return false;
 
         a = this.fillProtocol(a);
@@ -15,7 +15,19 @@ class exURL {
         const uA = new URL(a);
         const uB = new URL(b);
 
-        return uA.toString() === uB.toString();
+        if(!ignoreProtocol) {
+            if(uA.protocol != uB.protocol) return false;
+        }
+
+        if(!ignorePath){
+            if(uA.pathname != uB.pathname) return false;
+        }
+
+        if(!ignoreSearch){
+            if(uA.search != uB.search) return false;
+        }
+
+        return uA.host === uB.host;
     }
 
     isSameHost(a, b) {
@@ -24,8 +36,8 @@ class exURL {
         a = this.fillProtocol(a);
         b = this.fillProtocol(b);
 
-        const uA = new URL(a);
-        const uB = new URL(b);
+        const uA = require('url').parse(a, true, true);
+        const uB = require('url').parse(b, true, true);
 
         if (uA.host != uB.host) return false;
         return true;
@@ -34,7 +46,7 @@ class exURL {
     // 是否为脚本
     isScript(a) {
         if (_.isEmpty(a)) return false;
-        const uA = new URL(a);
+        const uA = require('url').parse(a, true, true);
         if (_.isEmpty(uA.protocol)) return false;
 
         return uA.protocol.indexOf('script') >= 0;

@@ -4,7 +4,7 @@ const { SubscribeGatherTaskJob } = require('../../libs/toucan-job');
 const expect = require('chai').expect;
 const { sleep } = require('../../libs/toucan-utility');
 
-describe('[测试入口] - SubscribeGatherTaskJob', () => {
+describe(' [测试入口] - SubscribeGatherTaskJob', () => {
 
     const gatherMQ = mqFactory.createGatherMQ('rabbit');
     const taskMQ = mqFactory.createTaskMQ('rabbit');

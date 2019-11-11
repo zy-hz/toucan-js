@@ -14,7 +14,7 @@ describe('[测试入口] - exURL', () => {
     describe('isSameUrl', () => {
         it('', () => {
             expect(exURL.isSameUrl('')).is.false;
-            expect(exURL.isSameUrl('www.19lou.com', '//www.19lou.com/'),'same').is.true;
+            expect(exURL.isSameUrl('www.19lou.com', '//www.19lou.com/'), 'same').is.true;
             expect(exURL.isSameUrl('http://www.19lou.com', 'https://www.19lou.com/'), 'https').is.false;
             expect(exURL.isSameUrl('http://www.19lou.com', '//www.19lou.com/a'), '/a').is.false;
             expect(exURL.isSameUrl('www.19lou.com/a?b=3', '//www.19lou.com/a?b=3'), '3').is.true;
@@ -22,7 +22,7 @@ describe('[测试入口] - exURL', () => {
         });
     })
 
-    describe(' toUrlObject', () => {
+    describe('toUrlObject', () => {
         //const targetUrl2 = new URL('https://user:pass@sub.host.com:8080/p/a/t/h?query=string#hash');
 
         it('simple', () => {
@@ -32,6 +32,19 @@ describe('[测试入口] - exURL', () => {
             expect(exURL.toUrlObject('http://127.0.0.1:8080'), 'string val2').to.be.eql(targetUrl);
             expect(exURL.toUrlObject('//127.0.0.1:8080'), 'string val3').to.be.eql(targetUrl);
             expect(exURL.toUrlObject({ host: '127.0.0.1', port: 8080 }), 'obj val').to.be.eql(targetUrl);
+        })
+    })
+
+    describe('isScript', () => {
+        it('', () => {
+            const url = '//food.19lou.com';
+            expect(exURL.isScript(url)).is.false;
+        })
+    })
+
+    describe('isSampHost', () => {
+        it('http://#', () => {
+            expect(exURL.isSameHost('http://#', 'http://#')).is.true;
         })
     })
 })
