@@ -46,7 +46,7 @@ describe('[测试入口] registMe', () => {
 
         // 获得注册key
         const { stationKey } = result;
-        const res = await tcSDK.registMe('127.0.0.1:1123', { machineKey: stationKey });
+        const res = await tcSDK.registMe('127.0.0.1:1123', { stationKey: stationKey });
         // 注册key发生变化
         expect(res.result.stationKey).not.be.eq(stationKey);
 

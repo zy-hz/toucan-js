@@ -47,7 +47,7 @@ class RegistMeRunner extends ToucanRunner {
 
     async updateProcess(remote, port) {
         // 准备在服务器上更新
-        const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port, machineKey: cache.stationKey });
+        const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port, stationKey: cache.stationKey });
 
         if (code === 0) {
             const { stationKey } = result;
@@ -63,7 +63,7 @@ class RegistMeRunner extends ToucanRunner {
 
     async syncProcess(remote) {
         // 从服务器上读取配置
-        const { code, result, error } = await tcSDK.syncStationConfig(remote, { machineKey: cache.stationKey });
+        const { code, result, error } = await tcSDK.syncStationConfig(remote, { stationKey: cache.stationKey });
         if (code === 0) {
             this.log(`从管理中心 ${remote} 上同步配置成功。`);
             this.log(result);

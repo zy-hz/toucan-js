@@ -5,25 +5,25 @@
 
 const _ = require('lodash');
 const { getObjectMD5 } = require('../../../toucan-utility');
-const { HOSTNAME, STATIONKEY } = require('../../db-center/const').station;
+const { HOSTNAME } = require('../../db-center/const').station;
 const dbConfig = require('../config').dbConnection;
 const tools = require('../tools');
 
 // 作为一个新机器注册
 async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
     console.log('runat', _.now());
-    
+
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
     // 根据主机名，检查这台主机是否注册过,如果注册过,抛出异常
     tools.expectIsNewStation(existStation, hostname);
 
-    // 生成machineKey
-    const machineKey = tools.generateKey(machineInfo);
+    // 生成stationKey
+    const stationKey = tools.generateKey(machineInfo);
 
     // 更新站点
-    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, machineKey }), `${HOSTNAME}`, hostname);
+    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, stationKey }), `${HOSTNAME}`, hostname);
 
     // 查询该站点信息
     const stationInfo = await dbc.selectOne(HOSTNAME, hostname);
@@ -31,24 +31,21 @@ async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, list
 }
 
 // 更新注册信息
-async function updateRegistInfo(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }, machineKey) {
+async function updateRegistInfo(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }, stationKey) {
 
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
     // 验证主机，没有通过，抛出异常
-    tools.expectIsExistStation(existStation, hostname, machineMD5, machineKey);
+    tools.expectIsExistStation(existStation, hostname, machineMD5, stationKey);
 
     // 验证通过
-    // 重新生成machineKey
-    machineKey = tools.generateKey(machineInfo);
+    // 重新生成stationKey
+    stationKey = tools.generateKey(machineInfo);
     // 更新站点
-    await dbc.update({ listenPort, listenIp, machineKey }, HOSTNAME, hostname);
+    await dbc.update({ listenPort, listenIp, stationKey }, HOSTNAME, hostname);
 
-    const result = {};
-    result[`${STATIONKEY}`] = machineKey;
-
-    return result;
+    return { stationKey };
 }
 
 module.exports = async (ctx, next) => {
@@ -56,7 +53,7 @@ module.exports = async (ctx, next) => {
     await next();
 
     // 从请求对象中获得参数
-    const { machineInfo, machineKey = '', listenPort } = ctx.request.body;
+    const { machineInfo, stationKey = '', listenPort } = ctx.request.body;
 
     // 构建注册的参数
     const pms = { machineInfo, machineMD5: getObjectMD5(machineInfo), listenPort, listenIp: ctx.clientIp };
@@ -66,7 +63,7 @@ module.exports = async (ctx, next) => {
     try {
 
         // 返回结果
-        ctx.result = _.isEmpty(machineKey) ? await registAsNew(dbc, pms) : await updateRegistInfo(dbc, pms, machineKey);
+        ctx.result = _.isEmpty(stationKey) ? await registAsNew(dbc, pms) : await updateRegistInfo(dbc, pms, stationKey);
     }
     finally {
         await dbc.destroy();
