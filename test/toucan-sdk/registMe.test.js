@@ -27,7 +27,7 @@ describe('[测试入口] registMe', () => {
         await GatherStationCenter.start(startOptions);
 
         // 删除指定对象
-        await dbc.delete({ stationId: meInfo.stationId });
+        await dbc.delete({ stationHostname: meInfo.stationHostname });
         // 在数据库中添加本机
         await dbc.insert({ stationId: meInfo.stationId, stationHostname: meInfo.stationHostname });
     })
