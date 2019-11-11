@@ -19,7 +19,7 @@ class BaseRunner extends ToucanWorkUnit {
     async start(options = {}) {
 
         // 每5秒检查一次
-        const scheduleRule = options.scheduleRule || '*/5 * * * * *';
+        let scheduleRule = options.scheduleRule || '*/5 * * * * *';
 
         // 启动定时作业
         this.schedule = schedule.scheduleJob(scheduleRule, async () => {
@@ -29,7 +29,11 @@ class BaseRunner extends ToucanWorkUnit {
             this.workInfo.unitStatus.updateStatus(StatusCode.actived);
 
             try {
-                await this.scheduleWork(options)
+                const result = await this.scheduleWork(options);
+
+                // 重新设置工作计划
+                const { rescheduleRule } = result || {};
+                if (!_.isEmpty(rescheduleRule)) scheduleRule = rescheduleRule
             }
             catch (error) {
                 // 设置状态
@@ -68,7 +72,7 @@ class BaseRunner extends ToucanWorkUnit {
         super.log(`[${this.className}]`, args);
     }
 
-    error(...args){
+    error(...args) {
         super.error(`[${this.className}]`, args);
     }
 }
