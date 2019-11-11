@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 const expect = require('chai').expect;
-const { getResponse } = require('../../toucan-service');
+
+// 服务的内容在toucan-sdk项目中测试
 
 describe('[测试入口] - gather station service', () => {
     const startOptions = {
@@ -17,38 +18,20 @@ describe('[测试入口] - gather station service', () => {
         }
     }
 
+    before('', () => {
+        GatherStationCenter.start(startOptions);
+    })
+
+    after('', () => {
+        GatherStationCenter.stop();
+    })
+
     describe('start', () => {
-
-        before('', () => {
-            GatherStationCenter.start(startOptions);
-        })
-
-        after('', () => {
-            GatherStationCenter.stop();
-        })
 
         it('WorkUnitInfo 测试', () => {
             const { unitName } = GatherStationCenter.unitInfo;
             expect(unitName).to.be.eq('GatherStationService');
             expect(GatherStationCenter.serviceName).to.be.eq('GatherStationService');
-        })
-
-        it('[demo] config 测试', async () => {
-            const { body } = await getResponse('/test-config',{},startOptions.port);
-            const { port, dbConnection } = body.result;
-            expect(port).to.be.eq(startOptions.port);
-            expect(dbConnection).to.be.eql(startOptions.dbConnection);
-        })
-
-        it('regist-station 测试', async () => {
-            const query = { hostName: 'zyHost' };
-            // 检测在指定的端口，是否能获得内容
-            const { body, statusCode } = await getResponse('/regist-station', query);
-            expect(statusCode).to.be.eq(200);
-
-            const { success, result } = body;
-            expect(success).is.true;
-            expect(result.hostName).to.be.eql(query.hostName);
         })
     })
 })

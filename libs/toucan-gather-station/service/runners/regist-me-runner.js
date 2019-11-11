@@ -24,7 +24,7 @@ class RegistMeRunner extends ToucanRunner {
             await this.registProcess(remote, port);
 
             // 同步采集站点的配置
-            await this.syncProcess(remote, port);
+            await this.syncProcess(remote);
         }
     }
 
@@ -59,8 +59,15 @@ class RegistMeRunner extends ToucanRunner {
         }
     }
 
-    async syncProcess(remote, port) {
-
+    async syncProcess(remote) {
+        // 从服务器上读取配置
+        const { code, result, error } = await tcSDK.syncStationConfig(remote, { machineKey: cache.stationKey });
+        if (code === 0) {
+            this.log(`从管理中心 ${remote} 上同步配置成功。`);
+            this.log(result);
+        } else if (code === -1) {
+            this.error(`从管理中心 ${remote} 上同步配置失败。${error}`);
+        }
     }
 
 }

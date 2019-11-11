@@ -14,26 +14,46 @@ const knex = require('knex')({
     }
 });
 const expect = require('chai').expect;
+const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 
-describe('temp [测试入口] - regist me runner', () => {
+describe('[测试入口] - regist me runner', () => {
     const cacheFileName = path.join(process.cwd(), '.cache', 'mock-test-regist-me-runner.json');
     const stationHostname = 'DESKTOP-19SS3KS';
     const stationId = 'test-01';
+    const startOptions = {
+        // 监听端口
+        port: 1123,
+        // 服务器的连接信息
+        dbConnection: {
+            host: '127.0.0.1',
+            port: 3306,
+            user: 'weapp',
+            password: '123456',
+            database: 'tc_gather_cc',
+        }
+    }
+    const remote = `${startOptions.dbConnection.host}:${startOptions.port}`;
 
     before('', async () => {
+        await GatherStationCenter.start(startOptions);
         // 清空缓存
         if (fs.existsSync(cacheFileName)) fs.unlinkSync(cacheFileName);
         cache.init(cacheFileName);
         await knex('gs').where({ stationId, stationHostname }).update({ stationMD5: '', stationKey: '' });
     })
 
+    after('', async () => {
+        await GatherStationCenter.stop();
+        await knex.destroy();
+    })
+
     it('scheduleWork regist', async () => {
-        await runner.scheduleWork({ remote: '127.0.0.1:57701', port: 57721 });
+        await runner.scheduleWork({ remote, port: 57721 });
         expect(cache.stationKey).is.not.empty;
     })
 
     it('scheduleWork update', async () => {
-        await runner.scheduleWork({ remote: '127.0.0.1:57701', port: 57721 });
+        await runner.scheduleWork({ remote, port: 57721 });
         expect(cache.stationKey).is.not.empty;
     })
 })
