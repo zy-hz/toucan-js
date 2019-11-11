@@ -8,5 +8,6 @@ module.exports = {
     STATIONMD5: 'stationMD5',
     STATIONKEY: 'stationKey',
     STATIONIP: 'stationIp',
-    STATIONLISTENPORT: 'stationListenPort'
+    STATIONLISTENPORT: 'stationListenPort',
+    STATIONCONFIGPLANID: 'stationConfigPlanId'
 }

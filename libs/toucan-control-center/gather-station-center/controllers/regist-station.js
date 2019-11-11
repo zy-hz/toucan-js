@@ -11,7 +11,6 @@ const tools = require('../tools');
 
 // 作为一个新机器注册
 async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
-    console.log('runat', _.now());
 
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);

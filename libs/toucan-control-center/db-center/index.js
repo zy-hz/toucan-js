@@ -18,6 +18,10 @@ class DbCenter {
         this.station = new StationTable(knex, dbConst.station);
     }
 
+    async destroy() {
+        await this.station.destroy();
+    }
+
 }
 
 // 更加选项创建数据中心

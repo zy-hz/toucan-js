@@ -3,7 +3,7 @@ const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const expect = require('chai').expect;
 
-describe('[测试入口] - sync station config', () => {
+describe('temp [测试入口] - sync station config', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
@@ -20,7 +20,9 @@ describe('[测试入口] - sync station config', () => {
 
     // 我注册的信息
     const meInfo = {
-        stationId: 'test-syncstationconfig', stationHostname: 'DESKTOP-19SS3KS', stationKey: 'testABC'
+        stationId: 'test-syncstationconfig', stationHostname: 'DESKTOP-19SS3KS',
+        stationMD5: 'f2d8bd57be4c33074a87db4596e3dd07',
+        stationKey: 'testABC'
     }
 
 
@@ -30,7 +32,7 @@ describe('[测试入口] - sync station config', () => {
         // 删除指定对象
         await dbc.delete({ stationId: meInfo.stationId });
         // 在数据库中添加本机
-        await dbc.insert({ stationId: meInfo.stationId, stationHostname: meInfo.stationHostname, stationKey: meInfo.stationKey });
+        await dbc.insert(meInfo);
 
     })
 
@@ -43,6 +45,6 @@ describe('[测试入口] - sync station config', () => {
         const { code, result } = await tcSDK.syncStationConfig(`${startOptions.dbConnection.host}:${startOptions.port}`, { stationKey: meInfo.stationKey });
         expect(code).to.be.eq(0);
 
-        console.log(result);
+        console.log('testresult',result);
     })
 })
