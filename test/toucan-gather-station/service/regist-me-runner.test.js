@@ -16,7 +16,7 @@ const knex = require('knex')({
 const expect = require('chai').expect;
 const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 
-describe('[测试入口] - regist me runner', () => {
+describe('temp [测试入口] - regist me runner', () => {
     const cacheFileName = path.join(process.cwd(), '.cache', 'mock-test-regist-me-runner.json');
     const stationHostname = 'DESKTOP-19SS3KS';
     const stationId = 'test-01';

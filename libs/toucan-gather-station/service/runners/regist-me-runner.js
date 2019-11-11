@@ -66,7 +66,12 @@ class RegistMeRunner extends ToucanRunner {
         const { code, result, error } = await tcSDK.syncStationConfig(remote, { stationKey: cache.stationKey });
         if (code === 0) {
             this.log(`从管理中心 ${remote} 上同步配置成功。`);
-            this.log(result);
+
+            // 配置有变化
+            if (!_.isEqual(cache._stationConfig, result)) {
+                // 保存到缓存
+                cache.set({ _stationConfig: result, _stationConfigChanged: true });
+            }
         } else if (code === -1) {
             this.error(`从管理中心 ${remote} 上同步配置失败。${error}`);
         }

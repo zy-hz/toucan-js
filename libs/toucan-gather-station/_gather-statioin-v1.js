@@ -44,7 +44,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
             this.stationConfig);
 
         // 自动启动
-        if (this.stationConfig.autoStart) await this.start();
+        if (this.stationConfig.autoStart != false) await this.start();
     }
 
     // 站点启动
