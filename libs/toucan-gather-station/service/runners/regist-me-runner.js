@@ -11,6 +11,7 @@ const _ = require('lodash');
 class RegistMeRunner extends ToucanRunner {
 
     async scheduleWork(options = {}) {
+
         const { remote, port } = options;
 
         if (cache.remoteServer === remote && !_.isEmpty(cache.stationKey)) {
@@ -29,6 +30,7 @@ class RegistMeRunner extends ToucanRunner {
     }
 
     async registProcess(remote, port) {
+
         // 准备在服务器上注册
         const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port });
         if (code === 0) {

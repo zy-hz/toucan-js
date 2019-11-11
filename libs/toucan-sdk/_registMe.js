@@ -18,6 +18,7 @@ module.exports = async (serverUrl, options = {}) => {
         machineInfo: await getMachineInfo()
     }
 
+    
     // 从服务器获得响应
     return await getResponse(url, Object.assign(options, meInfo),'POST');
 }

@@ -22,7 +22,7 @@ describe('[测试入口] - regist me runner', () => {
     const stationId = 'test-01';
     const startOptions = {
         // 监听端口
-        port: 1123,
+        port: 1125,
         // 服务器的连接信息
         dbConnection: {
             host: '127.0.0.1',
@@ -39,7 +39,9 @@ describe('[测试入口] - regist me runner', () => {
         // 清空缓存
         if (fs.existsSync(cacheFileName)) fs.unlinkSync(cacheFileName);
         cache.init(cacheFileName);
-        await knex('gs').where({ stationId, stationHostname }).update({ stationMD5: '', stationKey: '' });
+
+        await knex('gs').where({ stationHostname }).del()
+        await knex('gs').insert({ stationId, stationHostname });
     })
 
     after('', async () => {

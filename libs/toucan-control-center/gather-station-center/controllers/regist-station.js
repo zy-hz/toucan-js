@@ -57,12 +57,15 @@ module.exports = async (ctx, next) => {
     // 从请求对象中获得参数
     const { machineInfo, machineKey = '', listenPort } = ctx.request.body;
 
+    console.log('runat', _.now());
+
     // 构建注册的参数
     const pms = { machineInfo, machineMD5: getObjectMD5(machineInfo), listenPort, listenIp: ctx.clientIp };
 
     // 创建数据中心
     const dbc = require('../../db-center')(dbConfig).station;
     try {
+
         // 返回结果
         ctx.result = _.isEmpty(machineKey) ? await registAsNew(dbc, pms) : await updateRegistInfo(dbc, pms, machineKey);
     }

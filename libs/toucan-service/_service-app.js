@@ -118,6 +118,7 @@ class ServiceApp extends ToucanWorkUnit {
     stopApp() {
         if (!_.isNil(this._server)) {
             this._server.close();
+            delete this._server;
 
             this.log('服务停止');
         }
