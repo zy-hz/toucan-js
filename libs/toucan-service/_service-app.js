@@ -5,7 +5,6 @@
 const { ToucanWorkUnit } = require('../toucan-work-unit');
 const { mapDirToModule, StatusCode, getObjectClassName } = require('../toucan-utility');
 const Koa = require('koa');
-const app = new Koa();
 const bodyParser = require('koa-bodyparser');
 const response = require('./middlewares/response');
 const request = require('./middlewares/request');
@@ -87,7 +86,7 @@ class ServiceApp extends ToucanWorkUnit {
     startApp(options = {}) {
         // 监听的端口号
         const { port = 3000 } = options;
-
+        const app = new Koa();
         // 使用响应处理中间件（全局错误处理）
         app.use(response);
 
@@ -132,6 +131,8 @@ class ServiceApp extends ToucanWorkUnit {
             this.log(`正在停止运行器->${getObjectClassName(x)}...`);
             x.stop();
         });
+
+        delete this._runners;
     }
 
     ////////////////////////////////////////////////

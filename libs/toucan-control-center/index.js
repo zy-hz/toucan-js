@@ -9,6 +9,7 @@ const GatherTaskService = require('./gather-task-center/service');
 
 module.exports = {
     ToucanService,
+    GatherStationService,
     GatherTaskCenter: new GatherTaskService(),
     GatherStationCenter: new GatherStationService()
 };

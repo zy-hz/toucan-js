@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 const expect = require('chai').expect;
+const { GatherStationCenter } = require('../../../libs/toucan-control-center');
 
 // 服务的内容在toucan-sdk项目中测试
 
@@ -18,12 +18,12 @@ describe('[测试入口] - gather station service', () => {
         }
     }
 
-    before('', () => {
-        GatherStationCenter.start(startOptions);
+    before('', async () => {
+        await GatherStationCenter.start(startOptions);
     })
 
-    after('', () => {
-        GatherStationCenter.stop();
+    after('', async () => {
+        await GatherStationCenter.stop();
     })
 
     describe('start', () => {

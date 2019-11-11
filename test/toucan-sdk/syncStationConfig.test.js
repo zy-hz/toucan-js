@@ -35,7 +35,7 @@ describe('[测试入口] - sync station config', () => {
     })
 
     after('', async () => {
-        GatherStationCenter.stop();
+        await GatherStationCenter.stop();
         await dbc.destroy()
     })
 

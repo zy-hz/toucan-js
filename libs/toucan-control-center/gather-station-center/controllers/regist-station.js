@@ -11,7 +11,8 @@ const tools = require('../tools');
 
 // 作为一个新机器注册
 async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
-
+    console.log('runat', _.now());
+    
     const { hostname } = machineInfo;
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
@@ -56,8 +57,6 @@ module.exports = async (ctx, next) => {
 
     // 从请求对象中获得参数
     const { machineInfo, machineKey = '', listenPort } = ctx.request.body;
-
-    console.log('runat', _.now());
 
     // 构建注册的参数
     const pms = { machineInfo, machineMD5: getObjectMD5(machineInfo), listenPort, listenIp: ctx.clientIp };

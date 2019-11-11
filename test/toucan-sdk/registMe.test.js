@@ -33,7 +33,7 @@ describe('[测试入口] registMe', () => {
     })
 
     after('', async () => {
-        GatherStationCenter.stop();
+        await GatherStationCenter.stop();
         await dbc.destroy()
     })
 
