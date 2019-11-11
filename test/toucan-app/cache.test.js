@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const expect = require('chai').expect;
 
-describe('temp [测试入口] - cache', () => {
+describe('[测试入口] - cache', () => {
     const cacheFile = path.resolve(`${process.cwd()}`, '.cache', 'test_gs_cache.json');
     const obj = { testA: 'a', testB: { c1: 1, c2: '我是' } };
 

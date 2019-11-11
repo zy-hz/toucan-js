@@ -32,10 +32,10 @@ class RegistMeRunner extends ToucanRunner {
         // 准备在服务器上注册
         const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port });
         if (code === 0) {
+            const { stationId, stationKey } = result;
             this.log(`在管理中心 ${remote} 上注册成功，分配站点编号[${stationId}]`);
 
             // 保存到缓存
-            const { stationId, stationKey } = result;
             cache.set({ stationId, stationKey, remoteServer: remote });
 
         } else if (code === -1) {
@@ -44,7 +44,19 @@ class RegistMeRunner extends ToucanRunner {
     }
 
     async updateProcess(remote, port) {
+        // 准备在服务器上更新
+        const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port, machineKey: cache.stationKey });
 
+        if (code === 0) {
+            const { stationKey } = result;
+            this.log(`在管理中心 ${remote} 上更新成功。`);
+
+            // 保存到缓存
+            cache.set({ stationKey });
+
+        } else if (code === -1) {
+            this.error(`在管理中心 ${remote} 上更新失败。${error}`);
+        }
     }
 
     async syncProcess(remote, port) {
