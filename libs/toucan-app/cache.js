@@ -17,12 +17,24 @@ function readCacheFromFile(f) {
 
 // 缓存写入文件
 function writeCacheToFile(c, f) {
-    // 删除不需要的属性
-    delete c.cacheFileName;
+    c = deleteAttr(c);
 
     // 转为json存储
     const cnt = JSON.stringify(c);
     fs.writeFileSync(f, cnt);
+}
+
+function deleteAttr(c) {
+    const obj = _.cloneDeep(c);
+
+    // 删除不需要的属性
+    delete obj.cacheFileName;
+
+    // 删除内部属性，以下划线开头的属性
+    _.forEach(obj, (val, key) => {
+        if (_.startsWith(key, '_')) delete obj[`${key}`];
+    })
+    return obj;
 }
 
 module.exports = class {
@@ -41,6 +53,6 @@ module.exports = class {
 
         _.assign(this, obj);
 
-        writeCacheToFile(_.cloneDeep(this), this.cacheFileName);
+        writeCacheToFile(this, this.cacheFileName);
     }
 }
