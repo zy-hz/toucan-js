@@ -3,7 +3,7 @@ const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const expect = require('chai').expect;
 
-describe('temp [测试入口] - sync station config', () => {
+describe('[测试入口] - sync station config', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
@@ -45,6 +45,7 @@ describe('temp [测试入口] - sync station config', () => {
         const { code, result } = await tcSDK.syncStationConfig(`${startOptions.dbConnection.host}:${startOptions.port}`, { stationKey: meInfo.stationKey });
         expect(code).to.be.eq(0);
 
-        console.log('testresult',result);
+        expect(result.gatherSkill).is.not.undefined;
+        expect(result.gatherSkill.maxGatherCellCount).is.greaterThan(0);
     })
 })

@@ -4,6 +4,7 @@
 
 const dbConst = require('./const');
 const StationTable = require('./_table-station');
+const StationConfigTable = require('./_table-station-config');
 
 // 数据中心的类
 class DbCenter {
@@ -16,10 +17,12 @@ class DbCenter {
         });
 
         this.station = new StationTable(knex, dbConst.station);
+        this.stationConfig = new StationConfigTable(knex, dbConst.stationConfig);
     }
 
     async destroy() {
         await this.station.destroy();
+        await this.stationConfig.destroy();
     }
 
 }
