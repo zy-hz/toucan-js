@@ -6,28 +6,49 @@
 const { ToucanRunner } = require('../../../toucan-service');
 const cache = require('../cache');
 const tcSDK = require('../../../toucan-sdk');
+const _ = require('lodash');
 
 class RegistMeRunner extends ToucanRunner {
 
     async scheduleWork(options = {}) {
         const { remote, port } = options;
 
-        if (cache.remoteServer === remote) {
-            // 表示已经注册
-            // 检查自己的地址变更
-            this.log(`已经在服务 ${cache.remoteServer} 上登记`);
+        if (cache.remoteServer === remote && !_.isEmpty(cache.stationKey)) {
+            // 已经注册，开始执行更新过程
+            await this.updateProcess(remote, port);
+
+            // 同步采集站点的配置
+            await this.syncProcess(remote, port);
         } else {
-            // 准备在服务器上注册
-            const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port });
-            if (code === 0) {
-                const { stationId, stationKey } = result;
-                this.log(`在管理中心 ${remote} 上注册成功，分配站点编号[${stationId}]`);
+            // 没有在服务上注册，开始执行注册过程
+            await this.registProcess(remote, port);
 
-            } else if (code === -1) {
-                this.error(`在管理中心 ${remote} 上注册失败。${error}`);
-            }
-
+            // 同步采集站点的配置
+            await this.syncProcess(remote, port);
         }
+    }
+
+    async registProcess(remote, port) {
+        // 准备在服务器上注册
+        const { code, result, error } = await tcSDK.registMe(remote, { listenPort: port });
+        if (code === 0) {
+            this.log(`在管理中心 ${remote} 上注册成功，分配站点编号[${stationId}]`);
+
+            // 保存到缓存
+            const { stationId, stationKey } = result;
+            cache.set({ stationId, stationKey, remoteServer: remote });
+
+        } else if (code === -1) {
+            this.error(`在管理中心 ${remote} 上注册失败。${error}`);
+        }
+    }
+
+    async updateProcess(remote, port) {
+
+    }
+
+    async syncProcess(remote, port) {
+
     }
 
 }
