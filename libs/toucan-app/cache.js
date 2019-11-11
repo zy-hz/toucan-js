@@ -1,5 +1,6 @@
 const fs = require('fs');
 const _ = require('lodash');
+const path = require('path');
 
 // 从指定的文件读取配置
 function readCacheFromFile(f) {
@@ -21,6 +22,10 @@ function writeCacheToFile(c, f) {
 
     // 转为json存储
     const cnt = JSON.stringify(c);
+
+    const dir = path.dirname(f);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
     fs.writeFileSync(f, cnt);
 }
 

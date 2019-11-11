@@ -4,7 +4,6 @@
 //
 
 const _ = require('lodash');
-const { getObjectMD5 } = require('../../../toucan-utility');
 const { HOSTNAME } = require('../../db-center/const').station;
 const dbConfig = require('../config').dbConnection;
 const tools = require('../tools');
@@ -55,7 +54,7 @@ module.exports = async (ctx, next) => {
     const { machineInfo, stationKey = '', listenPort } = ctx.request.body;
 
     // 构建注册的参数
-    const pms = { machineInfo, machineMD5: getObjectMD5(machineInfo), listenPort, listenIp: ctx.clientIp };
+    const pms = { machineInfo, machineMD5: tools.getMachineMD5(machineInfo), listenPort, listenIp: ctx.clientIp };
 
     // 创建数据中心
     const dbc = require('../../db-center')(dbConfig).station;

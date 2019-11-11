@@ -1,0 +1,18 @@
+{
+    "apps": [
+        {
+            "name": "情报站", 
+            "script": "start.js", 
+            "args":[
+                "gs",
+                "--remote",
+                "211.149.224.49:57701",
+                "--port",
+                "57721"
+            ],
+            "instances": 1,
+            "exec_mode": "cluster", 
+            "autorestart": true   
+        }
+    ]
+}

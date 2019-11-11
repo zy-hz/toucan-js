@@ -21,7 +21,8 @@ describe('[测试入口] - sync station config', () => {
     // 我注册的信息
     const meInfo = {
         stationId: 'test-syncstationconfig', stationHostname: 'DESKTOP-19SS3KS',
-        stationMD5: 'f2d8bd57be4c33074a87db4596e3dd07',
+        //stationMD5: 'f2d8bd57be4c33074a87db4596e3dd07',
+        stationMD5: 'DESKTOP-19SS3KS',
         stationKey: 'testABC'
     }
 
@@ -30,7 +31,7 @@ describe('[测试入口] - sync station config', () => {
         await GatherStationCenter.start(startOptions);
 
         // 删除指定对象
-        await dbc.delete({ stationId: meInfo.stationId });
+        await dbc.delete({ stationHostname: meInfo.stationHostname });
         // 在数据库中添加本机
         await dbc.insert(meInfo);
 

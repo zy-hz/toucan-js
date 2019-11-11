@@ -4,7 +4,6 @@
 //
 const _ = require('lodash');
 const dbConfig = require('../config').dbConnection;
-const { getObjectMD5 } = require('../../../toucan-utility');
 const { HOSTNAME, STATIONID, STATIONNAME, STATIONCONFIGPLANID } = require('../../db-center/const').station;
 const { CONFIGID } = require('../../db-center/const').stationConfig;
 const tools = require('../tools');
@@ -15,7 +14,7 @@ const DEFAULT_PLAN_ID = '_default-01';
 async function getStation(dbc, machineInfo, stationKey) {
 
     const { hostname } = machineInfo;
-    const machineMD5 = getObjectMD5(machineInfo);
+    const machineMD5 = tools.getMachineMD5(machineInfo);
     const existStation = await dbc.selectOne(HOSTNAME, hostname);
 
     // 验证主机，没有通过，抛出异常

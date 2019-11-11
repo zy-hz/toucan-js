@@ -53,16 +53,13 @@ class ToucanGatherCell extends ToucanWorkUnit {
         this.__stopFlag = false;
 
         try {
-            // 制定采集任务的消息队列
+            // 绑定需要订阅消息队列
             this.gatherMQ.bindTaskQueue(this.skillKeys)
             // 启动消息队列的连接
-            await this.gatherMQ.connect();
-
-            // 绑定需要订阅消息队列
-            this.gatherMQ.bindTaskQueue(this.skillKeys);
+            //await this.gatherMQ.connect();
 
             // 创建订阅的作业，继承的基类可以重载该方法，实现自己的计划作业
-            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ,spiderOptions:this.spiderOptions });
+            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ, spiderOptions: this.spiderOptions });
 
             // 启动定时作业
             const scheduleRule = '* * * * * *'
@@ -121,7 +118,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
         catch (error) {
             // 设置状态
             this.workInfo.unitStatus.updateStatus(StatusCode.suspend);
-            this.processError('工作循环发生异常，工作中止。',error);
+            this.processError('工作循环发生异常，工作中止。', error);
         }
 
     }
@@ -146,8 +143,8 @@ class ToucanGatherCell extends ToucanWorkUnit {
         this.log(`${buildGatherCellId(this.unitInfo)} ${msg}`);
     }
 
-    processError(msg,error){
-        this.error(`${buildGatherCellId(this.unitInfo)} ${msg}`,error);
+    processError(msg, error) {
+        this.error(`${buildGatherCellId(this.unitInfo)} ${msg}`, error);
     }
 }
 
