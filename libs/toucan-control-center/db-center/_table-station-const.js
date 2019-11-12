@@ -5,10 +5,15 @@ module.exports = {
     TABLENAME: 'gs',
     HOSTNAME: 'stationHostname',
     STATIONID: 'stationId',
-    STATIONNAME:'stationName',
+    STATIONNAME: 'stationName',
     STATIONMD5: 'stationMD5',
     STATIONKEY: 'stationKey',
     STATIONIP: 'stationIp',
     STATIONLISTENPORT: 'stationListenPort',
-    STATIONCONFIGPLANID: 'stationConfigPlanId'
+    STATIONCONFIGPLANID: 'stationConfigPlanId',
+    SYSARCH: 'sysArch', // 操作系统架构,
+    SYSMEMORY: 'sysMemory', // 操作系统内存
+    SYSPLATFORM: 'sysPlatform', // 操作系统平台
+    SYSRELEASE: 'sysRelease',// 操作系统版本
+    SYSTYPE: 'sysType', //  操作系统类型
 }

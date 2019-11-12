@@ -39,7 +39,13 @@ module.exports = class extends BaseTable {
 
         if (obj.listenIp) fields[`${this.STATIONIP}`] = obj.listenIp;
         if (obj.listenPort) fields[`${this.STATIONLISTENPORT}`] = obj.listenPort;
-     
+
+        if (obj.arch) fields[`${this.SYSARCH}`] = obj.arch;
+        if (obj.memory) fields[`${this.SYSMEMORY}`] = obj.memory;
+        if (obj.platform) fields[`${this.SYSPLATFORM}`] = obj.platform;
+        if (obj.release) fields[`${this.SYSRELEASE}`] = obj.release;
+        if (obj.type) fields[`${this.SYSTYPE}`] = obj.type;
+        
         return fields;
     }
 } 
