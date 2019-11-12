@@ -13,7 +13,7 @@ class RegistMeRunner extends ToucanRunner {
     async scheduleWork(options = {}) {
 
         const { remote, port } = options;
-        let result;
+        let result = false;
         if (cache.remoteServer === remote && !_.isEmpty(cache.stationKey)) {
             // 已经注册，开始执行更新过程
             await this.updateProcess(remote, port);
@@ -28,8 +28,8 @@ class RegistMeRunner extends ToucanRunner {
             result = await this.syncProcess(remote);
         }
 
-        // 如果工作成功，设置计划间隔为5分钟
-        if (result) return { rescheduleRule: '*/5 * * * *' };
+        // 如果工作成功，设置计划间隔为5分钟,如果失败7秒后重试
+        return { rescheduleRule: result ? '*/5 * * * *' : '*/7 * * * * *' };
     }
 
     async registProcess(remote, port) {

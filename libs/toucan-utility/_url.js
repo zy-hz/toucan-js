@@ -68,12 +68,12 @@ class exURL {
     // 获得主机
     getHost(url) {
         url = this.fillProtocol(url);
-        return URL.parse(url, true, true).hostname;
+        return require('url').parse(url, true, true).hostname;
     }
 
     // 获得查询对象
     getQuery(url) {
-        const uri = URL.parse(url);
+        const uri = require('url').parse(url);
         return querystring.parse(uri.query);
     }
 
