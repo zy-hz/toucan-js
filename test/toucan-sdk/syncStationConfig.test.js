@@ -21,8 +21,7 @@ describe('[测试入口] - sync station config', () => {
     // 我注册的信息
     const meInfo = {
         stationId: 'test-syncstationconfig', stationHostname: 'DESKTOP-19SS3KS',
-        //stationMD5: 'f2d8bd57be4c33074a87db4596e3dd07',
-        stationMD5: 'DESKTOP-19SS3KS',
+        stationMD5: 'ff80d075f48a06e3960578327908e4f6',
         stationKey: 'testABC'
     }
 

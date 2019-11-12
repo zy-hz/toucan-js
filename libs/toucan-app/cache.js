@@ -60,4 +60,16 @@ module.exports = class {
 
         writeCacheToFile(this, this.cacheFileName);
     }
+
+    clear() {
+        // 保存文件名，因为后面对象会被删除
+        const tmpFile = this.cacheFileName;
+
+        _.forEach(this, (val, key) => {
+            if (!_.isFunction(val)) delete this[`${key}`];
+        })
+
+        this.cacheFileName = tmpFile;
+        writeCacheToFile({}, this.cacheFileName);
+    }
 }

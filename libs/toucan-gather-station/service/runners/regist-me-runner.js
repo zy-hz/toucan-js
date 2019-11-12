@@ -63,6 +63,8 @@ class RegistMeRunner extends ToucanRunner {
 
         } else if (code === -1) {
             this.error(`在管理中心 ${remote} 上更新失败。${error}`);
+            // 尝试修复错误
+            this.fixProcess(error);
         }
 
         return code === 0;
@@ -86,6 +88,17 @@ class RegistMeRunner extends ToucanRunner {
         return code === 0;
     }
 
+    // 尝试修复错误
+    async fixProcess(error) {
+
+        const msg = _.isObject(error) ? error.toString() : error;
+        if (/主机\[.*?\]未注册/im.test(msg)) {
+            // 尝试清除本地缓存
+            this.log('启动错误修复过程 -> 清除本地缓存');
+            cache.clear();
+        }
+
+    }
 }
 
 module.exports = new RegistMeRunner();
