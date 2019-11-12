@@ -16,4 +16,7 @@ module.exports = {
     SYSPLATFORM: 'sysPlatform', // 操作系统平台
     SYSRELEASE: 'sysRelease',// 操作系统版本
     SYSTYPE: 'sysType', //  操作系统类型
+    REGISTON: 'registOn',
+    CREATEON: 'createOn',
+    UPDATEON: 'updateOn',
 }

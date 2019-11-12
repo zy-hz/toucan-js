@@ -7,6 +7,7 @@ const _ = require('lodash');
 const { HOSTNAME } = require('../../db-center/const').station;
 const dbConfig = require('../config').dbConnection;
 const tools = require('../tools');
+const { currentDateTime } = require('../../../toucan-utility');
 
 // 作为一个新机器注册
 async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
@@ -20,8 +21,10 @@ async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, list
     // 生成stationKey
     const stationKey = tools.generateKey(machineInfo);
 
+    // 注册的时间
+    const registOn = currentDateTime();
     // 更新站点
-    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, stationKey }), `${HOSTNAME}`, hostname);
+    await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, stationKey, registOn }), `${HOSTNAME}`, hostname);
 
     // 查询该站点信息
     const stationInfo = await dbc.selectOne(HOSTNAME, hostname);
@@ -40,8 +43,10 @@ async function updateRegistInfo(dbc, { machineInfo = {}, machineMD5, listenPort,
     // 验证通过
     // 重新生成stationKey
     stationKey = tools.generateKey(machineInfo);
+    // 更新的时间
+    const updateOn = currentDateTime();
     // 更新站点
-    await dbc.update({ listenPort, listenIp, stationKey }, HOSTNAME, hostname);
+    await dbc.update({ listenPort, listenIp, stationKey, updateOn }, HOSTNAME, hostname);
 
     return { stationKey };
 }
