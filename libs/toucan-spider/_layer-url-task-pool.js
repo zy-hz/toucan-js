@@ -37,7 +37,8 @@ class LayerUrlTaskPool {
     // 比较连接是否存在
     isExist(url) {
         return _.some(this.__urls__, (x) => {
-            return exURL.isSameUrl(url,x.url);
+            // http 和 https 认为是相同的
+            return exURL.isSameUrl(url, x.url, { ignoreProtocol: true });
         })
     }
 
@@ -54,7 +55,7 @@ class LayerUrlTaskPool {
     }
 
     // 小于等于本层的所有数量
-    sumLessThan(layerIndex){
+    sumLessThan(layerIndex) {
         return _.sumBy(this.__urls__, (x) => {
             // 返回指定层，没有pop的数量
             return x.layerIndex <= layerIndex ? 1 : 0;

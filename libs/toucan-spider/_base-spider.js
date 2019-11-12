@@ -48,6 +48,8 @@ class ToucanBaseSpider {
         // 初始化的cookies
         this.cookie = new exCookie(cookie);
 
+        // 保留所有的原始选项
+        this.options = arguments[0];
         // 任务完成的处理程序
         //this.onTaskDone = onTaskDone;
     }
@@ -86,7 +88,9 @@ class ToucanBaseSpider {
             extractUrlTotalCount: SiteUrlCount(),
             extractUrlErrorCount: 0,
             depth: maxLayerIndex,
-        });
+        },
+            // 启动的选项作为任务的参数
+            this.options);
         // 爬行的循环
         let layerIndex = startPageIndex;
         while (layerIndex <= maxLayerIndex) {

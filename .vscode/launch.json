@@ -10,7 +10,12 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/start.js",
             "args":[
-                "gtc"
+                "gs",
+                "--remote",
+                "211.149.224.49:57701",
+                "--127.0.0.1:57701",
+                "--port",
+                "57721"
             ]
         },
         {

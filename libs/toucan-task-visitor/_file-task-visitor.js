@@ -4,14 +4,17 @@
 // 
 const _ = require('lodash');
 const moment = require('moment');
-
 const fs = require('fs');
+const path = require('path');
+const { md5 } = require('../../libs/toucan-utility');
 
 class FileTaskVisitor {
 
     constructor(options = {}) {
-        const { dbVisitor, urlFormat } = this.getOptions(options);
-        this.__taskPool = buildTaskPool(dbVisitor, urlFormat);
+        const { dbVisitor, urlFormat, enableCache = true } = this.getOptions(options);
+        this.dbVisitor = dbVisitor;
+        this.enableCache = enableCache;
+        this.__taskPool = buildTaskPool(dbVisitor, urlFormat, enableCache);
     }
 
     getOptions(args) {
@@ -31,6 +34,12 @@ class FileTaskVisitor {
 
         // 按照数量获取队列
         readyTasks = _.slice(readyTasks, 0, maxCount)
+
+        // 记录任务到缓存文件
+        // 可能导致bug:发布任务的组件没有真是的提交到任务中心
+        // 有时间修改该问题
+        if (this.enableCache) writeTask2Cache(this.dbVisitor, readyTasks);
+
         return _.map(readyTasks, (x) => {
             x.nextPublishTime = moment().add(5, 'seconds').valueOf()
             return {
@@ -42,17 +51,45 @@ class FileTaskVisitor {
 }
 
 // 构建任务池
-function buildTaskPool(fileName, urlFormat = '') {
-    const lines = _.split(fs.readFileSync(fileName), '\r\n');
+function buildTaskPool(fileName, urlFormat = '', enableCache = true) {
+    const lines = readTaskLines(fileName, enableCache);
     return _.map(lines, (ln) => {
         const pms = ln.split(/\t| +/im);
         let task = {};
         task.targetUrl = applyFormat(getTaskParam(pms, 0, ''), urlFormat);
         task.spiderType = getTaskParam(pms, 1, '');
         task.depth = getTaskParam(pms, 2, -1);
+        // 记录原始的任务
+        task.raw = ln;
 
         return task;
     });
+}
+
+// 读取任务行
+function readTaskLines(fileName, enableCache) {
+    const lines = _.split(fs.readFileSync(fileName), '\r\n');
+    if (!enableCache) return lines;
+
+    const cacheFileName = getTaskCacheFileName(fileName);
+    // 读取缓存
+    const existLines = fs.existsSync(cacheFileName) ? _.split(fs.readFileSync(cacheFileName), '\r\n') : [];
+    return _.difference(lines, existLines);
+}
+
+// 记录到任务缓存
+function writeTask2Cache(fileName, tasks) {
+    const lines = _.map(tasks, (t) => { return t.raw });
+    const cacheFileName = getTaskCacheFileName(fileName);
+    fs.appendFileSync(cacheFileName, _.join(lines, '\r\n') + '\r\n');
+}
+
+// 获得指定任务的缓存文件名
+function getTaskCacheFileName(fileName) {
+    // 唯一标记
+    const flag = md5(fileName);
+    const extName = path.extname(fileName);
+    return path.join(`${process.cwd()}/.cache/`, `${path.basename(fileName, extName)}_${flag}${extName}`);
 }
 
 function getTaskParam(ary, idx, val) {

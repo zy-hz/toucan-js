@@ -33,11 +33,24 @@ describe('[测试入口] - toucan service app', () => {
         expect(app.serviceName).to.be.eq(serviceName);
     })
 
+    it('config 测试', async () => {
+        const { body } = await getResponse('/config-test', {}, startOptions.port);
+        const { code, result } = body;
+        expect(code).to.be.eq(0);
+        expect(result.initA).to.be.eq('a');
+
+        const expectObj = {
+            port: result.port,
+            dbConnection: result.dbConnection
+        }
+        expect(expectObj, '和启动参数一致').to.be.eql(startOptions)
+    })
+
     it('info 接口测试', async () => {
         const { body } = await getResponse('/info', {}, startOptions.port);
 
-        const { success, result } = body;
-        expect(success).is.true;
+        const { code, result } = body;
+        expect(code).to.be.eq(0);
         expect(result).to.be.eq('127.0.0.1');
     })
 
@@ -45,8 +58,8 @@ describe('[测试入口] - toucan service app', () => {
         const { body, statusCode } = await getResponse('/dev-test', {}, startOptions.port);
         expect(statusCode).to.be.eq(200);
 
-        const { success, result } = body;
-        expect(success).is.true;
+        const { code, result } = body;
+        expect(code).to.be.eq(0);
         expect(result).to.be.eq('I am ready! 我准备好了');
     })
 })

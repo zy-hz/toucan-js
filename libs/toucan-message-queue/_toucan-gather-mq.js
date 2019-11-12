@@ -16,7 +16,7 @@ class ToucanGatherMQ extends ToucanBaseMQ {
     // 1. 订阅的队列列表，例如：toucan.cm.http,toucan.sp.com.ali
     // 2. 多个队列的时候，轮流获得队列中的任务
     bindTaskQueue(fromQueues = []) {
-        this.__taskBindQueue = _.concat([], fromQueues);
+        this.__taskBindQueue = _.concat([], _.castArray(fromQueues));
     }
 
     // 弹出当前的队列，并把他推入队列的末尾
@@ -35,7 +35,7 @@ class ToucanGatherMQ extends ToucanBaseMQ {
     }
 
     // 订阅采集任务
-    async subscribeTask() {
+    async subscribeTask({ consumeOptions = {} } = {}) {
         // 尝试从每个队列中获得任务，如果发现任务，下次就从下一个开始
         const maxTryCount = this.__taskBindQueue.length;
         let tryNum = 0;
@@ -44,7 +44,7 @@ class ToucanGatherMQ extends ToucanBaseMQ {
             const queue = this.popTaskQueue();
 
             // 从服务器获得消息
-            const msg = await this.mqVisitor.read({ queue })
+            const msg = await this.mqVisitor.read({ queue, consumeOptions })
 
             if (msg != false) return msg;
             tryNum = tryNum + 1;
@@ -73,6 +73,16 @@ class ToucanGatherMQ extends ToucanBaseMQ {
                 error,
             }
         }
+    }
+
+
+    // 提取信息
+    extractMessage(msg) {
+        if (_.isNil(msg)) throw new NullArgumentError('msg');
+        if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
+
+        if (_.isBuffer(msg.content)) return JSON.parse(msg.content.toString());
+        return typeof msg.content === 'object' ? msg.content : JSON.parse(msg.content.toString());
     }
 }
 

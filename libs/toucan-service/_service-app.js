@@ -5,7 +5,6 @@
 const { ToucanWorkUnit } = require('../toucan-work-unit');
 const { mapDirToModule, StatusCode, getObjectClassName } = require('../toucan-utility');
 const Koa = require('koa');
-const app = new Koa();
 const bodyParser = require('koa-bodyparser');
 const response = require('./middlewares/response');
 const request = require('./middlewares/request');
@@ -13,6 +12,7 @@ const request = require('./middlewares/request');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+
 
 class ServiceApp extends ToucanWorkUnit {
 
@@ -50,6 +50,12 @@ class ServiceApp extends ToucanWorkUnit {
         if (!_.isNil(this._server)) return;
 
         try {
+            // 把启动的配置附加到服务的配置上（提供全局使用）
+            // 服务的配置
+
+            const serviceConfig = fs.existsSync(this.appPath.configFile) ? require(this.appPath.configFile) : {};
+            _.assignIn(serviceConfig, options);
+
             // 启动自动运行者
             this.startRunner(options);
 
@@ -80,7 +86,7 @@ class ServiceApp extends ToucanWorkUnit {
     startApp(options = {}) {
         // 监听的端口号
         const { port = 3000 } = options;
-
+        const app = new Koa();
         // 使用响应处理中间件（全局错误处理）
         app.use(response);
 
@@ -111,6 +117,7 @@ class ServiceApp extends ToucanWorkUnit {
     stopApp() {
         if (!_.isNil(this._server)) {
             this._server.close();
+            delete this._server;
 
             this.log('服务停止');
         }
@@ -124,6 +131,8 @@ class ServiceApp extends ToucanWorkUnit {
             this.log(`正在停止运行器->${getObjectClassName(x)}...`);
             x.stop();
         });
+
+        delete this._runners;
     }
 
     ////////////////////////////////////////////////
@@ -149,7 +158,9 @@ class ServiceApp extends ToucanWorkUnit {
         appPath.controllerPath = path.resolve(d, 'controllers');
         appPath.runnerPath = path.resolve(d, 'runners');
         appPath.initScriptPath = path.resolve(d, 'scripts/init');
+        appPath.configFile = path.resolve(d, 'config.js');
 
+        appPath.cachePath = path.resolve(process.cwd(), '.cache');
         return appPath;
     }
 
@@ -168,8 +179,9 @@ class ServiceApp extends ToucanWorkUnit {
         // 枚举每个方法
         _.forEach(controllers, (val, key) => {
 
-            // 转为router
-            router.get(`/${key}`, val)
+            // 转为router - 支持 get 和 post
+            router.get(`/${key}`, val);
+            router.post(`/${key}`, val);
         })
 
         return router;

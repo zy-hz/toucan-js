@@ -7,18 +7,31 @@
 1. 在目录<mydir>中解开压缩包
 2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
 3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
+4. 在<mydir>的命令窗口中运行 cnpm i pm2 -g , 安装pm2管理工具
+5. 在<mydir>的命令窗口中运行 pm2 install pm2-logrotate，（注意是pm2 install 不是 npm install）
 
 ## 设置
 
 1. 在<mydri>的上级目录中创建config目录，在config目录中，新建
    - gather-station-center.config.json，采集站点控制中心的配置文件。
    - gather-task-center.config.json ,采集任务控制中心的配置文件。
-   - gather-result-center.config.json, 采集结果控制中心的配置文件。
-2. 在<mydir>目录运行 node init gsc|gtc|grc , 分别初始化采集站控制中心，采集任务控制中心和采集任务控制中心
+
+2. 在<mydir>目录运行 node init gsc|gtc , 分别初始化采集站点控制中心，采集任务控制中心
+
+3. 修改pm2-logrotate下，需要用pm2 set，否在不会生效
+
+   ```
+   pm2 set pm2-logrotate:max_size 10M
+   pm2 set pm2-logrotate:retain 7
+   pm2 set pm2-logrotate:workerInterval 30 
+   ```
+
+4. 
 
 ## 启动
 
-在目录<mydir>目录运行 node start gsc|gtc|grc , 可以分别启动采集站控制中心，采集任务控制中心和采集任务控制中心
+1. 在目录<mydir>目录运行 node start gsc|gtc , 可以分别启动采集站控制中心，采集任务控制中心
+2. 或者运行 pm2 start pm2.config.js --only gsc|gtc|gs
 
 ## 目录结构说明
 
@@ -34,6 +47,7 @@
 - 102 - 新增elm相关功能，饿了么店铺列表蜘蛛 （关闭：不能使用api访问）
 - 103 - 新增浏览器模式获得饿了么店铺信息
 - 104 - 新增采集站管理中心
+- 105 - 采集站点从管理中心获得运行配置
 
 ## 测试方案
 

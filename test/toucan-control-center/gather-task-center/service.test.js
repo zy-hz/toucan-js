@@ -1,11 +1,10 @@
 /* eslint-disable no-undef */
 const { GatherTaskCenter } = require('../../../libs/toucan-control-center');
 const expect = require('chai').expect;
-const { getResponse } = require('../../toucan-service');
 // 默认的配置
 const DEFAULT_CONFIG = require('../../../libs/toucan-control-center/gather-task-center/config');
 
-describe('temp [long][测试入口] - gather task service', () => {
+describe('[long][测试入口] - gather task service', () => {
     const startOptions = Object.assign(DEFAULT_CONFIG, {
         // 监听端口
         port: 1123,
