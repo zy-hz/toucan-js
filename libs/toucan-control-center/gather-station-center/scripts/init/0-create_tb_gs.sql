@@ -20,6 +20,11 @@ create table gs
    updateOn             datetime default '0001-01-01 00:00:00' comment '更新的时间',
    isLocked             bool default 0 comment '站点被锁定，不能使用',
    enableReset          bool default 0 comment '允许用重新注册',
+   sysArch              char(32) default '' comment '系统架构',
+   sysMemory            char(32) default '' comment '系统内存',
+   sysPlatform          char(32) default '' comment '系统平台',
+   sysRelease           char(32) default '' comment '操作系统版本',
+   sysType              char(32) default '' comment '操作系统类型',
    autoId               bigint not null auto_increment comment '自动编号',
    primary key (autoId)
 );
