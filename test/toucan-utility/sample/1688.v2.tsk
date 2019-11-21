@@ -1,0 +1,18 @@
+{
+    "batchInfo":{
+        "batchName":"1688全量产品详情采集任务",
+        "batchComment":"1688_productid_20191114_145341",
+        "batchOwner":"施工",
+        "batchGroup":"大嘴鸟",
+        "batchTag":"预备 浙江"
+    },
+    "batchFormat":{
+        "lineSplitChar":";",
+        "lineFields":[
+            "productId",
+            "memberId",
+            "shopUrl"
+        ],
+        "targetUrl":"http://detail.1688.com/offer/${productId}.html"
+    }
+}

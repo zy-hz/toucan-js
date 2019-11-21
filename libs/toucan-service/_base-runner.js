@@ -14,12 +14,22 @@ class BaseRunner extends ToucanWorkUnit {
         super({ status });
 
         this.className = getObjectClassName(this);
+        // 默认的工作计划
+        this.defaultscheduleRule = '*/5 * * * * *';
+    }
+
+    // 初始化
+    async init(options = {}) {
+        // 继承类，添加初始化代码
     }
 
     async start(options = {}) {
 
+        // 启动前的初始化
+        const myOptions = await this.init(options) || options;
+
         // 每5秒检查一次
-        let scheduleRule = options.scheduleRule || '*/5 * * * * *';
+        let scheduleRule = myOptions.scheduleRule || this.defaultscheduleRule;
 
         // 启动定时作业
         this.schedule = schedule.scheduleJob(scheduleRule, async () => {
@@ -29,7 +39,7 @@ class BaseRunner extends ToucanWorkUnit {
             this.workInfo.unitStatus.updateStatus(StatusCode.actived);
 
             try {
-                const result = await this.scheduleWork(options);
+                const result = await this.scheduleWork(myOptions);
 
                 // 重新设置工作计划
                 const { rescheduleRule } = result || {};

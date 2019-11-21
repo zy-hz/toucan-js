@@ -118,7 +118,7 @@ class RabbitMQVisitor extends ToucanMQVisitor {
         // 创建通道
         const ch = await this.conn.createConfirmChannel();
         try {
-            // 把对象转为支付串
+            // 把对象转为字符串
             if (!_.isString(content)) content = JSON.stringify(content);
             const buf = Buffer.from(content);
             let ok;

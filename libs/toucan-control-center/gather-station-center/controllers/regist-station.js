@@ -7,7 +7,7 @@ const _ = require('lodash');
 const { HOSTNAME } = require('../../db-center/const').station;
 const dbConfig = require('../config').dbConnection;
 const tools = require('../tools');
-const { currentDateTime } = require('../../../toucan-utility');
+const { currentDateTimeString } = require('../../../toucan-utility');
 
 // 作为一个新机器注册
 async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, listenIp }) {
@@ -22,7 +22,7 @@ async function registAsNew(dbc, { machineInfo = {}, machineMD5, listenPort, list
     const stationKey = tools.generateKey(machineInfo);
 
     // 注册的时间
-    const registOn = currentDateTime();
+    const registOn = currentDateTimeString();
     // 更新站点
     await dbc.update(Object.assign(machineInfo, { machineMD5, listenPort, listenIp, stationKey, registOn }), `${HOSTNAME}`, hostname);
 
@@ -44,7 +44,7 @@ async function updateRegistInfo(dbc, { machineInfo = {}, machineMD5, listenPort,
     // 重新生成stationKey
     stationKey = tools.generateKey(machineInfo);
     // 更新的时间
-    const updateOn = currentDateTime();
+    const updateOn = currentDateTimeString();
     // 更新站点
     await dbc.update({ listenPort, listenIp, stationKey, updateOn }, HOSTNAME, hostname);
 

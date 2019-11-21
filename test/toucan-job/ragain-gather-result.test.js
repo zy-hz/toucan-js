@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const expect = require('chai').expect;
 
-describe(' [测试入口] - regain gather result', () => {
+describe('[测试入口] - regain gather result', () => {
     const dir = `${process.cwd()}/.cache/test-mock`;
 
     before('', () => {

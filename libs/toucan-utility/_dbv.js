@@ -2,6 +2,7 @@ const fs = require('fs');
 const knex = require('knex');
 const _ = require('lodash');
 const { verifySqlPermit } = require('./_sql-command');
+const { getDateTimeString } = require('./_datetime')
 
 class DbVisitor {
     constructor(options = {}) {
@@ -23,6 +24,9 @@ class DbVisitor {
                 multipleStatements: true
             }
         })
+
+        // 数据库的连接
+        this.connection = options;
     }
 
     // 关闭访问器
@@ -50,6 +54,24 @@ class DbVisitor {
         verifySqlPermit(content, initSqlPermit);
         return await this.DB.raw(content, args);
     }
+
+    // 删除所有表
+    async dropTables() {
+        let sql = `select table_name from information_schema.TABLES where table_schema='${this.connection.database}';`
+        const result = await this.execSql(sql);
+        sql = _.map(result[0], row => { return `drop table \`${row['TABLE_NAME']}\`;` }).join('\n');
+        await this.execSql(sql, { initSqlPermit: { disableDrop: false } });
+    }
 }
 
-module.exports = { DbVisitor }
+// 对象转为字段值
+// string -> 'string'
+// time -> '0000-00-00 00:00:00'
+// number -> number
+function convertObjectToFieldValue(val) {
+    if (_.isString(val)) return `'${val}'`;
+    if (_.isDate(val)) return `'${getDateTimeString(val)}'`;
+    return val;
+}
+
+module.exports = { DbVisitor, convertObjectToFieldValue }

@@ -59,8 +59,7 @@ class RegainGatherResultJob extends TaskJob {
 // 保存结果到指定目录
 function saveResult(msg, outDir) {
     const fileName = buildTimeStampFileName(outDir);
-    // 这段代码是临时处理 工商项目1688的采集需求
-    const content = JSON.stringify(msg).replace(/m\.1688\.com/img, "detail.1688.com");
+    const content = JSON.stringify(msg)
     fs.writeFileSync(fileName, content);
 
     return fileName

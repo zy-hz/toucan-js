@@ -34,7 +34,10 @@ function joinWhereAsObject(dbv, objs) {
 
 // where 是字符串数组
 function joinWhereAsString(dbv, pms) {
-    return dbv.where(`${pms[0]}`, pms[1]);
+    if (pms.length === 2) return dbv.where(`${pms[0]}`, pms[1]);
+    if (pms[1] === 'in') return dbv.whereIn(`${pms[0]}`, pms[2]);
+
+    return dbv.where(`${pms[0]}`, `${pms[1]}`, pms[2]);
 }
 
 module.exports = { joinWhere }

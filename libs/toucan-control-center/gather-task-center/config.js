@@ -46,7 +46,9 @@ module.exports = {
     // 任务来源
     taskSource: [
         {
-            // 数据源的类型 file | db | fake | 其他特别的来源
+            // 给来源指定一个名称
+            sourceName:'',
+            // 数据源的类型 file | db | fake | dir | 其他特别的来源
             // 这些来源对应toucan-task-visitor 目录中的每个解析器
             dbType: '',
             // 数据访问器，可以是对象，或者字符串
@@ -69,6 +71,8 @@ module.exports = {
         publishGatherTask: '*/5 */10 8-21 * * *',
         // 每分钟的0秒
         regainGatherResult: '0 * * * * *',
+        // 每分钟的0秒
+        loadGatherTask: '0 * * * * *',
     }
 
 }

@@ -1,6 +1,9 @@
 //
 // Toucan消息队列的基类
 
+const { NullArgumentError } = require('../toucan-error');
+const _ = require('lodash');
+
 class ToucanBaseMQ {
 
     constructor(mqVisitor, option = {}) {
@@ -21,6 +24,24 @@ class ToucanBaseMQ {
 
     async onReceived() {
 
+    }
+
+    // 提取信息
+    extractMessage(msg) {
+
+        if (_.isNil(msg)) throw new NullArgumentError('msg');
+        if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
+
+        const content = _.isBuffer(msg.content) ? msg.content.toString() : msg.content;
+        if (_.isString(content)) {
+            try {
+                return JSON.parse(content);
+            }
+            catch (error) {
+                return content;
+            }
+        }
+        return content
     }
 }
 

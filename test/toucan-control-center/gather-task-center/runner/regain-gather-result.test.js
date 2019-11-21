@@ -1,19 +1,25 @@
 /* eslint-disable no-undef */
 const runner = require('../../../../libs/toucan-control-center/gather-task-center/runners/regain-gather-result');
 
-
 describe('[测试入口] - regain gather result runner', () => {
-
-    after('', async () => {
-        await runner.stop();
-    })
-
-    it('start', async () => {
-        const taskMQ = {
+    // 启动的选项
+    const options = {
+        // 数据库连接
+        dbConnection: {
+            client: 'mysql',
+            host: '127.0.0.1',
+            port: 3306,
+            user: 'weapp',
+            password: '123456',
+            database: 'tc_gather_cc',
+            charset: 'utf8'
+        },
+        // 任务队列
+        taskMQ: {
             // 消息队列的类型
             mqType: 'rabbit',
             // 发布采集任务的交换机
-            exchangeName: 'toucan.gather.task',
+            exchangeName: 'toucan-test.gather.task',
             // 任务队列的其他选项
             options: {
                 // 默认为本地服务器
@@ -31,14 +37,26 @@ describe('[测试入口] - regain gather result runner', () => {
             resultQueue: [
                 {
                     queue: 'toucan.gather.result.all',
-                    outDir: '../output/result.all',
-                    // 设置为false ,保证不从服务器删除数据
-                    options: { noAck: false }
+                    outDir: '../output/result-test.all',
+                    // 测试时可以设置 noAck = false
+                    options: { noAck: true }
                 }
             ]
-        }
-        const jobSchedule = { regainGatherResult: '*/2 * * * * *' }
-        await runner.start({ taskMQ, jobSchedule, batchRegainCount: 2 });
+        },
+
+    }
+
+
+    before('', async () => {
+        await runner.init(options);
+    })
+
+    after('', async () => {
+        await runner.stop();
+    })
+
+    it('start', async () => {
+        await runner.scheduleWork(options);
     })
 
 

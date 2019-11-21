@@ -18,22 +18,32 @@ describe('[测试入口] - base where', () => {
     const hostname = uuid().substr(0, 32);
     const sid = 'where-test';
 
-    before('', async () => {
+    beforeEach('', async () => {
         await dbv.insert({ stationId: sid, stationHostname: hostname });
     })
 
-    after('', async () => {
-        const del = joinWhere(dbv, { stationHostName: hostname }).del();
+    afterEach('', async () => {
+        const del = joinWhere(dbv, { stationId: sid }).del();
         await del;
-        
+
+    })
+
+    after('',async()=>{
         await knex.destroy();
     })
 
-    it('joinWhere', async () => {
+    it('joinWhere = ', async () => {
         const select = joinWhere(dbv, { stationHostName: hostname });
         select._method = 'select';
         const result = await select;
         expect(result).have.lengthOf(1);
         expect(result[0].stationHostname).to.be.eq(hostname)
+    })
+
+    it('joinWhere > ', async () => {
+        const select = joinWhere(dbv, 'stationId', '>', 'where-tess');
+        select._method = 'select';
+        const result = await select;
+        expect(result).have.lengthOf(1);
     })
 })

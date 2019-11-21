@@ -1,8 +1,7 @@
 //
 // 采集消息队列
-
-const ToucanBaseMQ = require('./_toucan-base-mq');
 const { NullArgumentError } = require('../toucan-error');
+const ToucanBaseMQ = require('./_toucan-base-mq');
 const _ = require('lodash');
 
 class ToucanGatherMQ extends ToucanBaseMQ {
@@ -46,7 +45,7 @@ class ToucanGatherMQ extends ToucanBaseMQ {
             // 从服务器获得消息
             const msg = await this.mqVisitor.read({ queue, consumeOptions })
 
-            if (msg != false) return msg;
+            if (msg != false) return this.extractMessage(msg);
             tryNum = tryNum + 1;
         }
 
@@ -73,16 +72,6 @@ class ToucanGatherMQ extends ToucanBaseMQ {
                 error,
             }
         }
-    }
-
-
-    // 提取信息
-    extractMessage(msg) {
-        if (_.isNil(msg)) throw new NullArgumentError('msg');
-        if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
-
-        if (_.isBuffer(msg.content)) return JSON.parse(msg.content.toString());
-        return typeof msg.content === 'object' ? msg.content : JSON.parse(msg.content.toString());
     }
 }
 

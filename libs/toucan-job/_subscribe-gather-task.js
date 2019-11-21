@@ -17,14 +17,12 @@ class SubscribeGatherTaskJob extends TaskJob {
     async do() {
 
         // 从消息队列订阅任务，这个阶段出现的异常，需要抛出
-        const msg = await this.gatherMQ.subscribeTask();
-        if (msg === false) {
+        let task = await this.gatherMQ.subscribeTask();
+        if (task === false) {
             // 消息队列没有任务
             return { jobCount: 0 };
         }
 
-        // 获得采集任务
-        let task = extractMessage(msg);
         // 根据任务的类型等参数创建对应的采集蜘蛛
         const spider = spiderFactory.createSpider(task, this.spiderOptions);
         // 启动采集蜘蛛
@@ -75,15 +73,6 @@ class SubscribeGatherTaskJob extends TaskJob {
 
         // TODO::提交到服务器
     }
-}
-
-// 提取信息
-function extractMessage(msg) {
-    if (_.isNil(msg)) throw new NullArgumentError('msg');
-    if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
-
-    if (_.isBuffer(msg.content)) return JSON.parse(msg.content.toString());
-    return typeof msg.content === 'object' ? msg.content : JSON.parse(msg.content.toString());
 }
 
 module.exports = { SubscribeGatherTaskJob };

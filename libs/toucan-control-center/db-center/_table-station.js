@@ -20,16 +20,6 @@ module.exports = class extends BaseTable {
         );
     }
 
-    objMap2Field_standard(obj) {
-        const fields = {};
-
-        _.forEach(this.tableConst, (val) => {
-            if (obj[`${val}`]) fields[`${val}`] = obj[`${val}`];
-        })
-
-        return fields;
-    }
-
     objMap2Field_machineInfo(obj) {
         const fields = {};
 

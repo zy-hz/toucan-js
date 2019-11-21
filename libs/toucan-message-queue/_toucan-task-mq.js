@@ -2,7 +2,6 @@
 //  Toucan任务队列
 //
 const ToucanBaseMQ = require('./_toucan-base-mq');
-const { NullArgumentError } = require('../toucan-error');
 
 const _ = require('lodash');
 
@@ -50,26 +49,8 @@ class ToucanTaskMQ extends ToucanBaseMQ {
         const msg = await this.mqVisitor.read({ queue, consumeOptions });
         if (_.isBoolean(msg)) return msg;
         
-        return _.map(_.castArray(msg), extractMessage);
+        return _.map(_.castArray(msg), this.extractMessage);
     }
-}
-
-// 提取信息
-function extractMessage(msg) {
-
-    if (_.isNil(msg)) throw new NullArgumentError('msg');
-    if (_.isNil(msg.content)) throw new NullArgumentError('msg.content');
-
-    const content = _.isBuffer(msg.content) ? msg.content.toString() : msg.content;
-    if (_.isString(content)) {
-        try {
-            return JSON.parse(content);
-        }
-        catch (error) {
-            return content;
-        }
-    }
-    return content
 }
 
 module.exports = ToucanTaskMQ;
