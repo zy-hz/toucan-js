@@ -90,6 +90,8 @@ describe('[测试入口] - load gather task', () => {
                 sourceName: 'uploadTask',
                 taskFile: path.resolve(uploadPath, '1688.v2.tsk'),
                 contentFile: path.resolve(uploadPath, '1688.v2.txt')
+                //taskFile: path.resolve('d:/Works/大嘴鸟/toucan-js/.sample/test/1688_productid_20191114_145341.tsk'),
+                //contentFile: path.resolve('d:/Works/大嘴鸟/toucan-js/.sample/test/1688_productid_20191114_145341.txt')
             });
 
             const dbc = require('../../../../libs/toucan-control-center/db-center')(options.dbConnection);

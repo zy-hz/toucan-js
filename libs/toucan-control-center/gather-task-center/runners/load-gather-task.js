@@ -42,7 +42,7 @@ class LoadGatherTaskRunner extends ToucanRunner {
         const { batchInfo, sourceName, batchFormat, contentFile, partition } = task;
         const { taskBatch, taskBatchDetail, taskBatchPlan } = dbc;
 
-        console.log(`准备载入任务从[${sourceName}] - > ${contentFile}`);
+        this.log(`准备载入任务从[${sourceName}] - > ${contentFile}`);
 
         // 载入批量任务
         const batchTasks = batchTaskLoader.load(contentFile, batchFormat, partition);

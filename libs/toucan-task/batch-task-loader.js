@@ -17,6 +17,7 @@ function readContent(file) {
 // http://detail.1688.com/offer/${productId}.html
 // http://detail.1688.com/offer/${0}.html
 function convertRow2Task(row, splitChar, fields, targetUrl) {
+
     row = _.trim(row);
     if (_.isEmpty(row)) return undefined;
 
@@ -66,6 +67,10 @@ function load(contentFile,
     // 文件分组（先切割，以便处理大任务）
     if (taskCount === 0) taskCount = Math.ceil(lines.length / (segmentCount || 1));
     const batchs = _.chunk(lines, taskCount);
+
+    // 当b数量到100w的时候，返回对象会到lodash异常中断，如果返回是字符串，就没有问题
+    // 当b数量小于10w的时候，也没有问题
+    // 很可能和batchs的数量的总和有关系
 
     return _.map(batchs, (b) => {
         let tasks = _.map(b, row => { return convertRow2Task(row, lineSplitChar, lineFields, targetUrl) });

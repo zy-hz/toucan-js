@@ -46,4 +46,12 @@ describe('[测试入口] - batch task loader', () => {
         expect(tasks).have.lengthOf(partition.segmentCount);
     })
 
+    it('load big count', () => {
+        partition.taskCount = 10000*100;
+        //let tasks = loader.load('d:/Works/大嘴鸟/toucan-js/.sample/test/1688_productid_20191114_145341.txt', batchFormat, partition);
+        // 被分割为10个批次
+        //expect(tasks).have.lengthOf(10);
+
+    })
+
 })
