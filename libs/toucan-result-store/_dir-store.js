@@ -11,7 +11,7 @@ class DirResultStore {
         outDir } = {}
     ) {
         this.outDir = path.resolve(process.cwd(), outDir);
-        if (!fs.existsSync(this.outDir)) fs.mkdirSync(this.outDir, { resolve: true });
+        if (!fs.existsSync(this.outDir)) fs.mkdirSync(this.outDir, { recursive: true });
     }
 
     async save(obj) {
