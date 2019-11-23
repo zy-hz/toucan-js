@@ -4,11 +4,28 @@
 
 ## 安装
 
-1. 在目录<mydir>中解开压缩包
+1. 在目录<mydir>中解开压缩包，解压缩完成后，在<mydir>目录中，应该是以下目录和文件：
+
+   ```
+   libs
+   init.js
+   package.json
+   pm2.config.js
+   README.md
+   start.js
+   ```
+
+   **注意：以下操作，必须在<mydir>目录中进行**
+
 2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
+
 3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
+
 4. 在<mydir>的命令窗口中运行 cnpm i pm2 -g , 安装pm2管理工具
-5. 在<mydir>的命令窗口中运行 pm2 install pm2-logrotate，（注意是pm2 install 不是 npm install）
+
+5. 在<mydir>的命令窗口中运行 pm2 install pm2-logrotate
+
+   **注意：是pm2 install 不是 npm instal**
 
 ## 设置
 
@@ -26,7 +43,6 @@
    pm2 set pm2-logrotate:workerInterval 30 
    ```
 
-4. 
 
 ## 启动
 
@@ -44,11 +60,17 @@
 
 ## 功能
 
+- 107 - 采集结果中增加站点信息（开发中）
 - 106 - 采集任务管理中心数据库支持 
 - 105 - 采集站点从管理中心获得运行配置
 - 104 - 新增采集站管理中心
 - 103 - 新增浏览器模式获得饿了么店铺信息
 - 102 - 新增elm相关功能，饿了么店铺列表蜘蛛 （关闭：不能使用api访问）
+
+## 问题
+
+- 100 - 上传任务文件的大小如果超过50万条，则很大概率出现异常
+- 
 
 ## 测试方案
 
@@ -74,69 +96,7 @@
 
    该方案时快速测试+长时间测试的方案总和。测试过程中会发现错误后，记录错误后跳过，最后给出一个综合报告
 
-## 采集任务管理中心 gtc
 
-​	复制导入，调度，发布采集任务。
-
-###一、配置文件说明
-
-​	配置文件为json类型，一般是<当前目录>/../config/gather-task-center.config.json。
-
-```json
-{
-    "port":57702,
-    "dbConnection":{
-        "host":"127.0.0.1",
-        "port":3306,
-        "user":"weapp",
-        "password":"123456",
-        "database":"tc_gather_cc"
-    },
-    "taskMQ":{
-        "mqType":"rabbit",
-        "exchangeName":"toucan.gather.task",
-        "options":{
-            "hostname":"211.149.224.49",
-            "port":5672,
-            "vhost":"gs-bj",
-            "username":"gs01",
-            "password":"123456"
-        },
-        "resultQueue":[
-            {
-                "queue":"toucan.gather.result.all",
-                "outDir":"../output/1688.detail.result.all"
-            }
-        ]
-    },
-    "taskSource":[
-        {
-            "dbType":"file",
-            "dbVisitor":"d:/Works/大嘴鸟/toucan-js/.sample/1688_productid_20191102_101337.txt",
-            "urlFormat":"http://detail.1688.com/offer/${0}.html",
-            "enableCache":true
-        }
-    ],
-    "batchPublishCount":10,
-    "batchRegainCount":100,
-    "jobSchedule":{
-        "publishGatherTask":"* * * * 2 *",
-        "regainGatherResult":"* * * * *"
-    }
-}
-```
-
-
-
-### 二、导入采集任务
-
-1. 配置导入目录
-
-   
-
-2. 
-
-## 采集站点管理中心 gsc
 
 
 
