@@ -11,7 +11,7 @@ describe('[测试入口] - publish gather task runner', () => {
             port: 3306,
             user: 'weapp',
             password: '123456',
-            database: 'tc_gather_cc',
+            database: 'tctest_gather_cc',
             charset: 'utf8'
         },
         // 任务队列
@@ -27,7 +27,7 @@ describe('[测试入口] - publish gather task runner', () => {
                 // 默认服务端口
                 port: 5672,
                 // 虚拟机
-                vhost: '/',
+                vhost: 'mock-test',
                 // 连接主机的用户名
                 username: 'guest',
                 // 连接主机的密码

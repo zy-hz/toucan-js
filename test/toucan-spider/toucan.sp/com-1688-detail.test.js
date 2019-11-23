@@ -8,7 +8,7 @@ const { exHTML } = require('../../../libs/toucan-utility');
 const fs = require('fs');
 
 describe('[demo] ali-1688-detail 蜘蛛测试', () => {//42077154176
-    const url1 = 'https://detail.1688.com/offer/602752160064.html?spm=a260j.12536015.jr601u7p.2.145d700eMEM6by';
+    const url1 = 'https://detail.1688.com/offer/602752160064.html';
 
     it('m ', async () => {
         const spider = new Ali1688DetailSpider();
@@ -28,18 +28,19 @@ describe('[demo] ali-1688-detail 蜘蛛测试', () => {//42077154176
         expectTask(task);
     })
 
-    describe('内部方法测试',()=>{
-        describe('verifyContentPage 测试',()=>{
-            it('ok',()=>{
-                const pageContent = fs.readFileSync(__dirname + '/../sample/page-detail-1688-com_ok.html','utf-8');
+    describe('内部方法测试', () => {
+        describe('verifyContentPage 测试', () => {
+            it('ok', () => {
+                const pageContent = fs.readFileSync(__dirname + '/../sample/page-detail-1688-com_ok.html', 'utf-8');
                 const result = verifyContentPage(pageContent);
                 expect(result.hasException).is.false;
             });
 
-            it('err',()=>{
-                const pageContent = fs.readFileSync(__dirname + '/../sample/page-detail-1688-com_err.html','utf-8');
+            it('err', () => {
+                const pageContent = fs.readFileSync(__dirname + '/../sample/page-detail-1688-com_err.html', 'utf-8');
                 const result = verifyContentPage(pageContent);
                 expect(result.hasException).is.true;
+                expect(result.errno).to.be.eq(50010)
 
                 console.log(result);
             });
@@ -56,6 +57,9 @@ function expectTask(task) {
 
 function expectPage(page) {
     expect(page.hasException).is.false;
+    expect(page.spiderType,'spiderType').is.not.empty;
+    expect(page.spiderName,'spiderName').is.not.eq('unknown');
+
     const content = exHTML.extractContent(page.pageContent, true);
     expect(content.indexOf('莎诺国际G4642图片包百度网盘下载') > 0).is.true;
 }

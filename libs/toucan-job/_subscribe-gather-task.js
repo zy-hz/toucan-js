@@ -1,16 +1,17 @@
 const { spiderFactory } = require('../toucan-spider');
 const { TaskJob } = require('./_base-task-job');
-const { NullArgumentError } = require('../toucan-error');
 const _ = require('lodash');
 
 class SubscribeGatherTaskJob extends TaskJob {
     constructor({
         gatherMQ,
         spiderOptions,
+        stationInfo,
     }) {
         super();
         this.gatherMQ = gatherMQ;
         this.spiderOptions = spiderOptions;
+        this.stationInfo = stationInfo;
     }
 
     // 注意：不是自己的异常，必须抛出，例如：gatherMQ的异常
@@ -43,7 +44,7 @@ class SubscribeGatherTaskJob extends TaskJob {
         // 提交页面采集结果到服务器
         const submitBeginTime = _.now();
         const result = await this.gatherMQ.submitResult(
-            { task, page },
+            { task, page, station: this.stationInfo },
             {
                 queue: 'toucan.gather.result.all',
                 options: {
@@ -67,11 +68,11 @@ class SubscribeGatherTaskJob extends TaskJob {
     }
 
     // 采集任务完成
-    async onTaskDone(task){
+    async onTaskDone(task) {
         // 记录页面日志
         this.logGatherTaskDone(task);
 
-        // TODO::提交到服务器
+        // TODO::提交到服务器-表示任务完成
     }
 }
 

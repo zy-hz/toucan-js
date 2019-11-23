@@ -2,6 +2,7 @@ const { ToucanBaseSpider } = require('../_base-spider');
 const PuppeteerPageFetch = require('../../toucan-page-fetch/_puppeteer-fetch');
 const _ = require('lodash');
 const { exHTML } = require('../../toucan-utility');
+const errorConst = require('../../toucan-error').ErrorConst.spiderError;
 
 class MobilePageFetch extends PuppeteerPageFetch {
 
@@ -24,6 +25,8 @@ class PCPageFetch extends PuppeteerPageFetch {
 class Ali1688DetailSpider extends ToucanBaseSpider {
 
     constructor(option = {}) {
+        // 设置蜘蛛的名称
+        option.spiderName = 'Ali1688DetailSpider';
         // 继承基类的创建参数
         super(option);
     }
@@ -82,14 +85,16 @@ function verifyContentPage(pageContent) {
     // 提取要求登录的文本
     const loginTxt = includeLoginForm(txt);
     if (_.isEmpty(loginTxt)) return { hasException: false };
+    // 设置错误代码
+    const errno = errorConst.requireUserLoginError;
 
     return {
         // 抓取过程是否异常
         hasException: true,
-        // 错误码
+        // 程序码
         code: 0,
         // 错误码
-        errno: 0,
+        errno,
         // 错误信息
         message: loginTxt,
         // 调用堆栈
@@ -99,9 +104,12 @@ function verifyContentPage(pageContent) {
 
 // 包含登录信息
 function includeLoginForm(txt) {
-    if(_.isEmpty(txt))return '';
+    if (_.isEmpty(txt)) return '';
 
-    if(/请登录/im.test(txt)) return '请登录';
+    if (/请登录/im.test(txt)) return '请登录';
+    if (/选择其中一个已登录的账户/im.test(txt)) return '选择其中一个已登录的账户';
+    if (/短信校验码登录/im.test(txt)) return '短信校验码登录';
+
     return '';
 }
 

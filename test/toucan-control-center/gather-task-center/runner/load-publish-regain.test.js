@@ -298,7 +298,13 @@ describe('[测试入口]load publish regain 综合测试', () => {
             const tableName = dbc.taskBatchDetail.getLikeTableName(testObj.task.batchId);
             const tbv = dbc.newTable(tableName, dbc.taskBatchDetail);
             const batchTask = await tbv.selectOne({ batchId: testObj.task.batchId });
-            expect(batchTask.workTime,'workTime').to.be.eq(Math.ceil(testObj.task.taskSpendTime/1000));
+            expect(batchTask.workTime, 'workTime').to.be.eq(Math.ceil(testObj.task.taskSpendTime / 1000));
+            expect(batchTask.spiderName, 'spiderName').to.be.eq(testObj.page.spiderName);
+            expect(batchTask.spiderType, 'spiderType').to.be.eq(testObj.page.spiderType);
+
+            expect(batchTask.stationName, 'stationName').to.be.eq(testObj.station.stationName);
+            expect(batchTask.stationNo, 'stationNo').to.be.eq(testObj.station.stationNo);
+            expect(batchTask.stationIp, 'stationIp').to.be.eq(testObj.station.stationIp);
 
             if (isOk) {
                 expect(batchPlan.taskErrorCount, 'taskErrorCount').to.be.eq(0);
@@ -306,18 +312,23 @@ describe('[测试入口]load publish regain 综合测试', () => {
                 expect(batchPlan.taskDoneRate, 'taskDoneRate').to.be.eq(25.00);
                 expect(batchPlan.taskErrorRate, 'taskErrorRate').to.be.eq(0.00);
 
-                expect(batchTask.taskState,'taskState').to.be.eq(20);
-                expect(batchTask.doneCount,'doneCount').to.be.eq(1);
-                expect(batchTask.errorCount,'errorCount').to.be.eq(0);
+                expect(batchTask.taskState, 'taskState').to.be.eq(20);
+                expect(batchTask.doneCount, 'doneCount').to.be.eq(1);
+                expect(batchTask.errorCount, 'errorCount').to.be.eq(0);
+                expect(batchTask.errorNo, 'errorNo').to.be.eq(0);
+                expect(batchTask.errorMessage, 'errorMessage').is.empty;
             } else {
                 expect(batchPlan.taskErrorCount, 'taskErrorCount').to.be.eq(1);
                 expect(batchPlan.taskResidualCount, 'taskResidualCount').to.be.eq(2);
                 expect(batchPlan.taskDoneRate, 'taskDoneRate').to.be.eq(33.33);
                 expect(batchPlan.taskErrorRate, 'taskErrorRate').to.be.eq(33.33);
 
-                expect(batchTask.taskState,'taskState').to.be.eq(21);
-                expect(batchTask.doneCount,'doneCount').to.be.eq(0);
-                expect(batchTask.errorCount,'errorCount').to.be.eq(1);
+                expect(batchTask.taskState, 'taskState').to.be.eq(21);
+                expect(batchTask.doneCount, 'doneCount').to.be.eq(0);
+                expect(batchTask.errorCount, 'errorCount').to.be.eq(1);
+
+                expect(batchTask.errorNo, 'errorNo').to.be.eq(50010);
+                expect(batchTask.errorMessage, 'errorMessage').to.be.eq('请登录');
             }
 
         }
@@ -341,9 +352,9 @@ async function readMessageFromServer(mq, queue) {
     return msgs;
 }
 
-function loadTaskFromFile(dir, fileName, batch, hasException = false) {
+function loadTaskFromFile(dir, fileName, batch) {
     const file = path.resolve(dir, fileName);
     const taskBody = JSON.parse(fs.readFileSync(file, 'utf8'));
     const { batchId, runCount, } = batch;
-    return _.merge(taskBody, { task: { batchId, runCount, taskId: 1, hasException } })
+    return _.merge(taskBody, { task: { batchId, runCount, taskId: 1 } })
 }

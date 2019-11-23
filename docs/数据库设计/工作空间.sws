@@ -4,7 +4,7 @@
 
 <Workspace>
 	<Local Expanded="Yes">
-		<Model Expanded="Yes" ID="{BE47A520-4DFD-4CEB-87DA-C99E41B6AA37}" Name="采集控制中心" Selected="Yes" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="采集控制中心.pdm"/>
+		<Model Expanded="Yes" ID="{BE47A520-4DFD-4CEB-87DA-C99E41B6AA37}" Name="采集控制中心" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="采集控制中心.pdm"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>

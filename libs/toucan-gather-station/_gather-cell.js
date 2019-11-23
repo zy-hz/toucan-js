@@ -45,6 +45,10 @@ class ToucanGatherCell extends ToucanWorkUnit {
 
         // 设置拥有的采集技能
         this.skillKeys = skillKeys;
+
+        // 采集单元所在的站点信息
+        const { stationName, stationNo, stationIp } = unitInfo;
+        this.stationInfo = { stationName, stationNo, stationIp };
     }
 
     // 启动采集单元
@@ -59,7 +63,7 @@ class ToucanGatherCell extends ToucanWorkUnit {
             //await this.gatherMQ.connect();
 
             // 创建订阅的作业，继承的基类可以重载该方法，实现自己的计划作业
-            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ, spiderOptions: this.spiderOptions });
+            const sgtJob = this.createScheduleJob({ gatherMQ: this.gatherMQ, spiderOptions: this.spiderOptions, stationInfo: this.stationInfo });
 
             // 启动定时作业
             const scheduleRule = '* * * * * *'

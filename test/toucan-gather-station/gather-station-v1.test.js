@@ -69,13 +69,16 @@ describe('[测试入口] - GatherStationV1', () => {
                 skillKeys: ['cm.http', 'cm.browser'],
                 skillCapability: 2,
             }
-            const gcs = buildGatherCells(skill, 9, { unitNo: 'test', unitAddress: 'my.add.111' });
+            const gcs = buildGatherCells(skill, 9, { unitName: 'zy-mock', unitNo: 'test', unitAddress: 'my.add.111' });
             expect(gcs).to.have.lengthOf(2);
             expect(gcs[1].mqVisitor).is.not.null;
             expect(gcs[1].unitInfo.unitName).to.be.eq(skill.skillName);
             expect(gcs[1].unitInfo.unitId).to.be.eq('test-10');
             expect(gcs[1].unitInfo.unitNo).to.be.eq('02');
             expect(gcs[1].unitInfo.unitAddress).to.be.eq('my.add.111');
+
+            expect(gcs[1].unitInfo.stationName).to.be.eq('zy-mock');
+            expect(gcs[1].unitInfo.stationNo).to.be.eq('test');
 
         });
 

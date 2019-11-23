@@ -49,7 +49,14 @@ class RegainGatherResultRunner extends ToucanRunner {
             await resultStore.save(msg)
 
             jobCount = jobCount + msg.length;
-            tasks = _.concat(tasks, _.map(msg, 'task'));
+            tasks = _.concat(tasks, _.map(msg, m => {
+                // 信息对象
+                const { task, station = {}, page = {} } = m;
+                // 获取页面的异常信息
+                const { hasException = false, errno = 0, message = '' } = page;
+                return Object.assign(task, { station }, { pageException: { hasException, errorNo: errno, errorMessage: message } })
+            }));
+
         } while (jobCount < batchRegainCount)
 
         return tasks;
@@ -91,16 +98,23 @@ class RegainGatherResultRunner extends ToucanRunner {
             await tbv.replace(_.map(outRows, r => {
                 const row = r[0];
                 const task = r[1];
-                const taskState = task.hasException ? 21 : 20;
+                const { station, pageException, taskSpendTime, spiderName, spiderType } = task;
+                // 使用页面的异常作为任务的异常，也就是说，如果页面有异常，任务则为异常
+                const taskState = pageException.hasException ? 21 : 20;
                 const counter = {
                     doneCount: taskState === 20 ? row.doneCount + 1 : row.doneCount,
                     errorCount: taskState === 21 ? row.errorCount + 1 : row.errorCount
                 }
-                return _.merge({}, r[0], counter, {
+                const { errorNo, errorMessage } = pageException;
+
+                return _.merge({}, r[0], counter, station, {
                     taskState,
+                    errorNo, errorMessage,
                     endOn: nowString,
                     processTime: getDateTimeDiff(nowString, row.beginOn, { abs: true }),
-                    workTime: Math.ceil((task.taskSpendTime || 0) / 1000),
+                    workTime: Math.ceil((taskSpendTime || 0) / 1000),
+                    spiderName,
+                    spiderType
                 });
             }))
         }
@@ -111,7 +125,7 @@ class RegainGatherResultRunner extends ToucanRunner {
         batches = _.map(batches, (val, key) => {
             const batchId = key - 0;
             const runCount = _.max(_.map(val, `${taskBatchPlan.RUNCOUNT}`));
-            const div = _.partition(val, x => { return x.hasException });
+            const div = _.partition(val, x => { return x.pageException.hasException });
             const errorCount = div[0].length;
             const doneCount = div[1].length + div[0].length;
             return { batchId, runCount, doneCount, errorCount };

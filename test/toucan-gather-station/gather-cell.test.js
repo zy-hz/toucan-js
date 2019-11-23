@@ -57,7 +57,7 @@ describe('[测试入口] - ToucanGatherCell', () => {
 
         it('单个RabbitMQ启动', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
-            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ, skillKeys });
+            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ',stationName:'zy-mock',stationNo:'112' }, gatherMQ, skillKeys });
 
             await gc.start();
             await gc.stop();

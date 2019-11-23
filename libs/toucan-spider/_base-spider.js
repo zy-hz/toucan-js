@@ -38,7 +38,7 @@ class ToucanBaseSpider {
         // 设置属性的默认值
         //
         this.spiderName = spiderName || 'unknown';
-        this.spiderType = spiderType;
+        this.spiderType = spiderType || 'unknown';
         this.idleSleep = idleSleep || 1000;
 
         //
