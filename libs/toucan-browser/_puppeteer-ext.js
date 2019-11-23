@@ -69,6 +69,7 @@ class PuppeteerExt1 {
                 '–no-zygote',
                 '–single-process',
                 '--window-size=300,900',
+                '–-no-sandbox',
             ],
             // 禁止一些默认 
             // 有navigator.webdriver属性，防止被被前端js检测出来
