@@ -31,12 +31,13 @@ class PuppeteerPageFetch extends ToucanPageFetch {
                     // 优化Chromium启动项 ， 
                     // 参考 https://juejin.im/post/5ce53c786fb9a07f014ecbcd
                     args: [
-                        '–disable-gpu',
-                        '–disable-dev-shm-usage',
-                        '–disable-setuid-sandbox',
-                        '–no-first-run',
-                        '–no-sandbox',
-                        '–no-zygote',
+                        '--disable-gpu',
+                        '--disable-dev-shm-usage',
+                        '--disable-setuid-sandbox',
+                        '--no-first-run',
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--no-zygote',
                         '–single-process'
                     ],
                     // 有navigator.webdriver属性，防止被被前端js检测出来

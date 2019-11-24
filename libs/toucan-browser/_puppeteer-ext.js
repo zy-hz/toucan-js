@@ -61,15 +61,15 @@ class PuppeteerExt1 {
             // 优化Chromium启动项 ， 
             // 参考 https://juejin.im/post/5ce53c786fb9a07f014ecbcd
             args: [
-                '–disable-gpu',
-                '–disable-dev-shm-usage',
-                '–disable-setuid-sandbox',
-                '–no-first-run',
-                '–no-sandbox',
-                '–no-zygote',
-                '–single-process',
+                '--disable-gpu',
+                '--disable-dev-shm-usage',
+                '--disable-setuid-sandbox',
+                '--no-first-run',
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--no-zygote',
+                '--single-process',
                 '--window-size=300,900',
-                '–-no-sandbox',
             ],
             // 禁止一些默认 
             // 有navigator.webdriver属性，防止被被前端js检测出来

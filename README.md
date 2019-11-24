@@ -55,6 +55,12 @@
    pm2 restart all
    ```
 
+8. 如果是centos环境，请运行以下命令，按照puppeteer依赖库
+
+   ```
+   yum install -y alsa-lib.x86_64 atk.x86_64 cups-libs.x86_64 GConf2.x86_64 gtk3.x86_64 ipa-gothic-fonts libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXrandr.x86_64 libXScrnSaver.x86_64 libXtst.x86_64 pango.x86_64 wqy-unibit-fonts.noarch wqy-zenhei-fonts.noarch xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-fonts-cyrillic xorg-x11-fonts-misc xorg-x11-fonts-Type1 xorg-x11-utils
+   ```
+
    
 
 ## 二、快速上手
@@ -161,6 +167,7 @@
 3. ###问题
 
 - 100 - 上传超大文件，大于100万记录的时候，大概率出现导入异常 
+- 101 - [fixed]centos系统，情报站不能启动chrome
 
 
 ## 测试方案
