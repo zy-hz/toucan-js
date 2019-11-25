@@ -8,7 +8,17 @@
 
 ## 一、安装和更新
 
-1. 在目录<mydir>中解开压缩包。或者在<mydir>中运行
+1. 在开始安装前，请保证您的系统有以下软件
+
+   - nodejs
+
+     
+
+   - git
+
+     下载页面：<https://github.com/waylau/git-for-win> 
+
+2. 在目录<mydir>中运行
 
    ```
    git clone https://github.com/zy-hz/deploy-toucan-js.git ./
@@ -27,13 +37,13 @@
 
    **注意：以下命令必须在<mydir>目录中运行**
 
-2. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
+3. 在<mydir>目录中打开命令窗口，运行 npm install -g cnpm --registry=https://registry.npm.taobao.org
 
-3. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
+4. 在<mydir>的命令窗口中运行 cnpm install (使用淘宝镜像安装速度快50%)
 
-4. 在<mydir>的命令窗口中运行 cnpm i pm2 -g , 安装pm2管理工具
+5. 在<mydir>的命令窗口中运行 cnpm i pm2 -g , 安装pm2管理工具
 
-5. 在<mydir>的命令窗口中运行 pm2 install pm2-logrotate（日志管理插件，防止本地日志过大）
+6. 在<mydir>的命令窗口中运行 pm2 install pm2-logrotate（日志管理插件，防止本地日志过大）
 
    **注意：是pm2 install 不是 npm install**
 
@@ -45,7 +55,7 @@
    pm2 set pm2-logrotate:workerInterval 30 
    ```
 
-6. 如果需要更新，请把更新文件解压缩到<mydir>目录中，然后运行
+7. 如果需要更新，请把更新文件解压缩到<mydir>目录中，然后运行
 
    ```
    cnpm update
@@ -55,13 +65,13 @@
 
    **注意：该过程可能需要一些时间（根据您的网络速度）**
 
-7. 更新完成后，需要重启正在运行的应用
+8. 更新完成后，需要重启正在运行的应用
 
    ```
    pm2 restart all
    ```
 
-8. 如果是centos环境，请运行以下命令，安装puppeteer依赖库
+9. 如果是centos环境，请运行以下命令，安装puppeteer依赖库
 
    ```
    yum install -y alsa-lib.x86_64 atk.x86_64 cups-libs.x86_64 GConf2.x86_64 gtk3.x86_64 ipa-gothic-fonts libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXrandr.x86_64 libXScrnSaver.x86_64 libXtst.x86_64 pango.x86_64 wqy-unibit-fonts.noarch wqy-zenhei-fonts.noarch xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-fonts-cyrillic xorg-x11-fonts-misc xorg-x11-fonts-Type1 xorg-x11-utils
@@ -97,8 +107,6 @@
    args: 'gs --remote 211.149.224.49:57701 --port 57721'
    ```
 
-   
-
 2. 单机工作模式
 
    **目前处于内部开发测试阶段，暂时不建议使用**
@@ -111,7 +119,16 @@
 
    myconf是采集情报站的配置文件，位置位于<mydir>/../config/myconf.json。**注意：必须有.json的后缀名**
 
-   
+3. 定时工作计划
+
+   情报站工作过程中，启用一些定时器执行定时任务，这些定时器说明如下
+
+   | 定时器名称     | 工作时间 | 备注                                                   |
+   | -------------- | -------- | ------------------------------------------------------ |
+   | 同步情报站配置 | 每5分钟  | 从服务器获取本情报的配置，发现变更，重启情报站         |
+   | 检查更新包     | 每10分钟 | 从代码查看检查最新更新，发现更新，自动安装，重启情报站 |
+
+4. 
 
 ### 采集站点管理中心
 
