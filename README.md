@@ -6,7 +6,7 @@
 
 - 2019-11-25 发布1.0.5版本
 
-## 一、安装和更新
+## 一、安装
 
 1. 在开始安装前，请保证您的系统有以下软件
 
@@ -16,7 +16,23 @@
 
    - git
 
-     下载页面：<https://github.com/waylau/git-for-win> 
+     windows 下载页面：<https://github.com/waylau/git-for-win> 
+
+     centos 运行 yum install git，如果您的网络比较慢，或者按照过程有问题，可以先修改本地yum镜像
+
+     ```
+     // 备份本地镜像
+     mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+     
+     // 下载新的CentOS-Base.repo 到/etc/yum.repos.d/
+     wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+     
+     // 运行以下命令生成缓存
+     yum clean all
+     yum makecache
+     ```
+
+     
 
 2. 在目录<mydir>中运行
 
@@ -55,26 +71,16 @@
    pm2 set pm2-logrotate:workerInterval 30 
    ```
 
-7. 如果需要更新，请把更新文件解压缩到<mydir>目录中，然后运行
-
-   ```
-   cnpm update
-   ```
-
-   该命令负责更新应用的相关依赖，在更新的时候，不需要停止正在运行的应用。
-
-   **注意：该过程可能需要一些时间（根据您的网络速度）**
-
-8. 更新完成后，需要重启正在运行的应用
-
-   ```
-   pm2 restart all
-   ```
-
-9. 如果是centos环境，请运行以下命令，安装puppeteer依赖库
+7. 如果是centos环境，请运行以下命令，安装puppeteer依赖库
 
    ```
    yum install -y alsa-lib.x86_64 atk.x86_64 cups-libs.x86_64 GConf2.x86_64 gtk3.x86_64 ipa-gothic-fonts libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXrandr.x86_64 libXScrnSaver.x86_64 libXtst.x86_64 pango.x86_64 wqy-unibit-fonts.noarch wqy-zenhei-fonts.noarch xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-fonts-cyrillic xorg-x11-fonts-misc xorg-x11-fonts-Type1 xorg-x11-utils
+   ```
+
+8. 在<mydir>目录中运行以下命令测试puppeteer，如果没有任何错误信息，表示安装正确
+
+   ```
+   node_modules/puppeteer/.local-chromium/linux-686378/chrome-linux/chrome --no-sandbox --disable-setuid-sandbox --headless
    ```
 
    
@@ -123,10 +129,10 @@
 
    情报站工作过程中，启用一些定时器执行定时任务，这些定时器说明如下
 
-   | 定时器名称     | 工作时间 | 备注                                                   |
-   | -------------- | -------- | ------------------------------------------------------ |
-   | 同步情报站配置 | 每5分钟  | 从服务器获取本情报的配置，发现变更，重启情报站         |
-   | 检查更新包     | 每10分钟 | 从代码查看检查最新更新，发现更新，自动安装，重启情报站 |
+   | 定时器名称     | 工作时间 | 备注                                                     |
+   | -------------- | -------- | -------------------------------------------------------- |
+   | 同步情报站配置 | 每5分钟  | 从服务器获取本情报的配置，发现变更，重启情报站           |
+   | 检查更新包     | 每10分钟 | 从代码库查看检查最新更新，发现更新，自动安装，重启情报站 |
 
 4. 
 
