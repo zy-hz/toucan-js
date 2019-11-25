@@ -4,7 +4,7 @@
 
 **最新版本**
 
-- 2019-11-24 发布1.0.4版本
+- 2019-11-25 发布1.0.5版本
 
 ## 一、安装和更新
 
@@ -61,7 +61,7 @@
    pm2 restart all
    ```
 
-8. 如果是centos环境，请运行以下命令，按照puppeteer依赖库
+8. 如果是centos环境，请运行以下命令，安装puppeteer依赖库
 
    ```
    yum install -y alsa-lib.x86_64 atk.x86_64 cups-libs.x86_64 GConf2.x86_64 gtk3.x86_64 ipa-gothic-fonts libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXrandr.x86_64 libXScrnSaver.x86_64 libXtst.x86_64 pango.x86_64 wqy-unibit-fonts.noarch wqy-zenhei-fonts.noarch xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-fonts-cyrillic xorg-x11-fonts-misc xorg-x11-fonts-Type1 xorg-x11-utils
@@ -163,6 +163,7 @@
 
 2. ###功能
   
+- 109 - 自动更新
 - 108 - 支持github部署
 - 107 - 在采集结果中添加站点信息
 - 106 - 采集任务管理中心数据库支持 
