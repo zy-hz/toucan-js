@@ -25,6 +25,8 @@ create table gs
    sysPlatform          char(32) default '' comment '系统平台',
    sysRelease           char(32) default '' comment '操作系统版本',
    sysType              char(32) default '' comment '操作系统类型',
+   nodeVersion          char(32) default '' comment 'nodejs的版本',
+   libVersion           char(32) default '' comment 'toucan-js库的版本',
    autoId               bigint not null auto_increment comment '自动编号',
    primary key (autoId)
 );

@@ -36,6 +36,8 @@ module.exports = class extends BaseTable {
         if (obj.release) fields[`${this.SYSRELEASE}`] = obj.release;
         if (obj.type) fields[`${this.SYSTYPE}`] = obj.type;
         
+        if(obj.nodeVersion) fields[`${this.NODEVERSION}`] = obj.nodeVersion;
+        if(obj.libVersion) fields[`${this.LIBVERSION}`] = obj.libVersion;
         return fields;
     }
 } 

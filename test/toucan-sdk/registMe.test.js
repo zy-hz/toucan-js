@@ -3,7 +3,7 @@ const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const expect = require('chai').expect;
 
-describe('temp[测试入口] registMe', () => {
+describe('[测试入口] registMe', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
