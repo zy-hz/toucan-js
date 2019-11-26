@@ -11,7 +11,7 @@ const {
 const fs = require('fs');
 const expect = require('chai').expect;
 
-describe('elm 页面分析测试 ', () => {
+describe('[测试入口] - elm 页面分析测试 ', () => {
 
     describe('analyzePageStatus ', () => {
         const pageContentLogon = fs.readFileSync(`${__dirname}/sample/elm-site-has-logon.html`, 'utf-8');
@@ -45,7 +45,7 @@ describe('elm 页面分析测试 ', () => {
         })
     })
 
-    describe('analyzeShopHomePage temp', () => {
+    describe('analyzeShopHomePage', () => {
         it('0', () => {
             const pageContent = fs.readFileSync(`${__dirname}/sample/elm-shop-home.html`, 'utf-8');
             const result = analyzeShopHomePage(pageContent);

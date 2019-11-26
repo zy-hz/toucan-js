@@ -10,7 +10,7 @@ class PublishGatherTaskJob extends TaskJob {
 
     constructor({ taskMQ, taskV, exchange }) {
         super();
-        
+
         this.taskMQ = taskMQ;
         this.taskV = taskV;
 
@@ -24,12 +24,12 @@ class PublishGatherTaskJob extends TaskJob {
 
         // 从任务源头获取采集任务
         const tasks = await this.taskV.readTaskSync(options);
+        this.log(`发布${tasks.length}个采集任务...`);
 
         // 从任务构建发布采集任务的选项
         // 为task添加taskOptions属性
         for (const t of tasks) {
             t.taskOptions = await this.buildTaskOptions(t);
-            console.log('准备发布作业', t.taskBody);
         }
 
         // 推送采集任务到采集任务消息队列
@@ -48,6 +48,10 @@ class PublishGatherTaskJob extends TaskJob {
         // 准备exchange
         await this.taskMQ.mqVisitor.prepareExchange(this.exchange, 'direct', { durable: true });
         return { exchange: this.exchange, routeKey }
+    }
+
+    log(msg) {
+        super.log(`[PublishGatherTaskJob] ${msg}`);
     }
 }
 

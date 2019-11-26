@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS `mytab` (
+	`col1` INT(11) NULL DEFAULT NULL
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+;

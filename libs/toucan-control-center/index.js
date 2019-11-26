@@ -1,8 +1,15 @@
-const GatherTaskCenter = require('./_gather-task-center');
-const GatherStationCenter = require('./_gather-station-center');
+//
+// 各类服务的集合
+//
+// 每个子目录为一种服务
+//
+const ToucanService = require('../toucan-service');
+const GatherStationService = require('./gather-station-center/service');
+const GatherTaskService = require('./gather-task-center/service');
 
-class ToucanControlCenter {
-
-}
-
-module.exports = ToucanControlCenter;
+module.exports = {
+    ToucanService,
+    GatherStationService,
+    GatherTaskCenter: new GatherTaskService(),
+    GatherStationCenter: new GatherStationService()
+};

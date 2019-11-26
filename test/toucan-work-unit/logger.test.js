@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const { ToucanLogger } = require('../../libs/toucan-work-unit');
 
-describe('ToucanLogger 测试 ', () => {
+describe('[测试入口] - ToucanLogger', () => {
 
     class TestLogger extends ToucanLogger {
 

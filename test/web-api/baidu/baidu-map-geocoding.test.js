@@ -5,7 +5,7 @@ const lib = require('rewire')('../../../libs/web-api/baidu/_baidu-map-geocoding'
 const buildQueryUrl = lib.__get__('buildQueryUrl');
 const fs = require('fs');
 
-describe('baidu map geocording 测试', () => {
+describe('[测试入口] - baidu map geocording', () => {
     it('buildQueryUrl ',()=>{
 
         const url = buildQueryUrl('/geocoder/v2/',{address:'百度大厦',output:'json',ak:'yourak'},'yoursk',false);

@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const mqFactory = require('../../libs/toucan-message-queue');
 const _ = require('lodash');
 
-describe('ToucanGtherMQ 测试', () => {
+describe('[测试入口] - ToucanGatherMQ', () => {
     const fromQueues = ['toucan.cm.http', 'toucan.cm.browse', 'toucan.sp.com.sohu.news', 'toucan.sp.com.sohu'];
 
     runTest('rabbit');
@@ -72,15 +72,15 @@ describe('ToucanGtherMQ 测试', () => {
                     await gatherMQ.disconnect();
                 })
 
-                it('subscribe ONE queue ', async () => {
+                it('subscribe ONE queue', async () => {
                     const qs = _.at(testQueues, 0);
                     gatherMQ.bindTaskQueue(qs);
 
                     let msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString()).to.be.eq(task1.taskBody);
+                    expect(msg,'task1.taskBody').to.be.eq(task1.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString()).to.be.eq(task2.taskBody);
+                    expect(msg,'task2.taskBody').to.be.eq(task2.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
                     expect(msg, '队列没有应该任务了').is.false;
@@ -90,13 +90,13 @@ describe('ToucanGtherMQ 测试', () => {
                     gatherMQ.bindTaskQueue(testQueues);
 
                     let msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString()).to.be.eq(task1.taskBody);
+                    expect(msg).to.be.eq(task1.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString(), '获取第二个队列的任务').to.be.eq(task3.taskBody);
+                    expect(msg, '获取第二个队列的任务').to.be.eq(task3.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
-                    expect(msg.content.toString(), '获取第一个队列的任务').to.be.eq(task2.taskBody);
+                    expect(msg, '获取第一个队列的任务').to.be.eq(task2.taskBody);
 
                     msg = await gatherMQ.subscribeTask();
                     expect(msg, '队列没有应该任务了').is.false;

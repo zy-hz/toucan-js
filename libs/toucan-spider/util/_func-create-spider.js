@@ -13,7 +13,7 @@ function createSpiderClassByTarget(targetName) {
 // 根据链接创建蜘蛛
 function createSpiderClassByUrl(url) {
     const hostname = exURL.getHost(url);
-    if(hostname == 'detail.1688.com') return require('../toucan.sp/_ali-1688-detail');
+    if(hostname == 'detail.1688.com') return require('../toucan.sp/_com-1688-detail');
     return undefined;
 }
 

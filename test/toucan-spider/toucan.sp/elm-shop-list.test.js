@@ -8,7 +8,7 @@ const fs = require('fs');
 const expect = require('chai').expect;
 const _ = require('lodash');
 
-describe('elm shop list 测试 ', () => {
+describe('[demo] elm shop list 测试 ', () => {
     describe('内部函数 ', () => {
 
         const spider = new ElmShopListSpider({

@@ -11,9 +11,9 @@ const { sleep } = require('../../libs/toucan-utility');
 
 const fs = require('fs');
 
-describe('GatherStationV1 综合测试 ', () => {
+describe('[测试入口] - GatherStationV1', () => {
 
-    describe('GatherStationV1 测试 ', () => {
+    describe('读取和启动', () => {
         const cfgFileName = `${__dirname}/sample/gsconfig.json`;
 
         it('读取配置文件', () => {
@@ -24,14 +24,6 @@ describe('GatherStationV1 综合测试 ', () => {
             runExpect4MessageQueue(gs.stationConfig.messageQueue);
         });
 
-        it('读取demo的配置',async ()=>{
-            const gs = new ToucanGatherStation(`${process.cwd()}/demo/gather-station/gsconfig.json`);
-            gs.stationConfig.autoStart = false;
-            await gs.init();
-
-            expect(gs.gatherCellPool.length).to.be.eq(gs.stationConfig.gatherSkill.maxGatherCellCount);
-        })
-
         it('初始化-不启动 ', async () => {
             const gs = new ToucanGatherStation(cfgFileName);
             gs.stationConfig.autoStart = false;
@@ -41,7 +33,7 @@ describe('GatherStationV1 综合测试 ', () => {
             expect(gs.unitInfo.unitAddress).is.not.empty;
         });
 
-        it('初始化-启动', async () => {
+        it('[long]初始化-启动', async () => {
             const gs = new ToucanGatherStation(cfgFileName);
             await gs.init();
 
@@ -53,7 +45,7 @@ describe('GatherStationV1 综合测试 ', () => {
         });
     });
 
-    describe('GatherStationV1 内部方法测试 ', () => {
+    describe('内部方法测试 ', () => {
 
         it('buildGatherCellPool 参数异常', () => {
             try {
@@ -77,13 +69,16 @@ describe('GatherStationV1 综合测试 ', () => {
                 skillKeys: ['cm.http', 'cm.browser'],
                 skillCapability: 2,
             }
-            const gcs = buildGatherCells(skill, 9, { unitId: 'test', unitAddress: 'my.add.111' });
+            const gcs = buildGatherCells(skill, 9, { unitName: 'zy-mock', unitNo: 'test', unitAddress: 'my.add.111' });
             expect(gcs).to.have.lengthOf(2);
             expect(gcs[1].mqVisitor).is.not.null;
             expect(gcs[1].unitInfo.unitName).to.be.eq(skill.skillName);
             expect(gcs[1].unitInfo.unitId).to.be.eq('test-10');
             expect(gcs[1].unitInfo.unitNo).to.be.eq('02');
             expect(gcs[1].unitInfo.unitAddress).to.be.eq('my.add.111');
+
+            expect(gcs[1].unitInfo.stationName).to.be.eq('zy-mock');
+            expect(gcs[1].unitInfo.stationNo).to.be.eq('test');
 
         });
 
@@ -115,7 +110,7 @@ describe('GatherStationV1 综合测试 ', () => {
         });
     });
 
-    describe('GatherStationV1 file模式测试', () => {
+    describe('[long]file模式测试', () => {
         const skillKeys = ['cm.http', 'cm.browser'];
         const q1 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[0]}`;
         const q2 = `${process.cwd()}/cache/filemq/toucan.${skillKeys[1]}`;

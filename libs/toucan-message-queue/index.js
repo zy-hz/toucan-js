@@ -23,6 +23,7 @@ class ToucanMessageQueueFactory {
         const mqv = mqvCreate(mqType, option);
         return new ToucanTaskMQ(mqv, option);
     }
+
 }
 
 module.exports = new ToucanMessageQueueFactory();

@@ -6,7 +6,7 @@ const { sleep, StatusCode } = require('../../libs/toucan-utility');
 const ToucanGatherCell = require('../../libs/toucan-gather-station/_gather-cell');
 const mqFactory = require('../../libs/toucan-message-queue');
 
-describe('ToucanGatherCell', () => {
+describe('[测试入口] - ToucanGatherCell', () => {
 
     describe('构造', () => {
         it('workInfo 测试 ', async () => {
@@ -57,7 +57,7 @@ describe('ToucanGatherCell', () => {
 
         it('单个RabbitMQ启动', async () => {
             const gatherMQ = mqFactory.createGatherMQ('rabbit');
-            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ' }, gatherMQ, skillKeys });
+            const gc = new ToucanGatherCell({ unitInfo: { unitName: '单个RabbitMQ',stationName:'zy-mock',stationNo:'112' }, gatherMQ, skillKeys });
 
             await gc.start();
             await gc.stop();
@@ -97,7 +97,7 @@ describe('ToucanGatherCell', () => {
         });
     });
 
-    describe('work loop zero job', () => {
+    describe('[long]work loop zero job', () => {
         const skillKeys = ['cm.http'];
         const gatherMQ = mqFactory.createGatherMQ('rabbit');
 
@@ -134,7 +134,7 @@ describe('ToucanGatherCell', () => {
     });
 
     // 由本地文件提供任务的采集
-    describe('fileMQ', () => {
+    describe('[demo]fileMQ ', () => {
         const queueName = 'ali.1688.detail';
         const skillKeys = [`${queueName}`];
         const fileMQOptions = {

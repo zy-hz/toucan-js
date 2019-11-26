@@ -4,11 +4,12 @@ const { PublishGatherTaskJob } = require('../../libs/toucan-job');
 const mqFactory = require('../../libs/toucan-message-queue');
 const tvFactory = require('../../libs/toucan-task-visitor');
 
-describe('PublishGatherTaskJob 综合测试', () => {
+
+describe('[测试入口] - PublishGatherTaskJob', () => {
 
     describe('do', async () => {
         const taskMQ = mqFactory.createTaskMQ('rabbit');
-        const taskV = tvFactory.create();
+        const taskV = tvFactory.create({ dbType: 'fake' });
         const job = new PublishGatherTaskJob({ taskMQ, taskV, exchange: 'test.toucan.gather.task' });
 
         after(async () => {
@@ -31,6 +32,7 @@ describe('PublishGatherTaskJob 综合测试', () => {
             resultExpect(result, false, 0);
         });
     });
+
 });
 
 // 结果检查

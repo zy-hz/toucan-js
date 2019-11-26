@@ -1,0 +1,18 @@
+{
+    "batchInfo":{
+        "batchName":"1688详情采集任务-mock",
+        "batchComment":"开发过程中的综合测试",
+        "batchOwner":"zy",
+        "batchGroup":"mock",
+        "batchTag":"开发 测试"
+    },
+    "batchFormat":{
+        "lineSplitChar":";",
+        "lineFields":[
+            "productId",
+            "memberId",
+            "shopUrl"
+        ],
+        "targetUrl":"http://detail.1688.com/offer/${productId}.html"
+    }
+}

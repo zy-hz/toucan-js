@@ -44,7 +44,7 @@ class ToucanGatherStationV1 extends ToucanWorkUnit {
             this.stationConfig);
 
         // 自动启动
-        if (this.stationConfig.autoStart) await this.start();
+        if (this.stationConfig.autoStart != false) await this.start();
     }
 
     // 站点启动
@@ -125,7 +125,7 @@ function buildGatherCellPool(gatherSkill = {}, stationInfo = {}, options = {}) {
 
 // 从模板构建采集单元集合
 // index - 能力在采集单元的位置
-function buildGatherCells(skill, index, { unitAddress, unitNo = '' }, {
+function buildGatherCells(skill, index, { unitName, unitAddress, unitNo = '' }, {
     messageQueue = { mqType: 'rabbit', mqOptions: {} }
 } = {}) {
     if (_.isNil(skill) || skill.skillCapability === 0) return null;
@@ -144,7 +144,11 @@ function buildGatherCells(skill, index, { unitAddress, unitNo = '' }, {
             // 单元编号
             unitNo: _.padStart(i + 1, 2, '0'),
             // 单元地址
-            unitAddress
+            unitAddress,
+            // 站点的信息
+            stationName: unitName,
+            stationNo: unitNo,
+            stationIp: unitAddress,
         }
 
         gcs.push(new ToucanGatherCell({ unitInfo, gatherMQ, skillKeys: skill.skillKeys, spiderOptions: skill.skillOptions }))

@@ -3,9 +3,9 @@ const expect = require('chai').expect;
 const uuid = require('uuid/v1');
 const { spiderFactory } = require('../../../libs/toucan-spider');
 
-describe('http sipder 测试', () => {
+describe('http sipder', () => {
 
-    describe('http 蜘蛛抓取测试 ', () => {
+    describe('[long]http 蜘蛛抓取测试 ', () => {
 
         it('http://delve.bodani.cn/ 测试', async () => {
             const spider = spiderFactory.createSpider({ spiderType: 'http' });

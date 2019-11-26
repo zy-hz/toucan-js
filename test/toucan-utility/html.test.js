@@ -3,7 +3,7 @@ const { exHTML } = require('../../libs/toucan-utility');
 const fs = require('fs');
 const expect = require('chai').expect;
 
-describe('exHTML 测试', () => {
+describe('[测试入口] - exHTML', () => {
     const htmlContent = fs.readFileSync(__dirname + '/sample/1688-product.html', 'utf-8');
 
     it('remove', () => {
@@ -16,7 +16,6 @@ describe('exHTML 测试', () => {
     it('extractContent',()=>{
         let result = exHTML.extractContent(htmlContent,true);
         expect(result.indexOf('<P>')<0).is.true;
-        console.log(result)
     })
 
 })

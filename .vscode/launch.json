@@ -8,7 +8,17 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/demo/gather-station/start.js"
+            "program": "${workspaceFolder}/start.js",
+            "args":[
+                "gtc",
+                "--conf",
+                "1688-detail",
+                "--remote1",
+                "211.149.224.49:57701",
+                "--127.0.0.1:57701",
+                "--port",
+                "57721"
+            ]
         },
         {
             "type": "node",
@@ -34,7 +44,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Fast testing",
+            "name": "Fast 测试",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [
@@ -43,7 +53,7 @@
                 "--recursive",
                 "--bail", // 发现错误后停止
                 "--grep",
-                "[[long]]",
+                "[[long]]|[[demo]]",
                 "--invert", // 排除以上标记
                 "true"
             ],
@@ -56,16 +66,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Long testing",
+            "name": "Long 测试",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [
                 "test",
                 "--no-timeouts",
                 "--recursive",
-                "--bail", // 发现错误后停止
+                // "--bail", // 发现错误后不停止
                 "--grep",
-                "[[long]]"
+                "[[long]]",
+                "--grep",
+                "[[demo]]",
+                "--invert"
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
@@ -83,7 +96,7 @@
                 "test",
                 "--no-timeouts",
                 "--recursive",
-                "--bail" // 发现错误后停止
+                //"--bail" // 发现错误后不停止
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,

@@ -2,14 +2,10 @@
 const expect = require('chai').expect;
 const tvFactory = require('../../libs/toucan-task-visitor');
 
-describe('FakeFileTaskVisitor 测试', () => {
-
-    describe('create', () => {
-
-    });
+describe('[测试入口] - FakeFileTaskVisitor', () => {
 
     describe('readTaskSync', async () => {
-        const tv = tvFactory.create();
+        const tv = tvFactory.create({ dbType: 'fake' });
         const task = tv.readTaskSync();
         expect(task).is.not.null;
     });

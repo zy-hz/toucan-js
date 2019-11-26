@@ -2,7 +2,7 @@
 // 载入的测试
 const expect = require('chai').expect;
 
-describe('工具库的入口测试',()=>{
+describe('[测试入口] - 工具库的入口测试',()=>{
 
     it('load utility 测试',()=>{
         const utils = require('../../libs/toucan-utility');

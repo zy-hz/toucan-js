@@ -5,7 +5,7 @@ const { exHTML } = require('../../libs/toucan-utility');
 const expect = require('chai').expect;
 const cheerio = require('cheerio');
 
-describe('puppeteer 测试 ', () => {
+describe('[demo]puppeteer 测试  ', () => {
 
     describe('操作测试', () => {
         // 定义自动滚动类

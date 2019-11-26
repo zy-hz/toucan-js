@@ -2,7 +2,6 @@
 //  Toucan任务队列
 //
 const ToucanBaseMQ = require('./_toucan-base-mq');
-const { NullArgumentError } = require('../toucan-error');
 
 const _ = require('lodash');
 
@@ -39,6 +38,18 @@ class ToucanTaskMQ extends ToucanBaseMQ {
             }
         }
 
+    }
+
+    // 订阅结果
+    async subscribeResult(queue, options = {}) {
+        // 获得消费队列的选项
+        const { consumeOptions = {} } = options;
+
+        // 尝试从每个队列中获得任务，如果发现任务，下次就从下一个开始
+        const msg = await this.mqVisitor.read({ queue, consumeOptions });
+        if (_.isBoolean(msg)) return msg;
+        
+        return _.map(_.castArray(msg), this.extractMessage);
     }
 }
 
