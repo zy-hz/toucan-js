@@ -3,7 +3,7 @@ const tcSDK = require('../../libs/toucan-sdk');
 const { GatherStationCenter } = require('../../libs/toucan-control-center');
 const expect = require('chai').expect;
 
-describe('[测试入口] registMe', () => {
+describe('temp[测试入口] registMe', () => {
     const startOptions = {
         // 监听端口
         port: 1123,
@@ -13,7 +13,7 @@ describe('[测试入口] registMe', () => {
             port: 3306,
             user: 'weapp',
             password: '123456',
-            database: 'tc_gather_cc',
+            database: 'tctest_gather_cc',
         }
     }
     const dbc = require('../../libs/toucan-control-center/db-center')(startOptions.dbConnection).station;

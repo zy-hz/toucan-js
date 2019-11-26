@@ -32,7 +32,7 @@ module.exports = {
       instances: 1,
       autorestart: true,
       restart_delay: 1000,
-      watch: ['upgrade'],
+      watch: false,
       watch_delay: 3000,
       max_memory_restart: '1G', //最大内存限制数,超出自动重启
       exec_mode: "cluster", //可选值fork,cluster(开启集群模式实现负载均衡),默认fork
@@ -46,7 +46,7 @@ module.exports = {
       instances: 1,
       autorestart: true,
       restart_delay: 1000,
-      watch: ['upgrade'],
+      watch: false,
       watch_delay: 3000,
       max_memory_restart: '1G', //最大内存限制数,超出自动重启
       exec_mode: "cluster", //可选值fork,cluster(开启集群模式实现负载均衡),默认fork

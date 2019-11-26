@@ -1,6 +1,6 @@
 {
   "name": "toucan-js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "toucan js libs",
   "main": "libs/index.js",
   "directories": {

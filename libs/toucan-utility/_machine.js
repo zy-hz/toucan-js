@@ -3,6 +3,7 @@
 //
 const os = require('os');
 const _ = require('lodash');
+const package = require('../../package.json');
 
 async function getMachineInfo() {
 
@@ -13,7 +14,9 @@ async function getMachineInfo() {
         arch: os.arch(),
         release: os.release(),
         memory: (os.totalmem() / 1024 / 1024 / 1024).toFixed(2),
-        networkAddress: getNetworkAddress()
+        networkAddress: getNetworkAddress(),
+        nodeVersion: process.version,
+        libVersion: package.version,
     }
 }
 
@@ -24,10 +27,11 @@ function getNetworkAddress() {
     for (var devName in interfaces) {
         const iface = interfaces[devName];
         _.forEach(iface, x => {
-            if(x.address !== '127.0.0.1' && !x.internal) result.push(x);
+            if (x.address !== '127.0.0.1' && !x.internal) result.push(x);
         })
     }
     return result;
 }
+
 
 module.exports = { getMachineInfo, getNetworkAddress }
