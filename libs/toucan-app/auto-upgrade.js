@@ -34,7 +34,7 @@ class ToucanUpgrade extends ToucanRunner {
         if (gitResult.state === gitState.updateDone) {
             // 如果发现更新
             this.log('代码更新成功，准备更新npm依赖...');
-            const npmResult = execFileSync('cnpm.cmd', ['install'], { cwd: workDir }).toString();
+            const npmResult = execFileSync('cnpm', ['install'], { cwd: workDir }).toString();
 
             // 把git的响应和npm的结果写入升级日志中
             writeUpgradeLog(workDir, gitResult.response, npmResult);

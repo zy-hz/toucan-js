@@ -3,9 +3,9 @@
 //
 const os = require('os');
 const _ = require('lodash');
-const package = require('../../package.json');
 
 async function getMachineInfo() {
+    const package = require('../../package.json');
 
     return {
         hostname: os.hostname(),
@@ -33,5 +33,10 @@ function getNetworkAddress() {
     return result;
 }
 
+// 是否为window平台
+function isWindowPlatform(){
+    //return os.platform()
+}
 
-module.exports = { getMachineInfo, getNetworkAddress }
+
+module.exports = { getMachineInfo, getNetworkAddress,isWindowPlatform }
