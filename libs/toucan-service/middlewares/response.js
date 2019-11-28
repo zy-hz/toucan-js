@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { currentDateTimeString } = require('../../toucan-utility');
 
 //
 // 响应处理模块(全局错误处理)
@@ -24,10 +25,10 @@ module.exports = async function (ctx, next) {
         }
     } catch (e) {
         // catch 住全局的错误信息
-        console.log('Catch Error: %o', e)
+        console.error(currentDateTimeString(), e.message);
 
         // 设置状态码为 200 - 服务端错误
-        ctx.status = 200
+        ctx.status = 200;
 
         // 输出详细的错误信息
         ctx.body = {

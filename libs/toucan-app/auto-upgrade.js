@@ -2,7 +2,7 @@
 // 自动更新
 //
 const { ToucanRunner } = require('../toucan-service');
-const { gitPull, gitState } = require('../toucan-utility');
+const { gitPull, gitState, isWindowPlatform } = require('../toucan-utility');
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -34,7 +34,7 @@ class ToucanUpgrade extends ToucanRunner {
         if (gitResult.state === gitState.updateDone) {
             // 如果发现更新
             this.log('代码更新成功，准备更新npm依赖...');
-            const npmResult = execFileSync('cnpm', ['install'], { cwd: workDir }).toString();
+            const npmResult = execFileSync(buildExecFileWithPlatfomr('cnpm'), ['install'], { cwd: workDir }).toString();
 
             // 把git的响应和npm的结果写入升级日志中
             writeUpgradeLog(workDir, gitResult.response, npmResult);
@@ -54,6 +54,13 @@ function writeUpgradeLog(workDir, gitResponse, npmResult) {
 
     const file = path.resolve(dir, `${_.now()}.txt`);
     fs.writeFileSync(file, `${gitResponse}\r\n\r\n${npmResult}`);
+}
+
+// 根据平台构建知悉的命令
+// 在window平台上，需要加.cmd
+function buildExecFileWithPlatfomr(cmd) {
+    if (isWindowPlatform()) return `${cmd}.cmd`;
+    return cmd;
 }
 
 module.exports = new ToucanUpgrade();

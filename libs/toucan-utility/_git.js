@@ -24,8 +24,7 @@ function gitPull({ workDir } = {}) {
 // 分析git的响应
 function analyzeResponse(response) {
     if (/already up to date/im.test(response)) return gitState.isNew;
-    if (/^updating/im.test(response)) return gitState.updateDone;
-    if (/^更新/im.test(response)) return gitState.updateDone;
+    if (/fast-forward/im.test(response)) return gitState.updateDone;
 
     return gitState.processError;
 }
