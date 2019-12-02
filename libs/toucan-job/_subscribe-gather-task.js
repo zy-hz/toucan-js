@@ -10,7 +10,7 @@ class SubscribeGatherTaskJob extends TaskJob {
     }) {
         super();
         this.gatherMQ = gatherMQ;
-        this.spiderOptions = spiderOptions;
+        this.spiderOptions = spiderOptions || {};
         this.stationInfo = stationInfo;
     }
 
@@ -46,7 +46,8 @@ class SubscribeGatherTaskJob extends TaskJob {
         const result = await this.gatherMQ.submitResult(
             { task, page, station: this.stationInfo },
             {
-                queue: 'toucan.gather.result.all',
+                // 指定结果消息队列
+                queue: this.spiderOptions.resultQueueName || 'toucan.gather.result.all',
                 options: {
                     queueOptions: {
                         // 每个结果存储一个单独文件，该选项针对fileMQ生效

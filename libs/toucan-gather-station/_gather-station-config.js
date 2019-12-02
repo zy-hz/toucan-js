@@ -38,10 +38,16 @@ const DEFALUT_CONFIG = constantize({
                 skillOptions: {
                     // 当为true的时候，采集引擎采集到页面后，只会保留页面中的文本内容(包括alt,title属性值)。其他脚本，样式，标签等会被忽略
                     // 如果对存储有要求的时候，才建议开启
-                    onlyKeepPageText: false
+                    onlyKeepPageText: false,
+                    // 两次采集的间隔时间，单位毫秒(ms)
+                    idleSleep:3000,
+                    // pupeteer专用参数
+					headless:true,
+                    // 指定结果发送的队列名称
+                    resultQueueName:''
                 }
             }
-        ],
+        ]
     },
     // 消息队列的定义
     messageQueue: {

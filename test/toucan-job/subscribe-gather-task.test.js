@@ -4,13 +4,28 @@ const { SubscribeGatherTaskJob } = require('../../libs/toucan-job');
 const expect = require('chai').expect;
 const { sleep } = require('../../libs/toucan-utility');
 
-const gatherResultQueue = 'toucan.gather.result.all'
+const gatherResultQueue = 'toucan.gather.result.1688'
 
 describe('[测试入口] - SubscribeGatherTaskJob', () => {
 
-    const gatherMQ = mqFactory.createGatherMQ('rabbit');
-    const taskMQ = mqFactory.createTaskMQ('rabbit');
+    const mqOptions = {
+        // 默认为本地服务器
+        hostname: '127.0.0.1',
+        // 默认服务端口
+        port: 5672,
+        // 虚拟机
+        vhost: 'mock-test',
+        // 连接主机的用户名
+        username: 'guest',
+        // 连接主机的密码
+        password: 'guest',
+    }
+
+    const gatherMQ = mqFactory.createGatherMQ('rabbit', mqOptions);
+    const taskMQ = mqFactory.createTaskMQ('rabbit', mqOptions);
     const fromQueues = ['test.cm.http'];
+    // 指定结果队列的名称
+    const spiderOptions = { resultQueueName: gatherResultQueue };
 
     const taskBody = {
         targetUrl: 'www.19lou.com',
@@ -47,7 +62,7 @@ describe('[测试入口] - SubscribeGatherTaskJob', () => {
         // 发布一个任务到队列
         await taskMQ.publishTask({ taskBody, taskOptions: { queue: fromQueues[0] } });
 
-        const job = new SubscribeGatherTaskJob({ gatherMQ, stationInfo: { stationName: 'zy-mock', stationNo: 'job test', stationIp: '11.11.22.33' } });
+        const job = new SubscribeGatherTaskJob({ gatherMQ, spiderOptions, stationInfo: { stationName: 'zy-mock', stationNo: 'job test', stationIp: '11.11.22.33' } });
         let result = await job.do();
         expect(result.jobCount).to.be.equal(1);
 
