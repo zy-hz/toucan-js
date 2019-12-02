@@ -5,11 +5,15 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 
-class DirResultStore {
+const ToucanBaseResultStore = require('../_base-store');
+
+class DirResultStore extends ToucanBaseResultStore {
     constructor({
         // 输出的目录
         outDir } = {}
     ) {
+        super();
+        
         this.outDir = path.resolve(process.cwd(), outDir);
         if (!fs.existsSync(this.outDir)) fs.mkdirSync(this.outDir, { recursive: true });
     }
@@ -40,4 +44,4 @@ function buildTimeStampFileName(dirName) {
     return fileName;
 }
 
-module.exports = { DirResultStore };
+module.exports = DirResultStore;

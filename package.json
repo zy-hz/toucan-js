@@ -1,6 +1,6 @@
 {
   "name": "toucan-js",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "toucan js libs",
   "main": "libs/index.js",
   "directories": {
@@ -29,6 +29,7 @@
     "cron-converter": "^1.0.0",
     "crypto": "^1.0.1",
     "encoding": "0.1.12",
+    "find": "^0.3.0",
     "getmac": "^1.5.0",
     "isclass": "^1.0.0",
     "jschardet": "^2.1.1",

@@ -74,7 +74,23 @@ describe('[测试入口]load publish regain 综合测试', () => {
                     queue: 'toucan.gather.result.all',
                     outDir: '../output/result.all',
                     // 测试时可以设置 noAck = false
-                    options: { noAck: true }
+                    options: { noAck: true },
+                    // storeType: 'tc-mysql',
+                    // storeOptions: {
+                    //     // 数据库连接
+                    //     dbConnection: {
+                    //         host: '127.0.0.1',
+                    //         port: 3306,
+                    //         user: 'weapp',
+                    //         password: '123456',
+                    //         database: 'tctest_gather_result',
+                    //         charset: 'utf8'
+                    //     },
+                    //     // 指定表名,注意不能使用中横线
+                    //     tableName: 'ali_1688_detail',
+                    //     // 新建表，'' | day | week | month
+                    //     newTableWhen: 'day',
+                    // }
                 }
             ]
         },

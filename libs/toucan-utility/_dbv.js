@@ -62,6 +62,11 @@ class DbVisitor {
         sql = _.map(result[0], row => { return `drop table \`${row['TABLE_NAME']}\`;` }).join('\n');
         await this.execSql(sql, { initSqlPermit: { disableDrop: false } });
     }
+
+    // 插入一个对象
+    async insert(tbName, obj) {
+        await this.DB(tbName).insert(obj);
+    }
 }
 
 // 对象转为字段值

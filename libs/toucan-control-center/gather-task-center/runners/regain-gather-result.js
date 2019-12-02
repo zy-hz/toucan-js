@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 const { ToucanRunner } = require('../../../toucan-service');
 const mqFactory = require('../../../toucan-message-queue');
-const rsFactory = require('../../../toucan-result-store');
+const { rsFactory } = require('../../../toucan-result-store');
 const { currentDateTimeString, getDateTimeDiff } = require('../../../toucan-utility');
 
 class RegainGatherResultRunner extends ToucanRunner {
@@ -67,10 +67,11 @@ class RegainGatherResultRunner extends ToucanRunner {
         let allTask = [];
         for await (const q of this.resultQueue) {
             // 创建结果存储器 - 可以为每个采集结果队列指定不同的结果存储器
-            const resultStore = rsFactory.create(q);
-
+            const resultStore = await rsFactory.create(q);
             const tasks = await this.do4Queue(q, batchRegainCount, resultStore);
+            
             this.log(`从${q.queue}回收${tasks.length}个采集结果。`);
+            await resultStore.close();
 
             allTask = _.concat(allTask, tasks);
         }
