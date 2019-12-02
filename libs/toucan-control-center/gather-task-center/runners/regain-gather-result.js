@@ -66,7 +66,7 @@ class RegainGatherResultRunner extends ToucanRunner {
     async regainResult(batchRegainCount) {
         let allTask = [];
         for await (const q of this.resultQueue) {
-            // 创建结果访问器
+            // 创建结果存储器 - 可以为每个采集结果队列指定不同的结果存储器
             const resultStore = rsFactory.create(q);
 
             const tasks = await this.do4Queue(q, batchRegainCount, resultStore);
