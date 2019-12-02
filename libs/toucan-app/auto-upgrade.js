@@ -43,6 +43,9 @@ class ToucanUpgrade extends ToucanRunner {
             writeUpgradeLog(workDir, gitResult.response, npmResult);
             this.log('安装依赖成功，准备重启服务...');
 
+            // 发送重启的通知
+            await this.triggleRestartListener();
+
         } else {
             this.log('当前代码为最新版本');
         }
@@ -51,9 +54,20 @@ class ToucanUpgrade extends ToucanRunner {
 
     // 添加监听消息的人
     addRestartListener(callbk) {
-
+        if (_.isFunction(callbk)) this.restartListener.push(callbk);
     }
 
+    // 触发重新启动的监听
+    async triggleRestartListener() {
+        for await (const f of this.restartListener) {
+            try {
+                await f();
+            }
+            catch (error) {
+                this.error('触发监听事件发生异常', error);
+            }
+        }
+    }
 }
 
 function writeUpgradeLog(workDir, gitResponse, npmResult) {

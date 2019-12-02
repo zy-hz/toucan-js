@@ -82,6 +82,7 @@ class BaseRunner extends ToucanWorkUnit {
     }
 
     async stop() {
+        this.log('关闭定时器');
         // 关闭定时器
         if (!_.isNil(this.schedule)) this.schedule.cancel();
         // 更新工作状态

@@ -7,8 +7,17 @@ const { ToucanRunner } = require('../../../toucan-service');
 const cache = require('../cache');
 const tcSDK = require('../../../toucan-sdk');
 const _ = require('lodash');
+// 自动更新
+const au = require('../../../toucan-app/auto-upgrade');
 
 class RegistMeRunner extends ToucanRunner {
+
+    constructor() {
+        super();
+
+        // 注册全局通知
+        au.addRestartListener(this.onRestartApp.bind(this));
+    }
 
     async scheduleWork(options = {}) {
 
@@ -98,6 +107,11 @@ class RegistMeRunner extends ToucanRunner {
             cache.clear();
         }
 
+    }
+
+    // 当准备重启的时候
+    async onRestartApp() {
+        await super.stop();
     }
 }
 

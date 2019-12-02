@@ -3,10 +3,31 @@ const lib = require('rewire')('../../libs/toucan-app/auto-upgrade');
 const buildExecFileWithPlatfomr = lib.__get__('buildExecFileWithPlatfomr');
 const expect = require('chai').expect
 
-describe('temp[测试入口] - auto upgrade', () => {
+describe('[测试入口] - auto upgrade', () => {
 
     it('buildExecFileWithPlatfomr', () => {
         expect(buildExecFileWithPlatfomr('cnpm')).eq('cnpm.cmd');
+    })
+
+    describe(' listener 测试', () => {
+        const au = require('../../libs/toucan-app/auto-upgrade');
+
+        before('', () => {
+            au.addRestartListener(a_1);
+            au.addRestartListener(a_2);
+        })
+
+        it('triggleRestartListener', async () => {
+            await au.triggleRestartListener();
+        })
+
+        function a_1() {
+            console.log('a_1 应答');
+        }
+
+        async function a_2(){
+            console.log('a_2 应答');
+        }
     })
 
 })

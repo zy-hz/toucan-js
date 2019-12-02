@@ -10,7 +10,7 @@ const knex = require('knex')({
         port: 3306,
         user: 'weapp',
         password: '123456',
-        database: 'tc_gather_cc',
+        database: 'tctest_gather_cc',
     }
 });
 const expect = require('chai').expect;
@@ -29,7 +29,7 @@ describe('[测试入口] - regist me runner', () => {
             port: 3306,
             user: 'weapp',
             password: '123456',
-            database: 'tc_gather_cc',
+            database: 'tctest_gather_cc',
         }
     }
     const remote = `${startOptions.dbConnection.host}:${startOptions.port}`;
@@ -57,5 +57,10 @@ describe('[测试入口] - regist me runner', () => {
     it('scheduleWork update', async () => {
         await runner.scheduleWork({ remote, port: 57721 });
         expect(cache.stationKey).is.not.empty;
+    })
+
+    it('测试更新触发', async () => {
+        const au = require('../../../libs/toucan-app/auto-upgrade');
+        await au.triggleRestartListener();
     })
 })
