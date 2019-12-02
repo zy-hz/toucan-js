@@ -20,6 +20,9 @@ class ToucanUpgrade extends ToucanRunner {
             enable: true,
             title: '下次检查更新时间：'
         }
+
+        // 重新启动的监听者
+        this.restartListener = [];
     }
 
     // 每次的工作计划
@@ -43,6 +46,11 @@ class ToucanUpgrade extends ToucanRunner {
         } else {
             this.log('当前代码为最新版本');
         }
+
+    }
+
+    // 添加监听消息的人
+    addRestartListener(callbk) {
 
     }
 

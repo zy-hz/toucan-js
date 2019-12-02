@@ -1,10 +1,19 @@
 /* eslint-disable no-undef */
-const au = require('../../libs/toucan-app/auto-upgrade');
 const lib = require('rewire')('../../libs/toucan-app/auto-upgrade');
 const buildExecFileWithPlatfomr = lib.__get__('buildExecFileWithPlatfomr');
 const expect = require('chai').expect
 
-describe('[测试入口] - auto upgrade', () => {
+describe('temp[测试入口] - auto upgrade', () => {
+
+    it('buildExecFileWithPlatfomr', () => {
+        expect(buildExecFileWithPlatfomr('cnpm')).eq('cnpm.cmd');
+    })
+
+})
+
+describe('[demo]模拟运行', () => {
+    const au = require('../../libs/toucan-app/auto-upgrade');
+
     // 自动更新的选项
     const options = {
         workDir: `C:\\Users\\zy\\Desktop\\deploy-test\\tc`,
@@ -13,11 +22,7 @@ describe('[测试入口] - auto upgrade', () => {
         scheduleRule: '* * * * *'
     }
 
-    it('[demo]', () => {
+    it('', () => {
         au.start(options)
-    })
-
-    it('buildExecFileWithPlatfomr',()=>{
-        expect(buildExecFileWithPlatfomr('cnpm')).eq('cnpm.cmd');
     })
 })
