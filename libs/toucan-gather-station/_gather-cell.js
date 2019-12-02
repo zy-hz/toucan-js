@@ -14,6 +14,8 @@ const { SubscribeGatherTaskJob } = require('../toucan-job');
 const _ = require('lodash');
 const schedule = require('node-schedule');
 
+const au = require('../toucan-app/auto-upgrade');
+
 class ToucanGatherCell extends ToucanWorkUnit {
 
     constructor({
@@ -49,6 +51,9 @@ class ToucanGatherCell extends ToucanWorkUnit {
         // 采集单元所在的站点信息
         const { stationName, stationNo, stationIp } = unitInfo;
         this.stationInfo = { stationName, stationNo, stationIp };
+
+        // 添加监视
+        au.addRestartListener(this.stop.bind(this));
     }
 
     // 启动采集单元
@@ -131,6 +136,9 @@ class ToucanGatherCell extends ToucanWorkUnit {
         this.processLog(`停止中...`);
         // 设置关闭标记，开始关闭流程
         this.__stopFlag = true;
+
+        // 关闭定时器
+        if (_.isNil(this.schedule)) this.schedule.cancel();
 
         while (!this.workInfo.unitStatus.isClosed) {
             await sleep(1000);
