@@ -231,6 +231,14 @@
 
    该方案时快速测试+长时间测试的方案总和。测试过程中会发现错误后，记录错误后跳过，最后给出一个综合报告
 
+## 注意事项
+
+1. mysql 编码错误：ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: Incorrect string value
+
+   MySQL的utf8编码只支持3字节的数据，而移动端的表情数据是4个字节的字符。如果直接往采用utf-8编码的数据库中插入表情数据，程序中将报SQL异常。
+
+   
+
 
 
 
