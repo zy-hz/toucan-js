@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/start.js",
-            "args":[
+            "args": [
                 "gs",
                 "--conf1",
                 "1688-detail",
@@ -94,6 +94,45 @@
             "stopOnEntry": false,
             "args": [
                 "test",
+                "--no-timeouts",
+                "--recursive",
+                //"--bail" // 发现错误后不停止
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "some spider demo",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "demo/spider",
+                "--no-timeouts",
+                "--recursive",
+                "--bail", // 发现错误后停止
+                "--grep",
+                // 指定需要运行的词
+                "temp"
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "All spider demo",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "demo/spider",
                 "--no-timeouts",
                 "--recursive",
                 //"--bail" // 发现错误后不停止
