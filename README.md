@@ -4,7 +4,7 @@
 
 **最新版本**
 
-- 2019-12-10 发布1.0.14版本
+- 2019-12-10 发布1.0.15版本
 
 ## 一、安装
 
@@ -207,7 +207,7 @@
 - 102 - [fixed]controllers目录不存在的时候，导致启动服务出现错误
 - 103 - [fixed]在一些机器上git更新后，不会自动启动
 - 104 - [fixed]centos系统的情报站，在自动更新重启后，提示stationKey不匹配
-- 105 - ER_TRUNCATED_WRONG_VALUE_FOR_FIELD
+- 105 - [fixed]ER_TRUNCATED_WRONG_VALUE_FOR_FIELD，不支持utf8mb4格式
 
 
 ## 测试方案
