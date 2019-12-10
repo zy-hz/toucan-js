@@ -13,7 +13,7 @@ class DbVisitor {
             user = 'root',
             password = 'root',
             database = '',
-            charset = 'utf8'
+            charset = 'utf8mb4'
         } = options;
 
         // 构建数据库

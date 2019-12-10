@@ -9,19 +9,19 @@ const { spiderFactory } = require('../../../libs/toucan-spider');
 const _ = require('lodash');
 
 module.exports = (
-    { only = false, targetUrl, spiderType, otherExpect = [] },
+    { only = false, targetUrl, spiderType, targetName, otherExpect = [] },
     // 用户定义的其他测试用例
     otherTestCase
 ) => {
 
-    describe(`[蜘蛛测试] ${targetUrl} ${only?'temp':''}`, function () {
+    describe(`[蜘蛛测试] ${targetUrl} ${only ? 'temp' : ''}`, function () {
 
         // 设置错误重试次数
         // 使用该功能的时候，describe 不能写成 () => 形式
         this.retries(2);
 
         it('读取网页内容', async () => {
-            const spider = spiderFactory.createSpider({ spiderType });
+            const spider = spiderFactory.createSpider({ spiderType, targetName, targetUrl });
 
             const runResult = await spider.run({ targetUrl }, verfiyGatherResult.bind(this));
             verifyRunResult(runResult);
@@ -68,7 +68,7 @@ module.exports = (
         expect(pageUrl, 'pageUrl').eq(targetUrl);
         expect(spiderName, 'spiderName').not.empty;
         expect(spiderName, 'spiderName不等于unknown').not.eq('unknown');
-        expect(page.spiderType, 'spiderType').eq(spiderType);
+        expect(page.spiderType, 'spiderType').not.empty;
 
         expect(statusCode, '状态码为200').to.be.eq(200);
     }

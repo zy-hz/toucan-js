@@ -4,9 +4,10 @@ const testSuit = require('../util/mocha-test-suit');
 const cheerio = require('cheerio');
 
 testSuit({
-    only:false,
-    targetUrl: 'http://delve.bodani.cn/',
-    spiderType: 'http',
+    // 只允许自己运行
+    only: false,
+    targetUrl: 'http://m.1688.com/offer/532164314479.html',
+    targetName: 'com-1688-detail',
     // 自定义的验证
     otherExpect: [
         verifyPageCharset,
@@ -16,11 +17,11 @@ testSuit({
 
 // 验证页面的字符集
 function verifyPageCharset({ pageCharset } = {}) {
-    expect(pageCharset, '页面编码为 utf-8').to.match(/^utf-8$/im);
+    expect(pageCharset, '页面编码为 GB2312').to.match(/^gb2312$/im);
 }
 
 // 验证页面的内容
 function verifyPageContent({ pageContent } = {}) {
     const $ = cheerio.load(pageContent);
-    expect($('title').text()).eq('伯大尼—查经资料');
+    expect($('title').text().trim()).eq('杭州19楼-找对象、办婚礼、搞装修、聊育儿、看小说、租房买卖二手房，就上19楼');
 }

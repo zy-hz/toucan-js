@@ -9,7 +9,7 @@ const connDbCenter = {
     user: 'weapp',
     password: '123456',
     database: 'tctest_gather_cc',
-    charset: 'utf8'
+    charset: 'utf8mb4'
 }
 
 // 结果数据库
@@ -19,7 +19,7 @@ const connResultCenter = {
     user: 'weapp',
     password: '123456',
     database: 'tctest_gather_result',
-    charset: 'utf8'
+    charset: 'utf8mb4'
 }
 
 // rabbit消息队列
