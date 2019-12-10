@@ -28,5 +28,5 @@ allTest(suitInfo, {
     expectPlanTableWhenRegain,
     // 获取子任务,每次解析一个子任务
     extractSubTask: { extractEnable: true, extractOptions: { limitSubTask: 5 } },
-    repeatCount: 10,
+    repeatCount: 3,
 })
