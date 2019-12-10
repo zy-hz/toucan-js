@@ -10,7 +10,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/start.js",
             "args": [
-                "gs",
+                "gtc",
                 "--conf1",
                 "1688-detail",
                 "--remote",
@@ -136,6 +136,24 @@
                 "--no-timeouts",
                 "--recursive",
                 //"--bail" // 发现错误后不停止
+            ],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Combine",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [
+                "test/combine/001/bodani-index-recursion.test.js",
+                "--no-timeouts",
+                "--recursive",
+                "--bail" // 发现错误后停止
             ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,

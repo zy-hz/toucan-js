@@ -264,7 +264,7 @@ describe('[测试入口]load publish regain 综合测试', () => {
         before('', async () => {
             // 获得发布的2个任务编号
             const batches = await dbc.taskBatchPlan.select();
-            okGatherResult = loadTaskFromFile(samplePath, 'regain-result-1688-smaill.json', batches[0]);
+            okGatherResult = loadTaskFromFile(samplePath, 'regain-result-1688-small.json', batches[0]);
             errorGatherResult = loadTaskFromFile(samplePath, 'regain-result-1688-error.json', batches[1], true);
         })
 

@@ -2,7 +2,7 @@
 // 使用mysql方式存储采集结果
 //
 const _ = require('lodash');
-const { DbVisitor } = require('../../toucan-utility');
+const { DbVisitor, md5, currentDateTimeString } = require('../../toucan-utility');
 const ToucanBaseResultStore = require('../_base-store');
 
 class MysqlResultStore extends ToucanBaseResultStore {
@@ -38,23 +38,36 @@ class MysqlResultStore extends ToucanBaseResultStore {
         for await (const m of ary) {
             const { task = {}, page = {} } = m;
             const { pageContent = '', overSize = 0 } = trimPageContent(page.pageContent);
+
+            const pageMD5 = md5(pageContent);
+            const existPage = await this.dbv.DB(this.storeTableName).select().where({ pageMD5 });
+            let outPageCount = _.isEmpty(existPage) ? pageContent : page.pageUrl;
+
+            // 标识页面已经访问过了
+            m.hasVisited = !_.isEmpty(existPage);
+
             await this.dbv.insert(this.storeTableName, {
                 batchId: task.batchId,
                 taskId: task.taskId,
                 runCount: task.runCount,
                 pageUrl: page.pageUrl,
                 hasException: page.hasException,
+                hasVisited: m.hasVisited,
                 pageSpendTime: page.pageSpendTime,
-                pageContent,
+                pageContent: outPageCount,
+                pageMD5,
+                createOn: currentDateTimeString(),
                 overSize
 
             })
         }
+
+        return ary;
     }
 }
 
-// 裁剪内容，保证能存入数据库
-function trimPageContent(content, maxSize = 1024 * 64) {
+// 裁剪内容，保证能存入数据库 16MB
+function trimPageContent(content, maxSize = 1024 * 1024 * 16) {
     if (_.isEmpty(content)) return {};
 
     const len = _.size(content);
@@ -73,13 +86,17 @@ function getCreateTableSql(tableName) {
         batchId              bigint not null comment '批次编号',
         taskId               bigint not null default 0 comment '任务编号',
         runCount             smallint default 0 comment '运行次数，推入队列次数',
+        createOn             datetime default '0001-01-01 00:00:00' comment '创建日期',
         pageUrl              varchar(1024) default '' comment '页面地址',
         hasException         bool default 0 comment '是否有异常',
+        hasVisited           bool default 0 comment '页面是否已经访问过了',
         pageSpendTime        int default 0 comment '采集花费时间',
-        pageContent          text comment '页面内容 ',
+        pageContent          mediumtext comment '页面内容 ',
+        pageMD5              char(32) default '',
         overSize             int default 0 comment '超长的数量（单位k）',
         autoId               bigint not null auto_increment,
-        primary key (autoId)
+        primary key (autoId),
+        key AK_Key_2 (pageMD5)
     );`
 }
 

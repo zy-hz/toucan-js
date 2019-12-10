@@ -56,8 +56,13 @@ class DbVisitor {
     }
 
     // 删除所有表
-    async dropTables() {
-        let sql = `select table_name from information_schema.TABLES where table_schema='${this.connection.database}';`
+    async dropTables(...args) {
+        args = _.flatten(args);
+        if (_.isEmpty(args)) args.push('*');
+        // 拼接表名匹配模式
+        const pattern = _.map(args, x => { return `^${x}` }).join('|');
+
+        let sql = `select table_name from information_schema.TABLES where table_schema ='${this.connection.database}' and TABLE_NAME REGEXP '${pattern}';`
         const result = await this.execSql(sql);
         sql = _.map(result[0], row => { return `drop table \`${row['TABLE_NAME']}\`;` }).join('\n');
         await this.execSql(sql, { initSqlPermit: { disableDrop: false } });

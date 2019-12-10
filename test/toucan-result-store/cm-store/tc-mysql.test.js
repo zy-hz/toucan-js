@@ -20,7 +20,7 @@ describe('[测试入口] - mysql', () => {
     }
 
     const rs = new rsClass(options);
-    const msg = require(path.resolve(__dirname, '../sample', 'regain-result-1688-smaill.json'));
+    const msg = require(path.resolve(__dirname, '../sample', 'regain-result-1688-small.json'));
 
     before('', async () => {
         await rs.init(options);

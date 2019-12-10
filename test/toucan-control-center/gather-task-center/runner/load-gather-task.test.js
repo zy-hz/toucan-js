@@ -4,7 +4,6 @@ const expect = require('chai').expect;
 const path = require('path');
 const fs = require('fs');
 
-
 describe('[测试入口] - load gather task', () => {
     // 启动的选项
     const options = {

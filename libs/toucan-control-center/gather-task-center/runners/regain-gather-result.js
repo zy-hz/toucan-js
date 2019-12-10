@@ -44,17 +44,18 @@ class RegainGatherResultRunner extends ToucanRunner {
             // 注意：waitAckNumber 参数没有生效（同时获取的任务数量）
             const msg = await this.taskMQ.subscribeResult(queue, { consumeOptions: options });
             if (msg === false) break;
+            jobCount = jobCount + msg.length;
 
             // 保存结果到指定目录
-            await resultStore.save(msg)
-
-            jobCount = jobCount + msg.length;
-            tasks = _.concat(tasks, _.map(msg, m => {
+            const saveResult = await resultStore.save(msg)
+            tasks = _.concat(tasks, _.map(saveResult, m => {
                 // 信息对象
                 const { task, station = {}, page = {} } = m;
                 // 获取页面的异常信息
                 const { hasException = false, errno = 0, message = '' } = page;
-                return Object.assign(task, { station }, { pageException: { hasException, errorNo: errno, errorMessage: message } })
+                // 获取任务的子任务 - 如果是重复的信息，不解析子任务
+                const subTasks = msg.hasVisited ? [] : resultStore.extractSubTasks(task, page);
+                return Object.assign(task, { station, subTasks }, { pageException: { hasException, errorNo: errno, errorMessage: message } })
             }));
 
         } while (jobCount < batchRegainCount)
@@ -69,7 +70,7 @@ class RegainGatherResultRunner extends ToucanRunner {
             // 创建结果存储器 - 可以为每个采集结果队列指定不同的结果存储器
             const resultStore = await rsFactory.create(q);
             const tasks = await this.do4Queue(q, batchRegainCount, resultStore);
-            
+
             this.log(`从${q.queue}回收${tasks.length}个采集结果。`);
             await resultStore.close();
 
@@ -77,6 +78,50 @@ class RegainGatherResultRunner extends ToucanRunner {
         }
 
         return allTask;
+    }
+
+    // 创建子任务
+    async createSubTask(task, dbc) {
+        const { taskBatchPlan, taskBatchDetail } = dbc;
+        const { batchId, runCount, taskId } = task;
+
+        const tableName = taskBatchDetail.getLikeTableName(batchId);
+        const tbvNewDetail = dbc.newTable(tableName, taskBatchDetail);
+
+        // 获取子任务
+        const subTasks = _.map(task.subTasks, x => { return taskBatchDetail.newRow(batchId, x, { preTaskId: taskId }) })
+
+        // 根据urlMD5获得已经存在的子任务(tbvNewDetail)
+        const md5s = _.map(subTasks, `${taskBatchDetail.URLMD5}`);
+        const existTasks = await tbvNewDetail.select(`${taskBatchDetail.URLMD5}`, 'in', [md5s]);
+
+        // 分给存在和新建的子任务
+        const result = _.partition(subTasks, x => { return _.some(existTasks, [`${taskBatchDetail.URLMD5}`, x.urlMD5]) });
+        const newTasks = result[1];
+        const updateTasks = result[0];
+
+        if (!_.isEmpty(newTasks)) {
+            // 添加子任务到数据表 
+            await tbvNewDetail.insertBatch(newTasks);
+
+            // 更新计划表
+            await taskBatchPlan.increase({ taskResidualCount: newTasks.length }, { batchId }, { runCount });
+        }
+
+        if (!_.isEmpty(updateTasks)) {
+            // 按照urlMD5统计
+            const sumTasks = _.map(_.groupBy(updateTasks, `${taskBatchDetail.URLMD5}`), (val, key) => { return { urlMD5: key, urlRefCount: val.length } });
+            // 合并
+            const zipTasks = _.zip(_.orderBy(existTasks, `${taskBatchDetail.URLMD5}`), _.orderBy(sumTasks, `${taskBatchDetail.URLMD5}`));
+            // 更新子任务到任务详情表
+            await tbvNewDetail.replace(_.map(zipTasks, r => {
+                const existTask = r[0];
+                const sumTask = r[1];
+
+                return _.merge(existTask, { urlRefCount: sumTask.urlRefCount });
+            }))
+
+        }
     }
 
     async updateTaskDetailTable(batches, dbc, nowString) {
@@ -183,6 +228,12 @@ class RegainGatherResultRunner extends ToucanRunner {
         const nowString = currentDateTimeString();
 
         try {
+
+            // 新建子任务
+            for await (const x of tasks) {
+                if (!_.isEmpty(x.subTasks)) await this.createSubTask(x, dbc, nowString);
+            }
+
             // 更新任务详情表
             await this.updateTaskDetailTable(batches, dbc, nowString);
 

@@ -8,6 +8,8 @@ module.exports = {
     TASKID:'taskId',            // 任务编号
     TASKSTATE:'taskState',      // 0-ready,1-reset,10-queue,20-done,21-error
     TASKBODY:'taskBody',        // 任务体，json
+    URLMD5:'urlMD5',            // 连接的唯一码
+    URLREFCOUNT:'urlRefCount',  // url被引用的数量
     PRETASKID:'preTaskId',      // 上一级任务编号
     ROOTTASKID:'rootTaskId',    // 根任务的编号
     RUNCOUNT:'runCount',        // 运行次数，推入队列次数

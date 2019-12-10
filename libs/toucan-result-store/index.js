@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const path = require('path');
 const find = require('find');
+const createExtractSubTaskFunction = require('./subtask-extract');
 
 class ResultStoreFactory {
 
@@ -17,6 +18,13 @@ class ResultStoreFactory {
         const engObj = new engClass(options.storeOptions || options);
         // 调用异步的初始化接口
         if (!ignoreInit) await engObj.init(options.storeOptions || options);
+
+        // 设置 extractSubTasks 方法
+        if (!_.isFunction(engObj.extractSubTasks)) {
+            const { extractSubTask } = options.storeOptions || options;
+            engObj.extractSubTasks = createExtractSubTaskFunction(extractSubTask);
+        }
+
         return engObj
     }
 }
@@ -33,7 +41,6 @@ function getStoreEngineFile(storeType) {
 
     return files[0];
 }
-
 
 module.exports = {
     rsFactory: new ResultStoreFactory()

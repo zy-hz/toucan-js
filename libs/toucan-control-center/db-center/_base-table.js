@@ -51,6 +51,14 @@ module.exports = class {
         await exec;
     }
 
+    async increase(obj,...where){
+        where = _.flatten(where);
+        obj = this.objMap2Field(obj);
+
+        const exec = joinWhere(this.tbVisitor, where).increment(obj);
+        await exec;  
+    }
+
     // replace into 是先删除再插入
     async replace(rows) {
         rows = _.castArray(rows);

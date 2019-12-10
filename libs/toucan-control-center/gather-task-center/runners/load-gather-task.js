@@ -53,7 +53,7 @@ class LoadGatherTaskRunner extends ToucanRunner {
         for await (const b of batchTasks) {
             // 新建批次任务（添加到批次表）
             const batchId = await taskBatch.generateBatchId({ insertToTable: true });
-            const rows = _.map(b, x => { return { batchId, taskBody: JSON.stringify(x) } });
+            const rows = _.map(b, x => { return taskBatchDetail.newRow(batchId, x) });
 
             // 第一个batchId作为homeId
             if (_.isEmpty(homeId)) homeId = batchId;

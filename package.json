@@ -1,6 +1,6 @@
 {
   "name": "toucan-js",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "toucan js libs",
   "main": "libs/index.js",
   "directories": {
@@ -48,6 +48,7 @@
     "superagent": "5.1.0",
     "superagent-proxy": "^2.0.0",
     "url": "^0.11.0",
+    "url-parse": "^1.4.7",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
