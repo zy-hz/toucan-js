@@ -208,6 +208,7 @@
 - 103 - [fixed]在一些机器上git更新后，不会自动启动
 - 104 - [fixed]centos系统的情报站，在自动更新重启后，提示stationKey不匹配
 - 105 - [fixed]ER_TRUNCATED_WRONG_VALUE_FOR_FIELD，不支持utf8mb4格式
+- 106 - windows-1252 页面不能解码
 
 
 ## 测试方案
