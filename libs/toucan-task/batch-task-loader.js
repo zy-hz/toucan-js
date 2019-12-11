@@ -59,10 +59,10 @@ function load(contentFile,
     } = {}
 ) {
     // 如果文件不存在，返回空数组
-    if (!fs.existsSync(contentFile)) return [];
+    if (_.isString(contentFile) && !fs.existsSync(contentFile)) return [];
 
-    // 读取文件内容
-    const lines = _.split(readContent(contentFile), '\n');
+    // 读取文件内容 或者 数组
+    const lines = _.isArray(contentFile) ? contentFile : _.split(readContent(contentFile), '\n');
 
     // 文件分组（先切割，以便处理大任务）
     if (taskCount === 0) taskCount = Math.ceil(lines.length / (segmentCount || 1));

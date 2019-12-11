@@ -106,6 +106,28 @@ describe('[测试入口] - load gather task', () => {
         })
     })
 
+    describe('temp 单任务测试', () => {
+        beforeEach('', () => {
+        })
+
+        // 该测试放在第一个
+        it('init', async () => {
+            await runner.init(options)
+            expect(runner.uploadSource).have.lengthOf(1);
+            expect(runner.uploadSource[0].dbPath).to.be.eq(uploadPath);
+        })
+
+        it('uploadTask', async () => {
+            const task = require('../sample/bodani.tsk.json');
+            task.sourceName = 'require-bodani';
+            const dbc = require('../../../../libs/toucan-control-center/db-center')(options.dbConnection);
+            await runner.uploadTask(task, dbc);
+
+            await dbc.destroy();
+
+        })
+
+    })
 })
 
 function prepareTaskFile(fileName, targetPath) {
@@ -113,5 +135,8 @@ function prepareTaskFile(fileName, targetPath) {
     const targetFileName = path.resolve(targetPath, fileName);
 
     fs.copyFileSync(srcFileName + '.tsk', targetFileName + '.tsk', fs.constants.COPYFILE_FICLONE);
-    fs.copyFileSync(srcFileName + '.txt', targetFileName + '.txt', fs.constants.COPYFILE_FICLONE);
+
+    if (fs.existsSync(srcFileName + '.txt')) {
+        fs.copyFileSync(srcFileName + '.txt', targetFileName + '.txt', fs.constants.COPYFILE_FICLONE);
+    }
 }

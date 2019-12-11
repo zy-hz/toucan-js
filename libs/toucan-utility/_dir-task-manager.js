@@ -79,7 +79,7 @@ class DirTaskManager {
         if (!fs.existsSync(targetPath)) fs.mkdirSync(targetPath);
 
         this.moveTaskFile(task.taskFile, targetPath);
-        this.moveTaskFile(task.contentFile, targetPath);
+        if (fs.existsSync(task.contentFile)) this.moveTaskFile(task.contentFile, targetPath);
     }
 
     // 设置任务完成

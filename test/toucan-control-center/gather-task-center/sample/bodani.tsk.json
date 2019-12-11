@@ -1,0 +1,26 @@
+{
+    "batchInfo":{
+        "batchName":"我的全站采集",
+        "batchComment":"",
+        "batchOwner":"zy",
+        "batchGroup":"开发",
+        "batchTag":"测试"
+    },
+    "batchFormat":{
+        "lineSplitChar":";",
+        "lineFields":[
+            "productId",
+            "memberId",
+            "shopUrl"
+        ],
+        "targetUrl":"http://shop.ttall.com/offer/${productId}.html"
+    },
+	"batchOptions":{
+		"resultQueueName":"result.zy.ttall",
+		"storeTableName":"zy_ttall"
+	},
+	"datas":[
+        "1423564;cn1;https://shop1.ttall.com",
+        "5371230;cn2;https://shop2.ttall.com"
+	]
+}
