@@ -174,6 +174,9 @@ class ToucanBaseSpider {
         // 解析列表的链接
         const extractUrlResult = this.extractUrl(thePage, response, layerIndex);
 
+        // 处理页面中实体字符
+        response.pageContent = exHTML.htmlDecode(response.pageContent);
+
         // 是否需要提取文本的内容
         if (this.onlyKeepPageText && !_.isNil(response)) {
             response.pageContent = exHTML.extractContent(response.pageContent, true);

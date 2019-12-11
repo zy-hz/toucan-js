@@ -26,10 +26,11 @@ describe('[测试入口] - exHTML', () => {
     describe('extractHyperlink', () => {
         it('1688', () => {
             const content = fs.readFileSync(__dirname + '/sample/1688-product.html', 'utf-8');
-            const result = exHTML.extractHyperlink(content,{baseUrl:'https://www.1688.com/'});
+            const result = exHTML.extractHyperlink(content, { baseUrl: 'https://www.1688.com/' });
             expect(result).length.above(1);
         })
 
     })
 
 })
+

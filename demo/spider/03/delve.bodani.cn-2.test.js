@@ -4,20 +4,15 @@ const testSuit = require('../util/mocha-test-suit');
 const cheerio = require('cheerio');
 
 testSuit({
-    only:false,
-    targetUrl: 'http://delve.bodani.cn/Old%20Testament/02Exo/02ET07.htm',
+    only: false,
+    targetUrl: 'http://delve.bodani.cn/Old%20Testament/10%202Sam/10Index.htm',
     spiderType: 'http',
     // 自定义的验证
     otherExpect: [
-        verifyPageCharset,
         verifyPageContent
     ]
 });
 
-// 验证页面的字符集
-function verifyPageCharset({ pageCharset } = {}) {
-    expect(pageCharset, '页面编码为 big5').to.match(/^big5$/im);
-}
 
 // 验证页面的内容
 function verifyPageContent({ pageContent } = {}) {

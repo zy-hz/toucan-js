@@ -22,7 +22,7 @@ const au = require('./libs/toucan-app/auto-upgrade');
 async function startApp() {
 
     // 启动更新程序
-    // 测试的时候，使用scheduleRule:'*/10 * * * *'，注意：使用只能是5位
+    // 测试的时候，使用scheduleRule:'*/13 * * * *'，注意：使用只能是5位
     // 发布的时候，使用随机0-59的分钟
     await au.start({ runAtOnce: true, scheduleRule: '*/13 * * * *' });
 

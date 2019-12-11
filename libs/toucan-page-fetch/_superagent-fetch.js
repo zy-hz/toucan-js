@@ -36,7 +36,7 @@ class SuperAgentPageFetch extends ToucanPageFetch {
 
             // 使用页面的指定编码转码为utf-8
             const pageContent = encoding.convert(response.body, 'utf-8', pageCharset, true).toString();
-
+            
             return {
                 // 抓取过程是否异常
                 hasException: false,
