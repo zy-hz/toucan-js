@@ -14,6 +14,7 @@ create table gt_batch
    batchGroup           char(16) default '' comment '批次所在组',
    batchTag             varchar(1024) default '' comment '批次的标签',
    batchSource          varchar(32) default '' comment '批次载入的来源',
+   batchOptions         varchar(1024) default '' comment '批次的工作选项',
    taskCount            int default 0 comment '批次的任务数量',
    runCount             int default 0 comment '运行次数',
    createOn             datetime default '0001-01-01 00:00:00' comment '创建时间',

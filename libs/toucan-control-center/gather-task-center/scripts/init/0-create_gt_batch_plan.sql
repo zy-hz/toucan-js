@@ -11,6 +11,7 @@ create table gt_batch_plan
    runCount             smallint not null default 0 comment '运行次数',
    createOn             datetime default '0001-01-01 00:00:00' comment '创建时间',
    runPlan              char(32) default '' comment '运行计划',
+   batchOptions         varchar(1024) default '' comment '批次的工作选项',
    lastQueueOn          datetime default '0001-01-01 00:00:00' comment '上次排队时间',
    nextQueueOn          datetime default '0001-01-01 00:00:00' comment '下次排队时间',
    beginOn              datetime default '0001-01-01 00:00:00' comment '开始时间',

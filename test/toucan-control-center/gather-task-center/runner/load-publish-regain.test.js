@@ -17,7 +17,7 @@ const publishTaskrunner = require('../../../../libs/toucan-control-center/gather
 // 回收任务的运行器
 const regainTaskRunner = require('../../../../libs/toucan-control-center/gather-task-center/runners/regain-gather-result');
 
-describe('[测试入口]load publish regain 综合测试', () => {
+describe('temp [测试入口]load publish regain 综合测试', () => {
     // 启动的选项
     const options = {
         // 数据库连接
@@ -331,7 +331,7 @@ describe('[测试入口]load publish regain 综合测试', () => {
                 expect(batchTask.taskState, 'taskState').to.be.eq(20);
                 expect(batchTask.doneCount, 'doneCount').to.be.eq(1);
                 expect(batchTask.errorCount, 'errorCount').to.be.eq(0);
-                expect(batchTask.errorNo, 'errorNo').to.be.eq(0);
+                expect(batchTask.errorNo - 0, 'errorNo').to.be.eq(0);
                 expect(batchTask.errorMessage, 'errorMessage').is.empty;
             } else {
                 expect(batchPlan.taskErrorCount, 'taskErrorCount').to.be.eq(1);
@@ -343,7 +343,7 @@ describe('[测试入口]load publish regain 综合测试', () => {
                 expect(batchTask.doneCount, 'doneCount').to.be.eq(0);
                 expect(batchTask.errorCount, 'errorCount').to.be.eq(1);
 
-                expect(batchTask.errorNo, 'errorNo').to.be.eq(50010);
+                expect(batchTask.errorNo - 0, 'errorNo').to.be.eq(50010);
                 expect(batchTask.errorMessage, 'errorMessage').to.be.eq('请登录');
             }
 

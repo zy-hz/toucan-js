@@ -106,7 +106,7 @@ describe('[测试入口] - load gather task', () => {
         })
     })
 
-    describe('temp 单任务测试', () => {
+    describe('单任务测试', () => {
         beforeEach('', () => {
         })
 

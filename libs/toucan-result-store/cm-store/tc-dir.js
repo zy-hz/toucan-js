@@ -13,7 +13,7 @@ class DirResultStore extends ToucanBaseResultStore {
         outDir } = {}
     ) {
         super();
-        
+
         this.outDir = path.resolve(process.cwd(), outDir);
         if (!fs.existsSync(this.outDir)) fs.mkdirSync(this.outDir, { recursive: true });
     }
@@ -21,6 +21,7 @@ class DirResultStore extends ToucanBaseResultStore {
     async save(obj) {
         const ary = _.castArray(obj);
         _.forEach(ary, x => { saveResult(x, this.outDir) });
+        return ary;
     }
 }
 
