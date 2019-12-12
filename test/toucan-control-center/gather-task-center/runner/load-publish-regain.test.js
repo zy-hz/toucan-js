@@ -17,7 +17,7 @@ const publishTaskrunner = require('../../../../libs/toucan-control-center/gather
 // 回收任务的运行器
 const regainTaskRunner = require('../../../../libs/toucan-control-center/gather-task-center/runners/regain-gather-result');
 
-describe('temp [测试入口]load publish regain 综合测试', () => {
+describe('[测试入口]load publish regain 综合测试', () => {
     // 启动的选项
     const options = {
         // 数据库连接
