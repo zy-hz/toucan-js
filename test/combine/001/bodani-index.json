@@ -5,5 +5,12 @@
         "batchOwner":"zy",
         "batchGroup":"开发",
         "batchTag":"测试"
-    }
+    },
+	"batchOptions":{
+		"resultQueueName":"result.zy.bodani",
+		"storeTableName":"zy_bodani"
+	},
+    "datas":[
+        "http://delve.bodani.cn/"
+    ]
 }

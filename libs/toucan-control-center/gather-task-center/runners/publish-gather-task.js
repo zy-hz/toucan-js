@@ -38,13 +38,13 @@ class PublishGatherTaskRunner extends ToucanRunner {
     }
 
     // 发布批次任务
-    async publishBatchTasks(batchTasks) {
+    async publishBatchTasks(batchTasks, options = {}) {
 
         // 处理每个批次中的任务，添加任务选项
         const tasks = _.map(batchTasks, task => {
             const { batchId, taskId, taskBody, runCount } = task;
             // 注意：runCount 需要增加1，表示自己的运行次数
-            const taskBodyObject = buildTaskBody(taskBody, { batchId, taskId, runCount: runCount + 1 });
+            const taskBodyObject = buildTaskBody(taskBody, Object.assign({}, { batchId, taskId, runCount: runCount + 1 }, options));
             const routeKey = spiderFactory.getSpiderId(taskBodyObject);
             return _.assign({}, { taskBody: taskBodyObject }, { taskOptions: { exchange: this.exchange, routeKey } });
         });
@@ -67,7 +67,7 @@ class PublishGatherTaskRunner extends ToucanRunner {
 
         let publishTaskCount = 0;
         for await (const batch of batches) {
-            const { batchId, runCount, taskQueueCount } = batch;
+            const { batchId, runCount, taskQueueCount, batchOptions } = batch;
 
             // 从数据中心获得需要发布的批次
             const tbName = taskBatchDetail.getLikeTableName(batchId);
@@ -77,7 +77,7 @@ class PublishGatherTaskRunner extends ToucanRunner {
             const batchTasks = await tbv.selectLimit(batchPublishCount, `${taskBatchDetail.TASKSTATE}`, '<', 10);
 
             // 发布到消息队列
-            const result = await this.publishBatchTasks(batchTasks);
+            const result = await this.publishBatchTasks(batchTasks, _.isEmpty(batchOptions) ? {} : JSON.parse(batchOptions));
             if (!result.hasException) {
                 // 发布成功后，更新任务详情表
                 const updateRows = _.map(batchTasks, x => {

@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const _ = require('lodash');
 
 function publishTaskTest(suitInfo,
-    { dbConnection, mq } = {},
+    { dbConnection, mq, batchOptions = {} } = {},
     // 第几次运行
     runIndex,
     {
@@ -15,6 +15,7 @@ function publishTaskTest(suitInfo,
         expectPlanTable
     }) {
     const { suitName } = suitInfo;
+
 
     // 定义当前的时间
     const dtNow = new Date();
@@ -35,7 +36,7 @@ function publishTaskTest(suitInfo,
             await mqv.deleteQueue(mq.queueName);
             await runner.init({ taskMQ: mq });
 
-            console.log(`%c${_.repeat('*', 10)} 第${runIndex}次运行 ${_.repeat('*', 10)}`,'color: green');
+            console.log(`%c${_.repeat('*', 10)} 第${runIndex}次运行 ${_.repeat('*', 10)}`, 'color: green');
         })
 
         it('publish 测试', async () => {
@@ -52,6 +53,12 @@ function publishTaskTest(suitInfo,
 
             taskObj = JSON.parse(msg.content.toString());
             expect(_.isObject(taskObj)).is.true;
+
+            // 验证任务参数
+            if (!_.isEmpty(batchOptions)) {
+                expect(taskObj.resultQueueName, 'resultQueueName').eq(batchOptions.resultQueueName);
+                expect(taskObj.storeTableName, 'storeTableName').eq(batchOptions.storeTableName);
+            }
 
             // 验证消息队列的任务体
             if (_.isFunction(expectMQTaskBody)) expectMQTaskBody(taskObj);

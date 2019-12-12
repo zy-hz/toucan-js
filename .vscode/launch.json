@@ -150,7 +150,7 @@
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
             "args": [
-                "test/combine/001/bodani-sp-windows-1252.test.js",
+                "test/combine/001/bodani-sp-utf8mb4.test.js",
                 "--no-timeouts",
                 "--recursive",
                 "--bail" // 发现错误后停止

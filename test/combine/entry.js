@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const { rebuildTaskDb, rebuildResultDb, uploadTaskTest, publishTaskTest, subscribeTaskTest, regainTaskTest } = require('./util');
 const _ = require('lodash');
+const path = require('path');
 
 const {
     connDbCenter, connResultCenter, rabbitMQ, gatherStationInfo,
@@ -31,8 +32,11 @@ function allTest(suitInfo, {
     repeatCount = 0
 }
 ) {
-    const { suitName = '未定义' } = suitInfo || {};
-    const title = `${_.padEnd(_.padStart(suitName, 30, '*'), 50, '*')}`
+    const { suitName = '未定义', suitRoot, suitId } = suitInfo || {};
+    const taskFile = path.resolve(suitRoot, `${suitId}.json`);
+    const batchOptions = require(taskFile).batchOptions || {};
+
+    const title = `${_.padEnd(_.padStart(suitName, 30, '*'), 50, '*')} [demo]`
     describe(title, function () {
 
         before('初始化测试环境', async () => {
@@ -46,19 +50,23 @@ function allTest(suitInfo, {
         for (let i = 0; i <= repeatCount; i++) {
 
             // STEP2:发布采集任务
-            publishTaskTest(suitInfo, { dbConnection: connDbCenter, mq }, i + 1, {
+            publishTaskTest(suitInfo, { dbConnection: connDbCenter, mq, batchOptions }, i + 1, {
                 expectMQTaskBody,
                 expectDetailTable: expectDetailTableWhenPublish,
                 expectPlanTable: expectPlanTableWhenPublish,
             });
 
             // STEP3:情报站采集 - 进入结果队列
-            subscribeTaskTest(suitInfo, { mq, resultQueueName, gatherStationInfo });
+            subscribeTaskTest(suitInfo, { mq, resultQueueName, gatherStationInfo, batchOptions });
 
             // STEP4:收集采集结果
             const resultQueue = resultTo === 'mysql' ? resultQueue4Mysql : resultQueue4Dir;
+            if (!_.isEmpty(batchOptions)) {
+                resultQueue.queue = batchOptions.resultQueueName;
+                //resultQueue.storeOptions.tableName = batchOptions.storeTableName;
+            }
             regainTaskTest(suitInfo, {
-                connDbCenter, connResultCenter, mq, resultQueueName,
+                connDbCenter, connResultCenter, mq, batchOptions,
                 resultQueue: _.merge({}, resultQueue, { storeOptions: { extractSubTask } }),
                 stationInfo: gatherStationInfo
             }, {

@@ -12,12 +12,10 @@ function uploadTaskTest(suitInfo, { dbConnection } = {}, { expectDBTaskBody } = 
     const { suitName, suitId, suitRoot } = suitInfo;
     const taskFile = path.resolve(suitRoot, `${suitId}.json`);
     const contentFile = path.resolve(suitRoot, `${suitId}.txt`);
-    const { batchInfo } = require(taskFile);
-    const task = {
-        sourceName: suitName,
-        batchInfo,
-        contentFile
-    }
+    const task = require(taskFile);
+    task.sourceName = suitName;
+    task.contentFile = contentFile;
+    
     // 定义当前的时间
     const dtNow = new Date();
 
@@ -42,7 +40,7 @@ function uploadTaskTest(suitInfo, { dbConnection } = {}, { expectDBTaskBody } = 
             expect(result).have.lengthOf(1);
 
             const row = result[0];
-            expect(row[`${dbConst.taskBatch.BATCHNAME}`], 'BATCHNAME').eq(batchInfo.batchName);
+            expect(row[`${dbConst.taskBatch.BATCHNAME}`], 'BATCHNAME').eq(task.batchInfo.batchName);
             expect(row[`${dbConst.taskBatch.TASKCOUNT}`], 'TASKCOUNT').eq(1);
             expect(row[`${dbConst.taskBatch.RUNCOUNT}`], 'RUNCOUNT').eq(1);
             expect(row[`${dbConst.taskBatch.CREATEON}`], 'CREATEON').above(dtNow);

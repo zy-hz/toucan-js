@@ -9,7 +9,7 @@ const suitInfo = {
 }
 
 allTest(suitInfo, {
-    expectDBTaskBody: expectTaskBody, expectMQTaskBody: expectTaskBody, expectDetailTable
+    expectDBTaskBody: expectTaskBody, expectMQTaskBody:expectTaskBody, expectDetailTable
 })
 
 // 自定义的验证方法
@@ -17,6 +17,7 @@ function expectTaskBody(taskBody) {
     const { targetUrl } = taskBody;
     expect(targetUrl, 'targetUrl').eq('http://delve.bodani.cn/');
 }
+
 
 function expectDetailTable(rows) {
     expect(rows).lengthOf(1);

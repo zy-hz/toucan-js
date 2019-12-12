@@ -6,13 +6,17 @@ const { sleep } = require('../../../libs/toucan-utility');
 const expect = require('chai').expect;
 const _ = require('lodash');
 
-function subscribeTaskTest(suitInfo, { mq, resultQueueName, gatherStationInfo } = {}) {
+function subscribeTaskTest(suitInfo, { mq, resultQueueName, gatherStationInfo, batchOptions = {} } = {}) {
     const { suitName } = suitInfo;
+    // 用户指定了专门的结果队列
+    resultQueueName = batchOptions.resultQueueName || resultQueueName;
 
     // 构建采集消息队列
     const gatherMQ = mqFactory.createGatherMQ(mq.mqType, mq.options);
-    // 蜘蛛参数
-    const spiderOptions = { resultQueueName };
+    // 蜘蛛参数 ,
+    // 如果没有在batchOptions中指定结果队列，蜘蛛参数使用测试中指定的结果队列
+    // 如果有在batchOptions中指定结果队列，就不用指定蜘蛛参数（任务中讲会设置结果队列）
+    const spiderOptions = _.isEmpty(batchOptions) ? { resultQueueName } : {};
 
     // 消息队列访问器
     const mqv = require('../../../libs/toucan-mq-visitor')(mq.mqType, mq.options);

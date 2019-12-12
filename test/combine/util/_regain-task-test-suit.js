@@ -6,7 +6,10 @@ const { DbVisitor, sleep } = require('../../../libs/toucan-utility');
 const expect = require('chai').expect;
 const _ = require('lodash');
 
-function regainTaskTest(suitInfo, { connDbCenter, mq, resultQueue, stationInfo },
+function regainTaskTest(suitInfo,
+    // 测试的参数
+    { connDbCenter, mq, connResultCenter, batchOptions = {}, resultQueue, stationInfo },
+    // 指定异常处理的方法
     {
         expectPlanTable,
         expectDetailTable
@@ -26,8 +29,13 @@ function regainTaskTest(suitInfo, { connDbCenter, mq, resultQueue, stationInfo }
         const dbc = require('../../../libs/toucan-control-center/db-center')(connDbCenter);
         const dbConst = require('../../../libs/toucan-control-center/db-center/const.js');
 
+        // 结果数据库
+        const resultDb = new DbVisitor(connResultCenter);
+        const resultTableName = _.isEmpty(batchOptions) ? resultQueue.storeOptions.tableName : batchOptions.storeTableName;
+
         before('准备测试环境', async () => {
-            await runner.init({ taskMQ })
+            await resultDb.dropTables(resultTableName);
+            await runner.init({ taskMQ });
         })
 
         let tasks;
@@ -95,9 +103,17 @@ function regainTaskTest(suitInfo, { connDbCenter, mq, resultQueue, stationInfo }
 
         })
 
+        it('验证结果存储', function (done) {
+            resultDb.DB(resultTableName).select().then(result => {
+                expect(result, '结果数量').lengthOf(1);
+                done()
+            })
+        })
+
         after('清理测试环境', async () => {
             await runner.stop();
             await dbv.close();
+            await resultDb.close();
         })
 
     })

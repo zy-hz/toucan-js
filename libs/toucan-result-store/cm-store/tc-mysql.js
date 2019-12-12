@@ -46,7 +46,12 @@ class MysqlResultStore extends ToucanBaseResultStore {
             // 标识页面已经访问过了
             m.hasVisited = !_.isEmpty(existPage);
 
-            await this.dbv.insert(this.storeTableName, {
+            if(!_.isEmpty(task.storeTableName)){
+                const createSql = getCreateTableSql(task.storeTableName);
+                await this.dbv.execSql(createSql);
+            }
+
+            await this.dbv.insert(task.storeTableName || this.storeTableName, {
                 batchId: task.batchId,
                 taskId: task.taskId,
                 runCount: task.runCount,

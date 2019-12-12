@@ -47,7 +47,8 @@ class SubscribeGatherTaskJob extends TaskJob {
             { task, page, station: this.stationInfo },
             {
                 // 指定结果消息队列
-                queue: this.spiderOptions.resultQueueName || 'toucan.gather.result.all',
+                // 优先采用task中的参数，然后是spiderOptions，最后才是默认
+                queue: task.resultQueueName || this.spiderOptions.resultQueueName || 'toucan.gather.result.all',
                 options: {
                     queueOptions: {
                         // 每个结果存储一个单独文件，该选项针对fileMQ生效

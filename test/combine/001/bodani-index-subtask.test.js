@@ -13,9 +13,6 @@ function expectTaskBody(taskBody) {
     expect(targetUrl, 'targetUrl').eq('http://delve.bodani.cn/');
 }
 
-function expectDetailTable(rows) {
-    expect(rows).lengthOf(100);
-}
 
 function expectPlanTable(row) {
     const { isEnd, taskResidualCount, taskDoneRate } = row;
@@ -26,7 +23,8 @@ function expectPlanTable(row) {
 
 // 运行测试
 allTest(suitInfo, {
-    expectDBTaskBody: expectTaskBody, expectMQTaskBody: expectTaskBody, expectDetailTable, expectPlanTable,
+    expectDBTaskBody: expectTaskBody, expectMQTaskBody: expectTaskBody, 
+    expectPlanTableWhenRegain:expectPlanTable,
     // 获取子任务
     extractSubTask: { extractEnable: true }
 })
