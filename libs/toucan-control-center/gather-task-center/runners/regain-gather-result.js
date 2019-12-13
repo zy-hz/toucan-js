@@ -116,7 +116,7 @@ class RegainGatherResultRunner extends ToucanRunner {
             // 更新子任务到任务详情表
             await tbvNewDetail.replace(_.map(zipTasks, r => {
                 const existTask = r[0];
-                const sumTask = r[1];
+                const sumTask = r[1] || {};
 
                 return _.merge(existTask, { urlRefCount: sumTask.urlRefCount });
             }))
