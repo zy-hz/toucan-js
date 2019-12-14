@@ -14,9 +14,15 @@ function replaceTaskParams(s, pms) {
 
 // 构建任务体
 function buildTaskBody(jsonString, options = {}) {
-    const obj = JSON.parse(jsonString);
-    obj.targetUrl = replaceTaskParams(obj.targetUrl, obj);
-    return _.assignIn(obj, options);
+    try {
+        const obj = JSON.parse(jsonString);
+        obj.targetUrl = replaceTaskParams(obj.targetUrl, obj);
+        return _.assignIn(obj, options);
+    }
+    catch (error) {
+        const { batchId, taskId } = options;
+        throw new Error(`${batchId}:${taskId} 构建任务体发生异常`);
+    }
 }
 
 module.exports = {

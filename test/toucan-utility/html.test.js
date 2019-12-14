@@ -13,6 +13,13 @@ describe('[测试入口] - exHTML', () => {
             expect(result.indexOf('<style') < 0).is.true;
             expect(result.indexOf('<link') < 0).is.true;
         });
+
+        it('removeTabCtrLn',()=>{
+            const s = `{"targetUrl":"http://delve.bodani.cn/Processing Docs/Working Data/68Christ/跟随基督的脚踪行/Jesus130.htm","targetHrefText":"太二十三：11 -
+            12 ","targetLayerIndex":3}`;
+            const result = exHTML.removeTabCtrLn(s);
+            expect(result).eq('{"targetUrl":"http://delve.bodani.cn/Processing Docs/Working Data/68Christ/跟随基督的脚踪行/Jesus130.htm","targetHrefText":"太二十三：11 -            12 ","targetLayerIndex":3}')
+        })
     })
 
     describe('extractContent', () => {

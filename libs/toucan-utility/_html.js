@@ -21,6 +21,9 @@ class exHTML {
         html = html.replace(/^\s+?$/img, '');
         return html.replace(/(\r\n)+/img, '\r\n');
     }
+    removeTabCtrLn(html){
+        return html.replace(/\r|\n|\t+/img, '');
+    }
     remove(html) {
         html = this.removeScript(html);
         html = this.removeStyle(html);
@@ -28,6 +31,7 @@ class exHTML {
 
         return this.removeBlank(html);
     }
+    
 
     // 提取内容
     extractContent(
@@ -90,7 +94,7 @@ class exHTML {
     // 过滤超连接
     filterHyperlink($, { ignoreNullText, ignoreSelfHref, ignoreOuterHref, baseUrl }) {
         const aHref = $.attr('href');
-        const aText = this.removeBlank($.text());
+        const aText = this.removeTabCtrLn($.text());
 
         if (_.isEmpty(aHref)) return undefined;
         if (ignoreNullText && _.isEmpty(aText)) return undefined;
