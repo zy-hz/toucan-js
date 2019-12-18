@@ -9,11 +9,75 @@
 
 ## 一、安装
 
+### 服务器安装
+
+1. 在安装前，请保证您的系统有以下软件
+
+   - nodejs
+
+     ```
+     // 修改npm 的默认仓库位置
+     npm config set registry http://registry.npm.taobao.org/
+     
+     // 安装pm2
+     npm install pm2 -g
+     ```
+
+   - git
+
+   - erlang
+
+   - mysql
+
+   - RabbitMQ
+
+2. RabbitMQ配置
+
+   - 整体修改RabbitMQ日志、数据、插件等的保存目录
+
+   - 运行sysdm.cpl，启动系统设置
+
+   - 系统环境变量中添加变量 RABBITMQ_BASE，变量值设置为您的目标目录。建议设置为D:\RabbitMQBase。
+
+   - 删除RabbitMQ服务，然后再安装RabbitMQ服务。如果您的目标目录被建立，表示设置成功。
+
+   - 启动RabbitMQ服务。
+
+   - 在目录RabbitMQ Server\rabbitmq_server-3.7.17\sbin中打开命令窗口，运行
+
+     ```
+     rabbitmq-plugins enable rabbitmq_management
+     ```
+
+   - 在浏览器窗口访问127.0.0.1:15672，出现rabbitmq的登录界面，使用guest登录后，表示安装成功。（密码默认为gust）
+
+3. mysql配置
+
+   - 添加数据库tc_gather_cc和tc_gather_result
+   - 添加用户weapp，赋予该用户以上两个数据库所有的操作权限
+
+4. 初始化管理中心
+
+   ```
+   node init gsc
+   node init gtc
+   ```
+
+5. 设置端口
+
+   - 配置防火墙，开放 57701 端口（gsc）
+   - 配置防火墙，开放5672端口（RabbitMQ）
+
+### 情报站安装
+
 1. 在开始安装前，请保证您的系统有以下软件
 
    - nodejs
 
-     
+     ```
+     // 修改npm 的默认仓库位置
+     npm config set registry http://registry.npm.taobao.org/
+     ```
 
    - git
 

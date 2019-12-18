@@ -1,3 +1,10 @@
+/*
+ * @Author: EZ
+ * @Date: 2019-11-28 14:43:46
+ * @LastEditors  : EZ
+ * @LastEditTime : 2019-12-18 18:49:06
+ * @Description: 
+ */
 // 注意：这个文件名一定是.config.js作为结尾
 //
 module.exports = {
@@ -6,7 +13,7 @@ module.exports = {
     {
       name: 'gs',
       script: 'start.js',
-      args: 'gs --remote 211.149.224.49:57701 --port 57721',
+      args: 'gs --remote 106.12.208.221:57701 --port 57721',
       instances: 1,
       autorestart: true,
       restart_delay: 5000,
